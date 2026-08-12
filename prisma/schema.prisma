@@ -1,0 +1,295 @@
+// This is your Prisma schema file
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// AUTH / USER
+// ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  dailyStats    DailyStats[]
+  goals         Goal[]
+  achievements  Achievement[]
+  refreshLogs   RefreshLog[]
+
+  @@map("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─────────────────────────────────────────────
+// PROFILES
+// ─────────────────────────────────────────────
+
+model Profile {
+  id                 String  @id @default(cuid())
+  userId             String  @unique
+  leetcodeUsername   String?
+  codeforcesUsername String?
+  gfgUsername        String?
+  codechefUsername   String?
+  atcoderUsername    String?
+  githubUsername     String?
+  bio                String?
+  isPublic           Boolean @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+  ratings     Rating[]
+  analytics   Analytics?
+
+  @@map("profiles")
+}
+
+// ─────────────────────────────────────────────
+// PROBLEMS & SUBMISSIONS
+// ─────────────────────────────────────────────
+
+enum Platform {
+  LEETCODE
+  CODEFORCES
+  CODECHEF
+  GFG
+  ATCODER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Problem {
+  id          String     @id @default(cuid())
+  platformId  String     // platform-specific problem ID
+  platform    Platform
+  title       String
+  slug        String
+  difficulty  Difficulty?
+  topics      String[]   // ["Array", "DP", "Graph"]
+  url         String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  submissions Submission[]
+
+  @@unique([platformId, platform])
+  @@map("problems")
+}
+
+model Submission {
+  id          String   @id @default(cuid())
+  profileId   String
+  problemId   String
+  status      String   // "Accepted", "Wrong Answer", etc.
+  language    String?
+  runtime     Int?     // ms
+  memory      Int?     // KB
+  submittedAt DateTime
+  createdAt   DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@map("submissions")
+}
+
+// ─────────────────────────────────────────────
+// RATINGS & CONTESTS
+// ─────────────────────────────────────────────
+
+model Rating {
+  id          String   @id @default(cuid())
+  profileId   String
+  platform    Platform
+  rating      Int
+  rank        Int?
+  contestName String?
+  contestId   String?
+  recordedAt  DateTime
+  createdAt   DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("ratings")
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS (computed & cached)
+// ─────────────────────────────────────────────
+
+model Analytics {
+  id                  String   @id @default(cuid())
+  profileId           String   @unique
+  totalSolved         Int      @default(0)
+  easySolved          Int      @default(0)
+  mediumSolved        Int      @default(0)
+  hardSolved          Int      @default(0)
+  topicMastery        Json     @default("{}") // { "Array": 85, "DP": 30 }
+  platformStats       Json     @default("{}") // per-platform totals
+  weakTopics          String[]
+  strongTopics        String[]
+  currentStreak       Int      @default(0)
+  longestStreak       Int      @default(0)
+  lastActiveDate      DateTime?
+  acceptanceRate      Float    @default(0)
+  lastComputedAt      DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("analytics")
+}
+
+// ─────────────────────────────────────────────
+// DAILY STATS (heatmap data)
+// ─────────────────────────────────────────────
+
+model DailyStats {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date
+  solved    Int      @default(0)
+  platform  Platform?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("daily_stats")
+}
+
+// ─────────────────────────────────────────────
+// RECOMMENDATIONS
+// ─────────────────────────────────────────────
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  profileId   String?
+  topic       String
+  pattern     String?
+  problemUrl  String?
+  problemName String?
+  platform    Platform?
+  difficulty  Difficulty?
+  priority    Int      @default(0)
+  reason      String?
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("recommendations")
+}
+
+// ─────────────────────────────────────────────
+// GOALS & ACHIEVEMENTS
+// ─────────────────────────────────────────────
+
+model Goal {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  target      Int
+  current     Int      @default(0)
+  unit        String   // "problems", "days", "rating"
+  deadline    DateTime?
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("goals")
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String
+  icon        String
+  unlockedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("achievements")
+}
+
+// ─────────────────────────────────────────────
+// SYSTEM / INFRA
+// ─────────────────────────────────────────────
+
+model RefreshLog {
+  id        String   @id @default(cuid())
+  userId    String
+  platform  Platform
+  status    String   // "pending", "success", "failed"
+  message   String?
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_logs")
+}
