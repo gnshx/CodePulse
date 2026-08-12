@@ -37,9 +37,10 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const profile = await prisma.profile.update({
+  const profile = await prisma.profile.upsert({
     where: { userId: session.user.id },
-    data: parsed.data,
+    update: parsed.data,
+    create: { userId: session.user.id, ...parsed.data },
   });
 
   // Trigger background data refresh

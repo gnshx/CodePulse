@@ -8,12 +8,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      clientId: process.env.AUTH_GOOGLE_ID || "dummy-google-id",
+      clientSecret: process.env.AUTH_GOOGLE_SECRET || "dummy-google-secret",
     }),
     GitHub({
-      clientId: process.env.AUTH_GITHUB_ID!,
-      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+      clientId: process.env.AUTH_GITHUB_ID || "dummy-github-id",
+      clientSecret: process.env.AUTH_GITHUB_SECRET || "dummy-github-secret",
     }),
   ],
   session: {

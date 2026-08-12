@@ -1,17 +1,26 @@
 import { Redis } from "@upstash/redis";
 
+const hasRedisConfig = Boolean(
+  process.env.UPSTASH_REDIS_REST_URL &&
+    process.env.UPSTASH_REDIS_REST_TOKEN &&
+    !process.env.UPSTASH_REDIS_REST_URL.includes("your-url")
+);
+
 const globalForRedis = globalThis as unknown as {
   redis: Redis | undefined;
 };
 
-export const redis =
-  globalForRedis.redis ??
-  new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-  });
+export const redis = hasRedisConfig
+  ? (globalForRedis.redis ??
+    new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    }))
+  : null;
 
-if (process.env.NODE_ENV !== "production") globalForRedis.redis = redis;
+if (process.env.NODE_ENV !== "production" && redis) {
+  globalForRedis.redis = redis;
+}
 
 // ─────────────────────────────────────────────
 // Cache Keys
@@ -39,6 +48,10 @@ export async function withCache<T>(
   ttl: number,
   fn: () => Promise<T>
 ): Promise<T> {
+  if (!redis) {
+    return fn();
+  }
+
   try {
     const cached = await redis.get<T>(key);
     if (cached !== null && cached !== undefined) return cached;

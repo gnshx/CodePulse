@@ -13,10 +13,10 @@ export const refreshAllPlatforms = inngest.createFunction(
     name: "Refresh All Platform Data",
     concurrency: { limit: 5 },
     retries: 2,
+    triggers: [{ event: "platform/refresh.requested" }],
   },
-  { event: "platform/refresh.requested" },
   async ({ event, step }) => {
-    const { userId } = event.data;
+    const { userId } = event.data as { userId: string };
 
     const profile = await step.run("fetch-profile", async () => {
       return prisma.profile.findUnique({ where: { userId } });
@@ -63,8 +63,11 @@ export const refreshAllPlatforms = inngest.createFunction(
 // Daily Scheduled Refresh (Cron)
 // ─────────────────────────────────────────────
 export const dailyRefreshCron = inngest.createFunction(
-  { id: "daily-refresh-cron", name: "Daily Data Refresh (2 AM)" },
-  { cron: "0 2 * * *" },
+  {
+    id: "daily-refresh-cron",
+    name: "Daily Data Refresh (2 AM)",
+    triggers: [{ cron: "0 2 * * *" }],
+  },
   async ({ step }) => {
     const users = await step.run("get-active-users", async () => {
       return prisma.user.findMany({

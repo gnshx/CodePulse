@@ -161,7 +161,9 @@ export async function computeAnalytics(userId: string): Promise<AnalyticsSummary
   });
 
   // Invalidate cache
-  await redis.del(CACHE_KEYS.userAnalytics(userId));
+  if (redis) {
+    await redis.del(CACHE_KEYS.userAnalytics(userId));
+  }
 
   return summary;
 }
