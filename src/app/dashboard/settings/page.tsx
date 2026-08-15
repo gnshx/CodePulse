@@ -1,147 +1,200 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "@/modules/auth/config";
+import { prisma } from "@/shared/db/client";
+import { revalidatePath } from "next/cache";
 
-import { useState } from "react";
-import type { Metadata } from "next";
+async function updateProfile(formData: FormData) {
+  "use server";
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-const PLATFORMS = [
-  { key: "leetcodeUsername", name: "LeetCode", color: "#ffa116", icon: "🟡", placeholder: "e.g. john_doe", url: "https://leetcode.com" },
-  { key: "codeforcesUsername", name: "Codeforces", color: "#1a83f2", icon: "🔵", placeholder: "e.g. tourist", url: "https://codeforces.com" },
-  { key: "gfgUsername", name: "GeeksforGeeks", color: "#2ba94b", icon: "🟢", placeholder: "e.g. johndoe123", url: "https://geeksforgeeks.org" },
-  { key: "codechefUsername", name: "CodeChef", color: "#d4a574", icon: "🍴", placeholder: "e.g. john_d", url: "https://codechef.com" },
-  { key: "atcoderUsername", name: "AtCoder", color: "#909090", icon: "🔘", placeholder: "e.g. john_doe", url: "https://atcoder.jp" },
-];
+  const leetcodeUsername = formData.get("leetcodeUsername") as string;
+  const codeforcesUsername = formData.get("codeforcesUsername") as string;
+  const gfgUsername = formData.get("gfgUsername") as string;
+  const codechefUsername = formData.get("codechefUsername") as string;
+  const atcoderUsername = formData.get("atcoderUsername") as string;
+  const githubUsername = formData.get("githubUsername") as string;
+  const bio = formData.get("bio") as string;
+  const isPublic = formData.get("isPublic") === "on";
 
-export default function SettingsPage() {
-  const [form, setForm] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
+  await prisma.profile.upsert({
+    where: { userId: session.user.id },
+    update: {
+      leetcodeUsername: leetcodeUsername || null,
+      codeforcesUsername: codeforcesUsername || null,
+      gfgUsername: gfgUsername || null,
+      codechefUsername: codechefUsername || null,
+      atcoderUsername: atcoderUsername || null,
+      githubUsername: githubUsername || null,
+      bio: bio || null,
+      isPublic,
+    },
+    create: {
+      userId: session.user.id,
+      leetcodeUsername: leetcodeUsername || null,
+      codeforcesUsername: codeforcesUsername || null,
+      gfgUsername: gfgUsername || null,
+      codechefUsername: codechefUsername || null,
+      atcoderUsername: atcoderUsername || null,
+      githubUsername: githubUsername || null,
+      bio: bio || null,
+      isPublic,
+    },
+  });
 
-  const handleSave = async () => {
-    setLoading(true);
-    setError("");
+  revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/platforms");
+}
 
-    try {
-      const res = await fetch("/api/user/profile", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+export default async function SettingsPage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
 
-      if (!res.ok) throw new Error("Failed to save");
-
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
-    } catch (e) {
-      setError("Failed to save profile. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const profile = await prisma.profile.findUnique({
+    where: { userId: session.user.id },
+  });
 
   return (
-    <div style={{ maxWidth: 700 }}>
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: "1.8rem", fontWeight: 800, marginBottom: 6 }}>⚙️ Settings</h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Connect your coding platforms to start tracking your progress.
+    <div>
+      <div className="mb-8">
+        <h1 className="mb-1.5 text-3xl font-extrabold">⚙️ Account Settings</h1>
+        <p className="text-secondary">
+          Configure your platform handles and profile preferences
         </p>
       </div>
 
-      <div className="glass-card" style={{ padding: 36 }}>
-        <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 24 }}>
-          🔗 Platform Usernames
-        </h2>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {PLATFORMS.map((p) => (
-            <div key={p.key}>
-              <label
-                htmlFor={`input-${p.key}`}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 10,
-                  fontWeight: 600,
-                  fontSize: "0.9rem",
-                }}
-              >
-                <span>{p.icon}</span>
-                <span style={{ color: p.color }}>{p.name}</span>
-              </label>
-              <div style={{ display: "flex", gap: 10 }}>
+      <div className="glass-card max-w-3xl p-8">
+        <form action={updateProfile} className="flex flex-col gap-6">
+          <div>
+            <h2 className="mb-4 text-xl font-bold border-b border-[var(--bg-border)] pb-3">
+              Platform Handles
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  LeetCode Username
+                </label>
                 <input
-                  id={`input-${p.key}`}
                   type="text"
+                  name="leetcodeUsername"
+                  defaultValue={profile?.leetcodeUsername || ""}
+                  placeholder="e.g. tourist"
                   className="input"
-                  placeholder={p.placeholder}
-                  value={form[p.key] ?? ""}
-                  onChange={(e) => setForm((prev) => ({ ...prev, [p.key]: e.target.value }))}
                 />
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-ghost"
-                  style={{ whiteSpace: "nowrap", padding: "12px 16px" }}
-                  id={`open-${p.key}-btn`}
-                >
-                  ↗
-                </a>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  Codeforces Handle
+                </label>
+                <input
+                  type="text"
+                  name="codeforcesUsername"
+                  defaultValue={profile?.codeforcesUsername || ""}
+                  placeholder="e.g. tourist"
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  GeeksforGeeks Username
+                </label>
+                <input
+                  type="text"
+                  name="gfgUsername"
+                  defaultValue={profile?.gfgUsername || ""}
+                  placeholder="e.g. gfg_user"
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  CodeChef Handle
+                </label>
+                <input
+                  type="text"
+                  name="codechefUsername"
+                  defaultValue={profile?.codechefUsername || ""}
+                  placeholder="e.g. chef_user"
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  AtCoder Username
+                </label>
+                <input
+                  type="text"
+                  name="atcoderUsername"
+                  defaultValue={profile?.atcoderUsername || ""}
+                  placeholder="e.g. tourist"
+                  className="input"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  GitHub Username
+                </label>
+                <input
+                  type="text"
+                  name="githubUsername"
+                  defaultValue={profile?.githubUsername || ""}
+                  placeholder="e.g. octocat"
+                  className="input"
+                />
               </div>
             </div>
-          ))}
-        </div>
-
-        {error && (
-          <div
-            style={{
-              marginTop: 20,
-              padding: "12px 16px",
-              borderRadius: "var(--radius-md)",
-              background: "rgba(239, 68, 68, 0.1)",
-              border: "1px solid rgba(239, 68, 68, 0.2)",
-              color: "var(--color-hard)",
-              fontSize: "0.88rem",
-            }}
-          >
-            {error}
           </div>
-        )}
 
-        <div style={{ marginTop: 32, display: "flex", gap: 12 }}>
-          <button
-            className="btn btn-primary"
-            onClick={handleSave}
-            disabled={loading}
-            id="settings-save-btn"
-            style={{ opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
-          >
-            {loading ? "⏳ Saving..." : saved ? "✅ Saved!" : "💾 Save & Sync"}
-          </button>
+          <div>
+            <h2 className="mb-6 text-xl font-bold border-b border-[var(--bg-border)] pb-3">
+              Profile Details
+            </h2>
+            <div className="flex flex-col gap-5">
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-secondary">
+                  Bio / About Me
+                </label>
+                <textarea
+                  name="bio"
+                  rows={4}
+                  defaultValue={profile?.bio || ""}
+                  placeholder="Tell us about your CP journey, target ratings, or goals..."
+                  className="input"
+                  style={{ resize: "vertical" }}
+                />
+              </div>
 
-          {saved && (
-            <div style={{ display: "flex", alignItems: "center", color: "var(--color-easy)", fontSize: "0.88rem" }}>
-              ✓ Data sync started in background
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  name="isPublic"
+                  id="isPublic"
+                  defaultChecked={profile?.isPublic || false}
+                  className="h-4 w-4 rounded border-[var(--bg-border)]"
+                />
+                <label htmlFor="isPublic" className="text-sm text-secondary">
+                  Make profile public (allow others to view your stats)
+                </label>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        <div
-          style={{
-            marginTop: 24,
-            padding: "16px",
-            borderRadius: "var(--radius-md)",
-            background: "rgba(108, 99, 255, 0.05)",
-            border: "1px solid rgba(108, 99, 255, 0.15)",
-          }}
-        >
-          <p style={{ fontSize: "0.83rem", color: "var(--text-secondary)" }}>
-            <strong style={{ color: "var(--brand-secondary)" }}>⚡ Background Sync: </strong>
-            After saving, your data is fetched in the background (usually under 2 minutes). You can continue using the app — we'll notify you when it's ready.
-          </p>
-        </div>
+          <div className="pt-4 border-t border-[var(--bg-border)] flex justify-end">
+            <button type="submit" className="btn btn-primary" id="save-settings-btn">
+              💾 Save Settings
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

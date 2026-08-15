@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const FEATURES = [
   {
@@ -74,7 +75,8 @@ export default function LandingPage() {
           </span>
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <ThemeToggle />
           <Link href="/login" className="btn btn-ghost" id="nav-login-btn">
             Sign In
           </Link>
@@ -237,45 +239,32 @@ export default function LandingPage() {
       </section>
 
       {/* ── Features ── */}
-      <section
-        id="features"
-        style={{ padding: "100px 24px", position: "relative", zIndex: 1 }}
-      >
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <h2 style={{ textAlign: "center", fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 800, marginBottom: 16 }}>
+      <section id="features" className="features-section">
+        <div className="features-container">
+          <h2 className="features-title">
             Everything you need to{" "}
             <span className="gradient-text">dominate</span>
           </h2>
-          <p style={{ textAlign: "center", color: "var(--text-secondary)", marginBottom: 60, fontSize: "1.1rem" }}>
+          <p className="features-intro">
             Built for serious competitive programmers who want real insights, not just stats.
           </p>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: 24,
-            }}
-          >
+          <div className="features-grid">
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="glass-card"
-                style={{ padding: 32, animationDelay: `${i * 0.1}s` }}
+                className="glass-card feature-card"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div
-                  style={{
-                    fontSize: "2rem",
-                    marginBottom: 16,
-                    display: "inline-block",
-                  }}
+                  className="feature-icon"
                 >
                   {f.icon}
                 </div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 8 }}>
+                <h3 className="feature-card-title">
                   {f.title}
                 </h3>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                <p className="feature-card-description">
                   {f.desc}
                 </p>
               </div>

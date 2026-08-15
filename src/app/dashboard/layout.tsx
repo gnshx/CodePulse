@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default async function DashboardLayout({
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar" style={{ justifyContent: "space-between" }}>
+      <nav className="navbar dashboard-navbar" style={{ justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
@@ -53,8 +54,9 @@ export default async function DashboardLayout({
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>
+        <div className="dashboard-navbar-actions">
+          <ThemeToggle />
+          <span className="dashboard-user-name">
             {session.user.name}
           </span>
           {session.user.image && (
@@ -68,7 +70,7 @@ export default async function DashboardLayout({
       </nav>
 
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className="sidebar dashboard-sidebar">
         <div style={{ marginBottom: 8, padding: "0 8px" }}>
           <p style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
             Navigation

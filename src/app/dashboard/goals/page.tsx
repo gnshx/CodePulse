@@ -22,29 +22,34 @@ export default async function GoalsPage() {
   }
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-extrabold">🎯 Goals & Badges</h1>
-        <p className="text-secondary">
+    <div className="dashboard-page goals-page">
+      <header className="page-header">
+        <p className="page-eyebrow">Personal progress</p>
+        <h1 className="page-title"><span aria-hidden="true">🎯</span> Goals &amp; Badges</h1>
+        <p className="page-description">
           Set personal targets, track your streaks, and unlock achievement badges
         </p>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="goals-layout">
         {/* Goals List */}
-        <div className="glass-card p-7">
-          <h2 className="mb-5 text-lg font-bold">
-            📌 Active Goals
-          </h2>
+        <section className="glass-card dashboard-card goals-card">
+          <div className="card-heading">
+            <div>
+              <p className="card-eyebrow">This week</p>
+              <h2>📌 Active Goals</h2>
+            </div>
+            <span className="card-count">{DUMMY_GOALS.length} goals</span>
+          </div>
 
-          <div className="flex flex-col gap-5">
+          <div className="goal-list">
             {DUMMY_GOALS.map((g) => {
               const pct = Math.min(100, Math.round((g.current / g.target) * 100));
               return (
-                <div key={g.id}>
-                  <div className="mb-1.5 flex justify-between text-[0.9rem]">
-                    <span className="font-semibold">{g.title}</span>
-                    <span className="font-bold text-brand-secondary">
+                <article key={g.id} className="goal-item">
+                  <div className="goal-item-header">
+                    <span className="goal-title">{g.title}</span>
+                    <span className={`goal-value ${g.isCompleted ? "is-complete" : ""}`}>
                       {g.current} / {g.target} {g.unit}
                     </span>
                   </div>
@@ -57,35 +62,39 @@ export default async function GoalsPage() {
                       }}
                     />
                   </div>
-                </div>
+                  <div className="goal-progress-caption">
+                    <span>{pct}% complete</span>
+                    {g.isCompleted && <span>Completed</span>}
+                  </div>
+                </article>
               );
             })}
           </div>
-        </div>
+        </section>
 
         {/* Achievements */}
-        <div className="glass-card p-7">
-          <h2 className="mb-5 text-lg font-bold">
-            🎖️ Achievement Badges
-          </h2>
+        <section className="glass-card dashboard-card achievements-card">
+          <div className="card-heading">
+            <div>
+              <p className="card-eyebrow">Your collection</p>
+              <h2>🎖️ Achievement Badges</h2>
+            </div>
+            <span className="card-count">{ACHIEVEMENTS.filter((item) => item.unlocked).length} unlocked</span>
+          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {ACHIEVEMENTS.map((a, i) => (
-              <div
-                key={i}
-                className={`rounded-[var(--radius-md)] border p-4 transition-all ${
-                  a.unlocked
-                    ? "border-brand-primary/30 bg-elevated"
-                    : "border-[var(--bg-border)] bg-[var(--bg-base)] opacity-50"
-                }`}
-              >
-                <span className="mb-2 block text-3xl">{a.icon}</span>
-                <p className="mb-1 text-[0.9rem] font-bold">{a.title}</p>
-                <p className="text-[0.75rem] text-muted">{a.desc}</p>
-              </div>
+          <div className="achievements-grid">
+            {ACHIEVEMENTS.map((a) => (
+              <article key={a.title} className={`achievement-card ${a.unlocked ? "is-unlocked" : "is-locked"}`}>
+                <span className="achievement-icon" aria-hidden="true">{a.icon}</span>
+                <div>
+                  <h3>{a.title}</h3>
+                  <p>{a.desc}</p>
+                </div>
+                <span className="achievement-status">{a.unlocked ? "Unlocked" : "Locked"}</span>
+              </article>
             ))}
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

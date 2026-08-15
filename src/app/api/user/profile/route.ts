@@ -1,16 +1,7 @@
+import { NextResponse } from "next/server";
 import { auth } from "@/modules/auth/config";
+import { profileUpdateSchema } from "@/modules/auth/validation";
 import { prisma } from "@/shared/db/client";
-import { inngest } from "@/lib/inngest";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-const schema = z.object({
-  leetcodeUsername: z.string().optional(),
-  codeforcesUsername: z.string().optional(),
-  gfgUsername: z.string().optional(),
-  codechefUsername: z.string().optional(),
-  atcoderUsername: z.string().optional(),
-});
 
 export async function GET() {
   const session = await auth();
@@ -21,33 +12,65 @@ export async function GET() {
   const profile = await prisma.profile.findUnique({
     where: { userId: session.user.id },
   });
-  return NextResponse.json({ success: true, data: profile });
+
+  return NextResponse.json({ profile });
 }
 
-export async function PATCH(req: NextRequest) {
+export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json();
-  const parsed = schema.safeParse(body);
+  try {
+    const body = await req.json();
+    const parsed = profileUpdateSchema.safeParse(body);
 
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message ?? "Invalid profile data." },
+        { status: 400 },
+      );
+    }
+
+    const {
+      leetcodeUsername,
+      codeforcesUsername,
+      gfgUsername,
+      codechefUsername,
+      atcoderUsername,
+      githubUsername,
+      bio,
+      isPublic,
+    } = parsed.data;
+
+    const profile = await prisma.profile.upsert({
+      where: { userId: session.user.id },
+      update: {
+        leetcodeUsername,
+        codeforcesUsername,
+        gfgUsername,
+        codechefUsername,
+        atcoderUsername,
+        githubUsername,
+        bio,
+        isPublic,
+      },
+      create: {
+        userId: session.user.id,
+        leetcodeUsername,
+        codeforcesUsername,
+        gfgUsername,
+        codechefUsername,
+        atcoderUsername,
+        githubUsername,
+        bio,
+        isPublic,
+      },
+    });
+
+    return NextResponse.json({ profile });
+  } catch {
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
-
-  const profile = await prisma.profile.upsert({
-    where: { userId: session.user.id },
-    update: parsed.data,
-    create: { userId: session.user.id, ...parsed.data },
-  });
-
-  // Trigger background data refresh
-  await inngest.send({
-    name: "platform/refresh.requested",
-    data: { userId: session.user.id },
-  });
-
-  return NextResponse.json({ success: true, data: profile });
 }
