@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { OAuthProviders } from "@/components/auth/oauth-providers";
+import { isGitHubAuthEnabled, isGoogleAuthEnabled } from "@/modules/auth/config";
 
 const FEATURES = [
   {
@@ -48,7 +50,9 @@ const STATS = [
   { value: "Free", label: "To Start" },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const showGoogleAuth = isGoogleAuthEnabled;
+  const showGitHubAuth = isGitHubAuthEnabled;
   return (
     <div style={{ position: "relative", overflow: "hidden" }}>
       <div className="bg-mesh" />
@@ -149,6 +153,7 @@ export default function LandingPage() {
             flexWrap: "wrap",
             justifyContent: "center",
             animationDelay: "0.3s",
+            maxWidth: 520,
           }}
         >
           <Link href="/login" className="btn btn-primary btn-lg" id="hero-cta-btn">
@@ -158,6 +163,19 @@ export default function LandingPage() {
             See Features →
           </Link>
         </div>
+
+        {(showGoogleAuth || showGitHubAuth) && (
+          <div
+            className="animate-fade-up"
+            style={{ marginTop: 18, width: "100%", maxWidth: 360, animationDelay: "0.35s" }}
+          >
+            <OAuthProviders
+              googleEnabled={showGoogleAuth}
+              githubEnabled={showGitHubAuth}
+              dividerLabel={null}
+            />
+          </div>
+        )}
 
         {/* Platform Logos */}
         <div

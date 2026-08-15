@@ -8,25 +8,35 @@ import { verifyPassword } from "@/modules/auth/password";
 import { credentialsSchema } from "@/modules/auth/validation";
 
 const oneDay = 60 * 60 * 24;
-const googleClientId = process.env.AUTH_GOOGLE_ID?.trim();
-const googleClientSecret = process.env.AUTH_GOOGLE_SECRET?.trim();
-const githubClientId = process.env.AUTH_GITHUB_ID?.trim();
-const githubClientSecret = process.env.AUTH_GITHUB_SECRET?.trim();
 
-// Google-issued web client IDs always end in this domain. This avoids showing
-// a sign-in button for placeholder or malformed environment values.
-export const isGoogleAuthEnabled = Boolean(
-  googleClientSecret &&
-    googleClientId?.endsWith(".apps.googleusercontent.com") &&
-    !googleClientId.startsWith("your-"),
-);
+function readAuthEnv(value?: string) {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
 
-export const isGitHubAuthEnabled = Boolean(
-  githubClientId && githubClientSecret && !githubClientId.startsWith("your-"),
-);
+  const normalized = trimmed.toLowerCase();
+  if (
+    normalized.startsWith("your-") ||
+    normalized.includes("change-me") ||
+    normalized === "sk-..." ||
+    normalized === "placeholder"
+  ) {
+    return undefined;
+  }
+
+  return trimmed;
+}
+
+const googleClientId = readAuthEnv(process.env.AUTH_GOOGLE_ID);
+const googleClientSecret = readAuthEnv(process.env.AUTH_GOOGLE_SECRET);
+const githubClientId = readAuthEnv(process.env.AUTH_GITHUB_ID);
+const githubClientSecret = readAuthEnv(process.env.AUTH_GITHUB_SECRET);
+
+export const isGoogleAuthEnabled = Boolean(googleClientId && googleClientSecret);
+export const isGitHubAuthEnabled = Boolean(githubClientId && githubClientSecret);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  trustHost: true,
   session: {
     strategy: "jwt",
     maxAge: oneDay,
@@ -37,7 +47,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   providers: [
     ...(isGoogleAuthEnabled
-      ? [Google({ clientId: googleClientId, clientSecret: googleClientSecret })]
+      ? [
+          Google({
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+            allowDangerousEmailAccountLinking: false,
+          }),
+        ]
       : []),
     ...(isGitHubAuthEnabled
       ? [GitHub({ clientId: githubClientId, clientSecret: githubClientSecret })]
