@@ -72,7 +72,7 @@ export default async function DashboardLayout({
       {/* Sidebar */}
       <aside className="sidebar dashboard-sidebar">
         <div style={{ marginBottom: 8, padding: "0 8px" }}>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.82rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
             Navigation
           </p>
         </div>

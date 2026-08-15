@@ -63,10 +63,10 @@ export default async function AICoachPage() {
                   key={i}
                   className="flex items-start gap-3.5 rounded-[var(--radius-md)] bg-elevated p-4 transition-colors hover:bg-hover"
                 >
-                  <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--brand-gradient)] text-[0.85rem] font-extrabold">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-gradient)] text-[0.95rem] font-extrabold">
                     {i + 1}
                   </div>
-                  <p className="pt-0.5 text-[0.95rem] text-primary">{step}</p>
+                  <p className="pt-0.5 text-[1rem] text-primary">{step}</p>
                 </div>
               ))}
             </div>
@@ -76,22 +76,22 @@ export default async function AICoachPage() {
         {/* Sidebar Cards */}
         <div className="flex flex-col gap-6">
           <div className="glass-card p-6">
-            <p className="mb-2 text-[0.8rem] text-muted">Target Readiness</p>
+            <p className="mb-2 text-[0.9rem] text-muted">Target Readiness</p>
             <h3 className="text-lg font-extrabold text-brand-accent">
               {coachReport.readinessLevel}
             </h3>
           </div>
 
           <div className="glass-card p-6">
-            <p className="mb-2 text-[0.8rem] text-muted">Top Focus Priority</p>
-            <p className="text-[0.95rem] font-semibold text-medium">
+            <p className="mb-2 text-[0.9rem] text-muted">Top Focus Priority</p>
+            <p className="text-[1rem] font-semibold text-medium">
               {coachReport.topPriority}
             </p>
           </div>
 
           <div className="glass-card bg-[linear-gradient(135deg,rgba(108,99,255,0.15),rgba(167,139,250,0.05))] p-6">
-            <p className="mb-2 text-[0.8rem] font-bold text-brand-secondary">💡 Coach Advice</p>
-            <p className="text-[0.9rem] italic text-secondary">
+            <p className="mb-2 text-[0.9rem] font-bold text-brand-secondary">💡 Coach Advice</p>
+            <p className="text-[1rem] italic text-secondary">
               &ldquo;{coachReport.motivationalNote}&rdquo;
             </p>
           </div>

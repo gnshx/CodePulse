@@ -107,7 +107,7 @@ export default async function LandingPage() {
         {/* Floating badge */}
         <div
           className="badge badge-primary animate-fade-up"
-          style={{ marginBottom: 24, fontSize: "0.8rem", padding: "6px 16px" }}
+          style={{ marginBottom: 24, fontSize: "0.92rem", padding: "7px 18px" }}
         >
           🚀 AI-Powered CP & DSA Coaching
         </div>
@@ -189,7 +189,7 @@ export default async function LandingPage() {
             animationDelay: "0.4s",
           }}
         >
-          <p style={{ color: "var(--text-muted)", width: "100%", marginBottom: 8, fontSize: "0.85rem" }}>
+          <p style={{ color: "var(--text-muted)", width: "100%", marginBottom: 8, fontSize: "0.95rem" }}>
             Supports your favourite platforms
           </p>
           {PLATFORMS.map((p) => (
@@ -215,14 +215,14 @@ export default async function LandingPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "0.6rem",
+                  fontSize: "0.76rem",
                   fontWeight: 800,
                   color: p.color,
                 }}
               >
                 {p.icon.slice(0, 2)}
               </div>
-              <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>{p.name}</span>
+              <span style={{ fontSize: "0.95rem", color: "var(--text-secondary)" }}>{p.name}</span>
             </div>
           ))}
         </div>
@@ -248,7 +248,7 @@ export default async function LandingPage() {
               >
                 {s.value}
               </div>
-              <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: 4 }}>
+              <div style={{ fontSize: "0.95rem", color: "var(--text-muted)", marginTop: 4 }}>
                 {s.label}
               </div>
             </div>

@@ -47,7 +47,7 @@ export default async function TopicsPage() {
               </div>
 
               <div className="mb-2 flex items-baseline justify-between">
-                <span className="text-[0.85rem] text-muted">Mastery Score</span>
+                <span className="text-[0.95rem] text-muted">Mastery Score</span>
                 <span className="text-[1.4rem] font-extrabold text-brand-secondary">{score}%</span>
               </div>
 

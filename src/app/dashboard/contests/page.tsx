@@ -33,7 +33,7 @@ export default async function ContestsPage() {
               <p>No contest history found or Codeforces account not linked.</p>
               <a
                 href="/dashboard/settings"
-                className="mt-2 inline-block text-[0.9rem] text-brand-accent transition-colors hover:text-brand-secondary"
+                className="mt-2 inline-block text-[1rem] text-brand-accent transition-colors hover:text-brand-secondary"
               >
                 Link Codeforces Username ↗
               </a>
@@ -46,8 +46,8 @@ export default async function ContestsPage() {
                   className="flex items-center justify-between rounded-[var(--radius-md)] bg-elevated px-4 py-3 transition-colors hover:bg-hover"
                 >
                   <div>
-                    <p className="text-[0.9rem] font-semibold">{c.contestName}</p>
-                    <p className="text-[0.78rem] text-muted">Rank: #{c.rank}</p>
+                    <p className="text-[1rem] font-semibold">{c.contestName}</p>
+                    <p className="text-[0.88rem] text-muted">Rank: #{c.rank}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-extrabold text-codeforces">{c.rating}</p>
@@ -64,13 +64,13 @@ export default async function ContestsPage() {
           </h2>
           <div className="flex flex-col gap-4">
             <div className="rounded-[var(--radius-md)] border border-brand-primary/20 bg-brand-primary/10 p-4">
-              <p className="text-[0.8rem] text-muted">Peak Rating</p>
+              <p className="text-[0.9rem] text-muted">Peak Rating</p>
               <p className="text-[1.6rem] font-extrabold text-brand-secondary">
                 {cfHistory.length > 0 ? Math.max(...cfHistory.map((c: any) => c.rating)) : "—"}
               </p>
             </div>
             <div className="rounded-[var(--radius-md)] border border-brand-accent/20 bg-brand-accent/10 p-4">
-              <p className="text-[0.8rem] text-muted">Contests Attended</p>
+              <p className="text-[0.9rem] text-muted">Contests Attended</p>
               <p className="text-[1.6rem] font-extrabold text-brand-accent">
                 {cfHistory.length}
               </p>

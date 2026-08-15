@@ -92,7 +92,7 @@ export default async function PlatformsPage() {
                 <span className="text-3xl">{p.icon}</span>
                 <div>
                   <h2 className="text-xl font-bold" style={{ color: p.color }}>{p.name}</h2>
-                  <p className="text-[0.85rem] text-muted">
+                  <p className="text-[0.95rem] text-muted">
                     {p.username ? `@${p.username}` : "Not connected"}
                   </p>
                 </div>
@@ -104,7 +104,7 @@ export default async function PlatformsPage() {
 
             <div className="flex flex-col gap-3 border-t border-[var(--bg-border)] pt-4">
               {p.details.map((d) => (
-                <div key={d.label} className="flex justify-between text-[0.9rem]">
+                <div key={d.label} className="flex justify-between text-[1rem]">
                   <span className="text-secondary">{d.label}</span>
                   {d.isLink && d.value ? (
                     <a

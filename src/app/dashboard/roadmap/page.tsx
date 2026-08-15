@@ -29,10 +29,10 @@ export default async function RoadmapPage() {
               <div className="mb-2 flex flex-wrap items-center gap-2.5">
                 <span className="badge badge-primary">{item.topic}</span>
                 <span className={`badge badge-${item.difficulty?.toLowerCase()}`}>{item.difficulty}</span>
-                <span className="text-[0.8rem] text-muted">Pattern: {item.pattern}</span>
+                <span className="text-[0.9rem] text-muted">Pattern: {item.pattern}</span>
               </div>
               <h3 className="mb-1 text-lg font-bold">{item.problemName}</h3>
-              <p className="text-[0.85rem] text-secondary">{item.reason}</p>
+              <p className="text-[0.95rem] text-secondary">{item.reason}</p>
             </div>
 
             {item.problemUrl && (
