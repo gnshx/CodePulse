@@ -1,57 +1,337 @@
-# Better CP
+# ⚡ CodePulse
 
-## Competitive Programming Intelligence Platform
+### Competitive Programming Intelligence Platform
 
 > **Connect. Analyze. Improve.**
 
-Better CP is a full-stack competitive-programming intelligence platform. It connects a learner's coding profiles, normalizes activity into a single data model, computes progress signals, and turns those signals into a focused practice roadmap and coaching guidance.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge)](https://code-pulse-ojlk.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge\&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge\&logo=typescript)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?style=for-the-badge\&logo=postgresql)](https://www.postgresql.org/)
 
-The project is designed around a production-oriented concern: external programming platforms are slow and inconsistent, while the learning experience should be fast, personalized, and reliable.
+**CodePulse** is a full-stack competitive programming intelligence platform that connects coding profiles, aggregates activity from multiple platforms, and transforms raw submissions into **actionable analytics, topic mastery insights, personalized recommendations, and AI-powered coaching**.
 
-**Live application:** [code-pulse-ojlk.vercel.app](https://code-pulse-ojlk.vercel.app/)
+Unlike a simple problem counter, CodePulse is designed to answer:
 
-## Product capabilities
+> **What are you good at, where are you weak, and what should you solve next?**
 
-- Account authentication with credentials, Google, and GitHub through Auth.js.
-- Linked-profile support for LeetCode, Codeforces, GeeksforGeeks, CodeChef, AtCoder, and GitHub identifiers.
-- Platform synchronization for LeetCode and Codeforces, including submissions, problem metadata, and rating history.
-- A unified analytics view: solved counts, difficulty distribution, topic mastery, acceptance rate, streaks, and platform statistics.
-- Data-driven recommendations built from learner weaknesses and a curated NeetCode-style curriculum.
-- AI coaching that produces a weekly study plan, readiness assessment, and highest-priority next action, with a deterministic fallback when no model key is configured.
-- Personal goals, achievements, contest discovery, dashboard views, and user settings.
+### 🌐 Live Application
 
-## Beyond a problem counter
+**[🚀 Open CodePulse →](https://code-pulse-ojlk.vercel.app/)**
 
-Most trackers show activity. Better CP turns activity into an informed next action.
+---
+
+## 📸 Product Tour
+
+### 🏠 Landing Page
+
+The entry point to CodePulse, introducing the platform and its competitive programming analytics experience.
+
+
+
+> ![CodePulse Landing Page](image.png)
+
+---
+
+### 🔐 Authentication
+
+Secure authentication powered by **Auth.js**, supporting credentials and OAuth providers.
+
+#### Login Page
+
+![alt text](image-1.png)
+
+#### Sign Up Page
+
+![alt text](image-2.png)
+
+---
+
+### 🔵 Google Authentication
+
+Sign in securely using a Google account through OAuth.
+
+![alt text](image-3.png)
+
+---
+
+### ⚫ GitHub Authentication
+
+Authenticate using GitHub OAuth and connect the development ecosystem with CodePulse.
+
+
+---
+
+### 📊 Dashboard Overview
+
+The central command center for a user's competitive programming journey.
+
+View important information in one place:
+
+* Total solved problems
+* Platform statistics
+* Difficulty distribution
+* Recent activity
+* Streaks
+* Progress signals
+* Personalized insights
+
+![CodePulse Dashboard](./public/screenshots/dashboard-overview.png)
+
+![alt text](image-4.png)
+
+---
+
+### 📈 Analytics Dashboard
+
+CodePulse transforms normalized submission data into meaningful performance analytics.
+
+![CodePulse Analytics](./public/screenshots/analytics.png)
+
+> **Screenshot:** `![alt text](image-5.png)
+
+Analytics include:
+
+* Solved problem statistics
+* Acceptance rate
+* Difficulty distribution
+* Platform performance
+* Progress trends
+* Daily activity
+* Streak calculations
+
+---
+
+### 🧠 Topic Mastery Analysis
+
+Identify strengths and weaknesses across competitive programming topics.
+
+![Topic Mastery](./public/screenshots/topic-mastery.png)
+
+> **Screenshot:** ![alt text](image-6.png)
+
+Instead of only tracking problem counts, CodePulse derives mastery signals from accepted problem activity.
 
 ```text
-Raw coding activity
-        ↓
-Platform synchronization
-        ↓
-Normalized data model
-        ↓
-Analytics engine
-        ↓
-Strength and weakness detection
-        ↓
-Personalized roadmap and AI coaching
+Arrays          ██████████  Strong
+Binary Search   ████████░░  Improving
+Graphs          ██████░░░░  Developing
+Dynamic Prog.   ████░░░░░░  Weak Area
 ```
 
-This makes questions such as these answerable from a learner's actual history:
+These signals directly influence recommendations and AI coaching.
 
-- Which topics are strongest, and which need deliberate practice?
-- Is progress consistent, or has practice volume slowed down?
-- What is the highest-value next pattern or problem set?
-- How are difficulty mix, streaks, and contest performance evolving?
+---
 
-## Architecture
+### 🎯 Personalized Recommendations
 
-### Architecture philosophy
+CodePulse analyzes user performance and identifies areas that deserve attention.
 
-Better CP is a **modular monolith with event-driven background processing**. It keeps the deployment and operational simplicity of one Next.js application, while isolating authentication, integrations, synchronization, analytics, recommendations, and coaching into domain modules.
 
-This avoids premature distributed-system complexity while preserving clear boundaries for testing, ownership, and future service extraction.
+The recommendation engine considers signals such as:
+
+* Topic mastery
+* Weak areas
+* Solving history
+* Difficulty distribution
+* Learning priorities
+
+```text
+Your Activity
+      ↓
+Analytics Engine
+      ↓
+Strength / Weakness Detection
+      ↓
+Recommendation Engine
+      ↓
+What to Learn Next
+```
+
+---
+
+### 🗺️ Personalized Learning Roadmap
+
+CodePulse helps transform analytics into a structured next step.
+
+![Learning Roadmap](./public/screenshots/roadmap.png)
+
+> **Screenshot:** ![alt text](image-11.png)
+
+The roadmap experience helps users focus on:
+
+* Priority topics
+* Recommended patterns
+* Problems to practice
+* Learning progression
+
+---
+
+### 🤖 AI Competitive Programming Coach
+
+The AI coach uses computed analytics to generate personalized guidance.
+
+![AI Coach](./public/screenshots/ai-coach.png)
+
+> **Screenshot:** ![alt text](image-7.png)
+
+The coach can provide:
+
+* Weekly study plans
+* Readiness assessments
+* Priority recommendations
+* Focus areas
+* Suggested next actions
+
+Example:
+
+```text
+Your Binary Search performance has improved recently.
+
+Dynamic Programming remains one of your weakest areas.
+
+Recommended focus:
+1. Basic 1D DP
+2. Knapsack patterns
+3. LIS and subsequence problems
+```
+
+### Graceful AI Fallback
+
+If an AI provider is unavailable or not configured, CodePulse falls back to deterministic analytics-based recommendations.
+
+```text
+Analytics
+    │
+    ▼
+AI Available?
+   / \
+ Yes  No
+  │    │
+  ▼    ▼
+AI Coach   Analytics-Based
+Response   Fallback
+   \         /
+    └───┬───┘
+        ▼
+       User
+```
+
+---
+
+### 🔗 Platform Profile Management
+
+Users can manage their competitive programming identities from a single profile.
+
+![Profile Settings](./public/screenshots/profile-settings.png)
+
+> **Screenshot:** ![alt text](image-8.png)
+
+Supported profile identifiers include:
+
+* LeetCode
+* Codeforces
+* CodeChef
+* GeeksforGeeks
+* AtCoder
+* GitHub
+
+---
+
+### 🔄 Platform Synchronization
+
+CodePulse separates external platform collection from user-facing requests.
+
+
+Current platform synchronization architecture includes:
+
+```text
+User Requests Refresh
+        │
+        ▼
+Refresh Request Recorded
+        │
+        ▼
+platform/refresh.requested
+        │
+        ▼
+┌───────────────────────────┐
+│   Inngest Background Job  │
+└─────────────┬─────────────┘
+              │
+      ┌───────┴────────┐
+      ▼                ▼
+  LeetCode        Codeforces
+      │                │
+      └───────┬────────┘
+              ▼
+       Normalize Data
+              │
+              ▼
+        PostgreSQL
+              │
+              ▼
+   Recompute Analytics
+              │
+              ▼
+     Updated Dashboard
+```
+
+Slow and failure-prone external API calls do not block normal dashboard requests.
+
+---
+
+### 🎯 Personal Goals
+
+Users can set and track their competitive programming goals.
+
+![Goals](./public/screenshots/goals.png)
+
+> **Screenshot:** ![alt text](image-9.png)
+
+Goals help turn long-term improvement into measurable progress.
+
+---
+
+### 🏆 Achievements
+
+Track milestones and accomplishments throughout the competitive programming journey.
+
+
+---
+
+### 🏅 Contest Discovery
+
+Discover and track competitive programming contests.
+
+![Contests](./public/screenshots/contests.png)
+
+> **Screenshot:** ![alt text](image-10.png)
+
+---
+
+# ✨ Core Features
+
+| Feature            | Description                                             |
+| ------------------ | ------------------------------------------------------- |
+| 🔐 Authentication  | Credentials, Google OAuth, and GitHub OAuth             |
+| 🔗 Profile Linking | Manage identifiers across multiple coding platforms     |
+| 🔄 Background Sync | Event-driven platform synchronization                   |
+| 📊 Analytics       | Solved counts, acceptance rate, difficulty mix, streaks |
+| 🧠 Topic Mastery   | Identify strong and weak competitive programming topics |
+| 🎯 Recommendations | Personalized practice recommendations                   |
+| 🗺️ Roadmap        | Analytics-driven learning direction                     |
+| 🤖 AI Coach        | Personalized study guidance and readiness assessment    |
+| 🔥 Streak Tracking | Track consistent problem-solving activity               |
+| 🎯 Goals           | Define and monitor learning goals                       |
+| 🏆 Achievements    | Track important competitive programming milestones      |
+| 🏅 Contests        | Contest discovery and related experiences               |
+| ⚡ Caching          | Redis-powered read-through caching                      |
+| 🔁 Background Jobs | Retryable and concurrency-controlled workflows          |
+
+---
+
+# 🏗️ System Architecture
 
 ```text
                          ┌──────────────────────────┐
@@ -61,26 +341,29 @@ This avoids premature distributed-system complexity while preserving clear bound
                                        │
                   ┌────────────────────┼────────────────────┐
                   │                    │                    │
-           Server-rendered        Route handlers       Server actions
-           dashboard pages        /api/*               auth and updates
+           Server-rendered        Route Handlers       Server Actions
+           dashboard pages           /api/*           auth and updates
                   │                    │                    │
                   └────────────────────┴────────────────────┘
                                        │
                          ┌─────────────▼─────────────┐
-                         │       Domain modules       │
+                         │       Domain Modules       │
+                         │                            │
                          │ auth · sync · analytics    │
                          │ goals · learning · AI      │
+                         │ recommendations            │
                          └───────┬───────────┬────────┘
                                  │           │
                  ┌───────────────▼───┐   ┌───▼────────────────┐
                  │ PostgreSQL + Prisma│   │ Upstash Redis      │
-                 │ source of truth    │   │ read-through cache │
-                 └────────────────────┘   └────────────────────┘
-                                 ▲
-                                 │ events / scheduled work
-                         ┌───────┴───────────┐
+                 │ Source of Truth    │   │ Read-Through Cache │
+                 └───────────────┬───┘   └────────────────────┘
+                                 │
+                         Events / Scheduled Work
+                                 │
+                         ┌───────▼───────────┐
                          │      Inngest       │
-                         │ sync orchestration │
+                         │ Sync Orchestration │
                          └───────┬───────────┘
                                  │
                     ┌────────────┴─────────────┐
@@ -88,193 +371,374 @@ This avoids premature distributed-system complexity while preserving clear bound
                     └───────────────────────────┘
 ```
 
-### Why this shape?
+---
 
-The request path stays focused on user-facing reads and writes. Slow, failure-prone platform collection is moved to Inngest functions, where it can be retried and rate-limited independently. PostgreSQL stores normalized, durable records; Redis is an optional cache that accelerates expensive reads without becoming a correctness dependency.
+# 🧩 Architecture Philosophy
 
-### Data flow
+CodePulse uses a **modular monolith with event-driven background processing**.
 
-```text
-User requests refresh
-        ↓
-RefreshLog records pending work
-        ↓
-platform/refresh.requested event
-        ↓
-Inngest worker
-        ↓
-LeetCode and Codeforces fetch steps run independently
-        ↓
-Normalize and persist activity
-        ↓
-Recompute the Analytics read model
-        ↓
-Dashboard, roadmap, and coach read the new projection
-```
-
-The worker uses parallel steps, retryable execution, and a concurrency limit. Platform collection is kept out of user-facing request paths, and one provider's failure does not prevent other work from finishing.
-
-## Key engineering decisions
-
-| Concern | Design | Rationale |
-| --- | --- | --- |
-| Authentication | Auth.js with Prisma adapter and JWT sessions | Supports OAuth and credentials while keeping user identity in the application database. |
-| Database access | Prisma 7 with the PostgreSQL driver adapter | Type-safe persistence and a clear schema boundary around domain data. |
-| Background work | Inngest events and a daily cron | Separates long-running platform I/O from web requests; jobs are retryable and concurrency-limited. |
-| Cache strategy | Optional Upstash Redis read-through cache | Keeps the app functional locally without Redis while lowering latency and provider load in production. |
-| External integrations | Platform-specific service modules | Prevents provider API details from leaking into pages, route handlers, or analytics logic. |
-| AI resiliency | OpenAI output with an analytics-based fallback | Users receive actionable coaching even during key misconfiguration or provider failure. |
-| Input validation | Zod schemas at API boundaries | Rejects malformed profile and credential payloads before persistence. |
-
-## Technology stack
-
-| Layer | Technologies |
-| --- | --- |
-| Application | Next.js 16, React 19, TypeScript, App Router |
-| UI and visualization | Tailwind CSS, Radix UI, Recharts |
-| Identity | Auth.js, OAuth (Google and GitHub), credentials authentication |
-| Data | PostgreSQL, Prisma 7, PostgreSQL driver adapter |
-| Async workflows | Inngest events, cron scheduling, retries, concurrency controls |
-| Performance | Upstash Redis read-through caching |
-| Intelligence | OpenAI with deterministic analytics-based fallback |
-| Deployment | Vercel |
-
-## Repository map
+The application is not unnecessarily split into microservices. Instead, major domains are isolated into independent modules while maintaining the simplicity of a single deployment.
 
 ```text
-src/
-├── app/                 # App Router pages, API routes, and server actions
-├── components/          # UI, charts, auth, dashboard, and platform components
-├── modules/             # Domain services and integration adapters
-│   ├── analytics/       # Derived learner metrics and cache invalidation
-│   ├── auth/            # Auth.js configuration, password utilities, validation
-│   ├── ai/              # Personalized coach and model fallback
-│   ├── learning/        # Live analytics used by learning experiences
-│   ├── recommendations/ # Curriculum and personalized roadmap selection
-│   ├── sync/            # Event-driven platform refresh requests
-│   ├── leetcode/        # LeetCode integration
-│   └── codeforces/      # Codeforces integration and ratings
-├── jobs/                # Inngest event functions and scheduled jobs
-├── shared/              # Prisma client, Redis cache, types, logging, utilities
-└── hooks/               # Client-side React hooks
-prisma/
-├── schema.prisma        # Relational data model
-└── migrations/          # Versioned database migrations
+Next.js Application
+        │
+        ├── Authentication Module
+        ├── Platform Integration Module
+        │      ├── LeetCode
+        │      └── Codeforces
+        ├── Synchronization Module
+        ├── Analytics Module
+        ├── Recommendation Module
+        ├── Learning Module
+        └── AI Module
+                 │
+                 ▼
+        Event-Driven Background Jobs
+                 │
+                 ▼
+        PostgreSQL + Redis
 ```
 
-## Data model
+This provides:
 
-The relational core separates identity, linked profiles, raw learning activity, and derived projections:
+* Clear separation of concerns
+* Independent domain boundaries
+* Easier testing and maintenance
+* Extensible platform integrations
+* Background processing
+* A path to future service extraction if scale requires it
+
+---
+
+# 🔄 Data Flow
+
+```text
+User Links Platform Profiles
+           │
+           ▼
+User Requests Synchronization
+           │
+           ▼
+RefreshLog Records Pending Work
+           │
+           ▼
+platform/refresh.requested Event
+           │
+           ▼
+       Inngest Worker
+           │
+    ┌──────┴───────┐
+    ▼              ▼
+LeetCode      Codeforces
+    │              │
+    └──────┬───────┘
+           ▼
+   Normalize Activity
+           │
+           ▼
+   PostgreSQL Storage
+           │
+           ▼
+ Analytics Computation
+           │
+           ▼
+Persisted Analytics Model
+           │
+    ┌──────┼─────────────┐
+    ▼      ▼             ▼
+Dashboard Roadmap     AI Coach
+```
+
+---
+
+# 🧠 Analytics Engine
+
+CodePulse converts raw activity into explainable learner signals.
+
+| Metric          | Method                                                   |
+| --------------- | -------------------------------------------------------- |
+| Solved Problems | Unique accepted problem records                          |
+| Difficulty Mix  | Accepted problems grouped by difficulty                  |
+| Topic Mastery   | Bounded logarithmic score from accepted problem coverage |
+| Weak Topics     | Mastery below the defined weakness threshold             |
+| Strong Topics   | Mastery above the defined strength threshold             |
+| Acceptance Rate | Unique accepted ÷ unique attempted problems              |
+| Streaks         | Consecutive days with solved activity                    |
+
+### Persisted Read Model
+
+Analytics are not recomputed for every dashboard request.
+
+```text
+Platform Activity
+       │
+       ▼
+PostgreSQL
+       │
+       ▼
+Analytics Computation
+       │
+       ▼
+Persisted Analytics Snapshot
+       │
+       ├──► Dashboard
+       ├──► Recommendations
+       └──► AI Coach
+```
+
+This makes expensive derived data explicit and keeps dashboard reads efficient.
+
+---
+
+# 🔌 Platform Integration Design
+
+Provider-specific logic is isolated behind dedicated integration modules.
+
+```text
+                    CodePulse Core
+                          │
+                          ▼
+                Platform Integration Layer
+                          │
+          ┌───────────────┼───────────────┐
+          ▼               ▼               ▼
+     LeetCode        Codeforces      Future Adapters
+     Integration      Integration
+          │               │
+          └───────┬───────┘
+                  ▼
+          Normalized Data Model
+                  │
+                  ▼
+           Analytics Engine
+                  │
+          ┌───────┴────────┐
+          ▼                ▼
+    Recommendations     AI Coach
+```
+
+This prevents provider-specific response formats from leaking into the analytics or UI layers.
+
+---
+
+# 🗄️ Data Model
 
 ```text
 User ──1:1── Profile ──1:N── Submission ──N:1── Problem
   │              │                  │
-  │              ├──1:N── Rating    └── platform + topic metadata
+  │              ├──1:N── Rating    └── Platform + Topic Metadata
+  │              │
   │              └──1:1── Analytics
+  │
   ├──1:N── DailyStats
   ├──1:N── Goal
   ├──1:N── Achievement
   └──1:N── RefreshLog
 ```
 
-`Analytics` is a persisted read model, not merely a response assembled on every page load. This makes the dashboard inexpensive to render and gives background sync a single, explicit projection to refresh.
+> **Design principle:** Raw platform activity is stored separately from derived learner intelligence, allowing analytics to evolve and be recomputed without re-ingesting historical data.
 
-> **Design principle:** raw platform activity is stored separately from derived learner intelligence, so the analytics methodology can evolve and be recomputed without re-ingesting history.
+---
 
-## Analytics methodology
+# 🛠️ Technology Stack
 
-- **Solved problems:** unique accepted problem records.
-- **Difficulty mix:** unique accepted problems grouped by Easy, Medium, and Hard.
-- **Topic mastery:** a bounded logarithmic score from accepted-problem coverage, preventing early volume from looking like complete mastery.
-- **Weak and strong topics:** mastery below 40 and at least 75, respectively.
-- **Acceptance rate:** unique accepted problems divided by unique attempted problems.
-- **Streaks:** consecutive days with solved activity, calculated from daily statistics.
+| Layer           | Technologies                                     |
+| --------------- | ------------------------------------------------ |
+| Application     | Next.js 16, React 19, TypeScript, App Router     |
+| UI              | Tailwind CSS, Radix UI                           |
+| Visualization   | Recharts                                         |
+| Authentication  | Auth.js, Google OAuth, GitHub OAuth, Credentials |
+| Database        | PostgreSQL                                       |
+| ORM             | Prisma 7 + PostgreSQL Driver Adapter             |
+| Background Jobs | Inngest Events, Cron Scheduling, Retries         |
+| Caching         | Upstash Redis                                    |
+| AI              | OpenAI + Deterministic Analytics Fallback        |
+| Validation      | Zod                                              |
+| Deployment      | Vercel                                           |
 
-These signals inform both the recommendations engine and the AI coach. They are deliberately explainable: each headline metric can be traced to stored platform activity.
+---
 
-## Local development
+# ⚙️ Key Engineering Decisions
 
-### Prerequisites
+| Concern          | Design                            | Why                                                           |
+| ---------------- | --------------------------------- | ------------------------------------------------------------- |
+| Architecture     | Modular monolith                  | Strong boundaries without unnecessary microservice complexity |
+| Data Sync        | Event-driven jobs                 | External APIs do not block user-facing requests               |
+| Database         | PostgreSQL + Prisma               | Type-safe relational persistence                              |
+| Analytics        | Persisted read model              | Avoid repeated expensive calculations                         |
+| Cache            | Redis read-through cache          | Faster reads without making Redis a correctness dependency    |
+| Failure Handling | `Promise.allSettled`              | One provider failure does not block others                    |
+| Background Work  | Inngest                           | Retryable, scheduled, concurrency-controlled workflows        |
+| AI               | Provider + deterministic fallback | Recommendations remain available during AI failures           |
+| Validation       | Zod                               | Reject malformed input at application boundaries              |
 
-- Node.js 20 or later
-- PostgreSQL 14 or later
-- An Inngest development server for local background jobs (recommended)
-- Optional: Upstash Redis and an OpenAI API key
+---
 
-### Install and configure
+# 🛡️ Reliability & Scaling
+
+### Idempotency
+
+Platform records use stable identifiers and uniqueness constraints to reduce duplicate data during repeated synchronization.
+
+### Concurrency Control
+
+Refresh workflows use controlled concurrency to avoid overwhelming external providers.
+
+### Failure Isolation
+
+```text
+Platform Synchronization
+        │
+        ├── LeetCode      ✅
+        ├── Codeforces    ❌
+        └── Remaining Work Continues
+```
+
+One provider failure does not prevent successful providers from updating.
+
+### Retryable Workflows
+
+Background jobs can retry failed work independently.
+
+### Cache Fail-Open
+
+```text
+Redis Available?
+    │
+   / \
+ Yes  No
+ │     │
+ ▼     ▼
+Cache PostgreSQL
+ │      │
+ └──┬───┘
+    ▼
+ Response
+```
+
+The database remains the source of truth.
+
+---
+
+# 📂 Project Structure
+
+```text
+src/
+├── app/                 # App Router pages, API routes, server actions
+├── components/          # UI, charts, auth and dashboard components
+│
+├── modules/
+│   ├── analytics/       # Derived learner metrics
+│   ├── auth/            # Authentication and validation
+│   ├── ai/              # Personalized coach and fallback
+│   ├── learning/        # Learning experiences
+│   ├── recommendations/ # Personalized roadmap selection
+│   ├── sync/            # Event-driven synchronization
+│   ├── leetcode/        # LeetCode integration
+│   └── codeforces/      # Codeforces integration
+│
+├── jobs/                # Inngest functions and scheduled jobs
+│
+├── shared/
+│   ├── db/
+│   ├── cache/
+│   ├── logger/
+│   ├── types/
+│   └── utils/
+│
+└── hooks/
+
+prisma/
+├── schema.prisma
+└── migrations/
+
+public/
+└── screenshots/
+    ├── landing-page.png
+    ├── login-page.png
+    ├── signup-page.png
+    ├── google-auth.png
+    ├── github-auth.png
+    ├── dashboard-overview.png
+    ├── analytics.png
+    ├── topic-mastery.png
+    ├── recommendations.png
+    ├── ai-coach.png
+    ├── roadmap.png
+    ├── profile-settings.png
+    ├── platform-sync.png
+    ├── goals.png
+    ├── achievements.png
+    └── contests.png
+```
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+* Node.js 20+
+* PostgreSQL 14+
+* Inngest development server recommended
+* Optional Upstash Redis
+* Optional OpenAI API key
+
+## Installation
 
 ```bash
+git clone https://github.com/gnshx/YOUR_REPOSITORY_NAME.git
+cd YOUR_REPOSITORY_NAME
 npm install
 ```
 
-Create `.env` with the values required for your environment. Do not commit this file.
+Create `.env`:
 
-```bash
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/better_cp"
-AUTH_SECRET="generate-a-long-random-secret"
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/codepulse"
+
+AUTH_SECRET="your-long-random-secret"
 AUTH_URL="http://localhost:3000"
 NEXTAUTH_URL="http://localhost:3000"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-# Optional OAuth providers
 AUTH_GOOGLE_ID=""
 AUTH_GOOGLE_SECRET=""
+
 AUTH_GITHUB_ID=""
 AUTH_GITHUB_SECRET=""
 
-# Optional performance and AI integrations
 UPSTASH_REDIS_REST_URL=""
 UPSTASH_REDIS_REST_TOKEN=""
+
 OPENAI_API_KEY=""
 
-# Required when connecting a deployed Inngest service
 INNGEST_EVENT_KEY=""
 INNGEST_SIGNING_KEY=""
 ```
 
-Apply the existing migration and generate the Prisma client:
+Run database migrations:
 
 ```bash
 npx prisma migrate deploy
 npx prisma generate
 ```
 
-Start the web application:
+Start the application:
 
 ```bash
 npm run dev
 ```
 
-In a second terminal, start Inngest for local event delivery and scheduled functions:
+Start local background jobs:
 
 ```bash
 npx inngest-cli@latest dev
 ```
 
-The application runs at [http://localhost:3000](http://localhost:3000). Inngest discovers functions through `http://localhost:3000/api/inngest`.
+---
 
-## Operational playbook
-
-### Development database changes
-
-After updating `prisma/schema.prisma`, create a named migration and regenerate the client:
-
-```bash
-npx prisma migrate dev --name describe_the_change
-npx prisma generate
-```
-
-### Production deployment
-
-1. Provide all required environment variables in the deployment environment.
-2. Run `npx prisma migrate deploy` as a release step.
-3. Build and deploy the Next.js application.
-4. Configure Inngest to invoke `/api/inngest` and validate its signing configuration.
-5. Monitor refresh failures and external-provider rate limits using `RefreshLog` and platform observability.
-
-For the current Vercel deployment, use `https://code-pulse-ojlk.vercel.app` as the production base URL. Set `AUTH_URL`, `NEXTAUTH_URL`, and `NEXT_PUBLIC_APP_URL` to that base URL in the Production environment. When Google OAuth is enabled, register `https://code-pulse-ojlk.vercel.app/api/auth/callback/google` as an authorized redirect URI in Google Cloud Console.
-
-### Validation
+# 🧪 Validation
 
 ```bash
 npm run lint
@@ -282,60 +746,87 @@ npx tsc --noEmit
 npm run build
 ```
 
-## API surface
+---
 
-| Endpoint | Purpose | Access |
-| --- | --- | --- |
-| `GET /api/auth/*` and `POST /api/auth/*` | Auth.js authentication handlers | Public / provider flow |
-| `GET /api/user/profile` | Read the current user's profile | Authenticated |
-| `POST /api/user/profile` | Validate and update linked handles and profile fields | Authenticated |
-| `GET /api/analytics` | Return the current user's computed analytics | Authenticated |
-| `GET/POST/PUT /api/inngest` | Inngest function registration and invocation | Inngest-managed |
+# 🗺️ Roadmap
 
-## Reliability and scaling
+* [ ] Add first-class ingestion adapters for additional platforms
+* [ ] Incremental synchronization for large submission histories
+* [ ] Pagination for high-volume platform activity
+* [ ] Integration tests for provider adapters
+* [ ] Analytics calculation tests
+* [ ] Authorization boundary tests
+* [ ] Job duration and retry observability
+* [ ] Cache hit-rate monitoring
+* [ ] Provider failure categorization
+* [ ] Stronger submission-level idempotency
+* [ ] Expand recommendation intelligence
 
-- **Idempotency:** platform records use stable platform identifiers and composite uniqueness for problems; refreshes are tracked independently in `RefreshLog`.
-- **Concurrency control:** the user-refresh function limits concurrent executions to five.
-- **Failure isolation:** `Promise.allSettled` lets one provider failure avoid blocking other configured fetches; Inngest retries failed work twice.
-- **Fan-out safety:** the daily job selects up to 500 profiled users per run before emitting individual refresh events.
-- **Caching:** cache failures fail open to the database path; cache invalidation happens after analytics recomputation.
-- **Graceful degradation:** Redis, OAuth providers, and OpenAI are optional. Core credential login and deterministic coaching remain available with the corresponding configuration absent.
+---
 
-The current domain boundaries support future extraction of platform synchronization, analytics computation, or coaching workloads only when scale or team topology justifies the extra operational cost.
+# 🎓 Engineering Concepts Demonstrated
 
-## Engineering focus
+```text
+✓ Full-Stack TypeScript
+✓ Next.js App Router
+✓ Server Rendering
+✓ Server Actions
+✓ Route Handlers
+✓ OAuth Authentication
+✓ External API Integration
+✓ Data Normalization
+✓ Relational Database Design
+✓ PostgreSQL
+✓ Prisma ORM
+✓ Event-Driven Architecture
+✓ Background Jobs
+✓ Scheduled Jobs
+✓ Retryable Workflows
+✓ Concurrency Control
+✓ Failure Isolation
+✓ Redis Caching
+✓ Persisted Read Models
+✓ Analytics Pipelines
+✓ Domain-Based Architecture
+✓ Input Validation
+✓ AI Integration
+✓ Graceful Degradation
+✓ Production Deployment
+```
 
-This project demonstrates the systems concepts that matter in a production full-stack application:
+---
 
-- Full-stack TypeScript with server rendering, route handlers, and server actions.
-- OAuth, credential authentication, authorization boundaries, and secure environment configuration.
-- External API integration, data normalization, and relational schema design.
-- Event-driven background processing, retries, controlled concurrency, and failure isolation.
-- Persisted read models, caching, cache fail-open behavior, and data-driven recommendations.
-- AI integration with deterministic graceful degradation.
+# 🌐 Live Demo
 
-## Security notes
+### **[🚀 Try CodePulse](https://code-pulse-ojlk.vercel.app/)**
 
-- Keep `.env` and all provider secrets outside source control.
-- Require authenticated sessions for profile and analytics routes.
-- Validate credentials and profile-update payloads with Zod.
-- Use a production-grade, high-entropy `AUTH_SECRET` and HTTPS-only deployment configuration.
-- Treat third-party platform data as untrusted input; normalize it in integration modules before it reaches analytics or UI code.
+---
 
-## Roadmap
+# 💡 The Core Idea
 
-- Add first-class ingestion adapters for the remaining stored platform handles.
-- Introduce integration tests for provider adapters, analytics calculations, and authorization boundaries.
-- Add observability for job duration, retry rate, cache hit rate, and provider failure categories.
-- Harden ingestion idempotency with provider submission identifiers and database-level uniqueness where supported.
-- Add pagination and incremental synchronization for high-volume competitive-programming histories.
+> **Raw activity tells you what you did. Analytics tells you how you are doing. Recommendations tell you what to do next.**
 
-## The core idea
+```text
+          CONNECT
+             │
+             ▼
+      Coding Platforms
+             │
+             ▼
+          ANALYZE
+             │
+             ▼
+    Personalized Insights
+             │
+             ▼
+          IMPROVE
+             │
+             ▼
+    Roadmaps + AI Coaching
+```
 
-> Raw activity tells you what you did. Analytics tells you how you are doing. Recommendations tell you what to do next.
+### Built to help competitive programmers move from **tracking progress** to **understanding and improving it**.
 
-Better CP connects these layers to help competitive programmers move from tracking progress to understanding and improving it.
+---
 
-## License
-
-Private project. Add a license before distributing or accepting external contributions.
+⭐ If you found CodePulse useful, consider giving the repository a star.
