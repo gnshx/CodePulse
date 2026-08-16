@@ -4,6 +4,8 @@ Better CP is a full-stack competitive-programming intelligence platform. It conn
 
 The project is designed around a production-oriented concern: external programming platforms are slow and inconsistent, while the learning experience should be fast, personalized, and reliable.
 
+**Live application:** [code-pulse-ojlk.vercel.app](https://code-pulse-ojlk.vercel.app/)
+
 ## Product capabilities
 
 - Account authentication with credentials, Google, and GitHub through Auth.js.
@@ -205,6 +207,8 @@ npx prisma generate
 3. Build and deploy the Next.js application.
 4. Configure Inngest to invoke `/api/inngest` and validate its signing configuration.
 5. Monitor refresh failures and external-provider rate limits using `RefreshLog` and platform observability.
+
+For the current Vercel deployment, use `https://code-pulse-ojlk.vercel.app` as the production base URL. Set `AUTH_URL`, `NEXTAUTH_URL`, and `NEXT_PUBLIC_APP_URL` to that base URL in the Production environment. When Google OAuth is enabled, register `https://code-pulse-ojlk.vercel.app/api/auth/callback/google` as an authorized redirect URI in Google Cloud Console.
 
 ### Validation
 
