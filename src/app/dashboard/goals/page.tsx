@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getPersonalProgress } from "@/modules/goals/service";
+import type { Goal, Achievement } from "@/shared/types";
 import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
 
 export default async function GoalsPage() {
@@ -34,7 +35,7 @@ export default async function GoalsPage() {
           </div>
 
           <div className="goal-list">
-            {progress.goals.map((g) => {
+            {progress.goals.map((g: Goal) => {
               const pct = Math.min(100, Math.round((g.current / g.target) * 100));
               return (
                 <article key={g.id} className="goal-item">
@@ -73,8 +74,8 @@ export default async function GoalsPage() {
             <span className="card-count">{achievements.length} unlocked</span>
           </div>
 
-          <div className="achievements-grid">
-            {achievements.length ? achievements.map((a) => (
+            <div className="achievements-grid">
+            {achievements.length ? achievements.map((a: Achievement) => (
               <article key={a.title} className="achievement-card is-unlocked">
                 <span className="achievement-icon" aria-hidden="true">{a.icon}</span>
                 <div>

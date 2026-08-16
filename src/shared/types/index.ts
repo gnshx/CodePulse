@@ -73,3 +73,25 @@ export interface ApiResponse<T = unknown> {
   error?: string;
   message?: string;
 }
+
+export interface Goal {
+  id: string;
+  userId?: string;
+  title: string;
+  target: number;
+  current: number;
+  unit: string;
+  deadline?: Date | null;
+  isCompleted: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Achievement {
+  id?: string;
+  userId?: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlockedAt?: Date;
+}
