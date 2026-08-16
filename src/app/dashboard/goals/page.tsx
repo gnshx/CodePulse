@@ -10,7 +10,7 @@ export default async function GoalsPage() {
     redirect("/login");
   }
   const analytics = await getPersonalizedAnalytics(session.user.id);
-  const progress = await getPersonalProgress(session.user.id, analytics);
+  const progress: { goals: Goal[]; achievements: Achievement[] } = await getPersonalProgress(session.user.id, analytics);
   const achievements = progress.achievements;
 
   return (
