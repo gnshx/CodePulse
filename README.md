@@ -1,5 +1,9 @@
 # Better CP
 
+## Competitive Programming Intelligence Platform
+
+> **Connect. Analyze. Improve.**
+
 Better CP is a full-stack competitive-programming intelligence platform. It connects a learner's coding profiles, normalizes activity into a single data model, computes progress signals, and turns those signals into a focused practice roadmap and coaching guidance.
 
 The project is designed around a production-oriented concern: external programming platforms are slow and inconsistent, while the learning experience should be fast, personalized, and reliable.
@@ -16,7 +20,38 @@ The project is designed around a production-oriented concern: external programmi
 - AI coaching that produces a weekly study plan, readiness assessment, and highest-priority next action, with a deterministic fallback when no model key is configured.
 - Personal goals, achievements, contest discovery, dashboard views, and user settings.
 
+## Beyond a problem counter
+
+Most trackers show activity. Better CP turns activity into an informed next action.
+
+```text
+Raw coding activity
+        ↓
+Platform synchronization
+        ↓
+Normalized data model
+        ↓
+Analytics engine
+        ↓
+Strength and weakness detection
+        ↓
+Personalized roadmap and AI coaching
+```
+
+This makes questions such as these answerable from a learner's actual history:
+
+- Which topics are strongest, and which need deliberate practice?
+- Is progress consistent, or has practice volume slowed down?
+- What is the highest-value next pattern or problem set?
+- How are difficulty mix, streaks, and contest performance evolving?
+
 ## Architecture
+
+### Architecture philosophy
+
+Better CP is a **modular monolith with event-driven background processing**. It keeps the deployment and operational simplicity of one Next.js application, while isolating authentication, integrations, synchronization, analytics, recommendations, and coaching into domain modules.
+
+This avoids premature distributed-system complexity while preserving clear boundaries for testing, ownership, and future service extraction.
 
 ```text
                          ┌──────────────────────────┐
@@ -59,11 +94,25 @@ The request path stays focused on user-facing reads and writes. Slow, failure-pr
 
 ### Data flow
 
-1. A user links platform handles in the profile settings.
-2. A sync request records a pending refresh and emits `platform/refresh.requested`.
-3. The Inngest worker fetches configured platforms in parallel steps, then recomputes analytics and marks the refresh complete.
-4. The analytics engine deduplicates accepted problems, calculates difficulty and topic signals, derives streaks and acceptance rate, and persists an analytics snapshot.
-5. Dashboard, roadmap, and coach experiences read that snapshot. Cached analytics and AI responses reduce repeated database/model work.
+```text
+User requests refresh
+        ↓
+RefreshLog records pending work
+        ↓
+platform/refresh.requested event
+        ↓
+Inngest worker
+        ↓
+LeetCode and Codeforces fetch steps run independently
+        ↓
+Normalize and persist activity
+        ↓
+Recompute the Analytics read model
+        ↓
+Dashboard, roadmap, and coach read the new projection
+```
+
+The worker uses parallel steps, retryable execution, and a concurrency limit. Platform collection is kept out of user-facing request paths, and one provider's failure does not prevent other work from finishing.
 
 ## Key engineering decisions
 
@@ -76,6 +125,19 @@ The request path stays focused on user-facing reads and writes. Slow, failure-pr
 | External integrations | Platform-specific service modules | Prevents provider API details from leaking into pages, route handlers, or analytics logic. |
 | AI resiliency | OpenAI output with an analytics-based fallback | Users receive actionable coaching even during key misconfiguration or provider failure. |
 | Input validation | Zod schemas at API boundaries | Rejects malformed profile and credential payloads before persistence. |
+
+## Technology stack
+
+| Layer | Technologies |
+| --- | --- |
+| Application | Next.js 16, React 19, TypeScript, App Router |
+| UI and visualization | Tailwind CSS, Radix UI, Recharts |
+| Identity | Auth.js, OAuth (Google and GitHub), credentials authentication |
+| Data | PostgreSQL, Prisma 7, PostgreSQL driver adapter |
+| Async workflows | Inngest events, cron scheduling, retries, concurrency controls |
+| Performance | Upstash Redis read-through caching |
+| Intelligence | OpenAI with deterministic analytics-based fallback |
+| Deployment | Vercel |
 
 ## Repository map
 
@@ -116,6 +178,8 @@ User ──1:1── Profile ──1:N── Submission ──N:1── Problem
 ```
 
 `Analytics` is a persisted read model, not merely a response assembled on every page load. This makes the dashboard inexpensive to render and gives background sync a single, explicit projection to refresh.
+
+> **Design principle:** raw platform activity is stored separately from derived learner intelligence, so the analytics methodology can evolve and be recomputed without re-ingesting history.
 
 ## Analytics methodology
 
@@ -228,7 +292,7 @@ npm run build
 | `GET /api/analytics` | Return the current user's computed analytics | Authenticated |
 | `GET/POST/PUT /api/inngest` | Inngest function registration and invocation | Inngest-managed |
 
-## Scaling and reliability considerations
+## Reliability and scaling
 
 - **Idempotency:** platform records use stable platform identifiers and composite uniqueness for problems; refreshes are tracked independently in `RefreshLog`.
 - **Concurrency control:** the user-refresh function limits concurrent executions to five.
@@ -236,6 +300,19 @@ npm run build
 - **Fan-out safety:** the daily job selects up to 500 profiled users per run before emitting individual refresh events.
 - **Caching:** cache failures fail open to the database path; cache invalidation happens after analytics recomputation.
 - **Graceful degradation:** Redis, OAuth providers, and OpenAI are optional. Core credential login and deterministic coaching remain available with the corresponding configuration absent.
+
+The current domain boundaries support future extraction of platform synchronization, analytics computation, or coaching workloads only when scale or team topology justifies the extra operational cost.
+
+## Engineering focus
+
+This project demonstrates the systems concepts that matter in a production full-stack application:
+
+- Full-stack TypeScript with server rendering, route handlers, and server actions.
+- OAuth, credential authentication, authorization boundaries, and secure environment configuration.
+- External API integration, data normalization, and relational schema design.
+- Event-driven background processing, retries, controlled concurrency, and failure isolation.
+- Persisted read models, caching, cache fail-open behavior, and data-driven recommendations.
+- AI integration with deterministic graceful degradation.
 
 ## Security notes
 
@@ -252,6 +329,12 @@ npm run build
 - Add observability for job duration, retry rate, cache hit rate, and provider failure categories.
 - Harden ingestion idempotency with provider submission identifiers and database-level uniqueness where supported.
 - Add pagination and incremental synchronization for high-volume competitive-programming histories.
+
+## The core idea
+
+> Raw activity tells you what you did. Analytics tells you how you are doing. Recommendations tell you what to do next.
+
+Better CP connects these layers to help competitive programmers move from tracking progress to understanding and improving it.
 
 ## License
 
