@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
+import { hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 import { generateAICoachInsights } from "@/modules/ai/service";
+import Link from "next/link";
 
 export default async function AICoachPage() {
   const session = await auth();
@@ -9,19 +11,18 @@ export default async function AICoachPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const analytics = await getPersonalizedAnalytics(userId);
+  const [analytics, hasLinkedSource] = await Promise.all([
+    getPersonalizedAnalytics(userId),
+    hasLinkedLearningSource(userId),
+  ]);
 
   // Fallback / Default AI report if OpenAI key is not set or empty
   let coachReport = {
-    summary: "Your progress shows strong fundamentals in basic data structures. You are ready to tackle medium-level Dynamic Programming and Graph algorithms.",
-    weeklyPlan: [
-      "Days 1-2: 1D Dynamic Programming & Knapsack variants",
-      "Days 3-4: Breadth-First Search & Depth-First Search on 2D Grids",
-      "Days 5-7: Codeforces Div. 2 Virtual Contest & Error Analysis",
-    ],
-    readinessLevel: "Ready for Codeforces Div. 2 B/C-level problems",
-    topPriority: "Focus on 2D Dynamic Programming & memoization patterns",
-    motivationalNote: "Consistency is key — keep your daily streak alive!",
+    summary: "We could not read solved-problem data from your linked account yet. Confirm the username in Settings and try again in a moment.",
+    weeklyPlan: ["Confirm your platform username", "Refresh this page", "Start the personalized plan once your solved problems load"],
+    readinessLevel: "Waiting for linked-platform data",
+    topPriority: "Verify your platform username",
+    motivationalNote: "Once your account data is available, your plan will be tailored to it.",
   };
 
   if (process.env.OPENAI_API_KEY && analytics) {
@@ -39,7 +40,16 @@ export default async function AICoachPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+      {!hasLinkedSource ? (
+        <div className="glass-card max-w-2xl p-8 text-center">
+          <p className="mb-3 text-4xl">🤖</p>
+          <h2 className="mb-2 text-xl font-bold">Your coach is ready when your accounts are linked</h2>
+          <p className="mb-6 text-secondary">
+            Add a LeetCode or Codeforces username so your coach can use your solved topics, problem volume, and rating to build a plan for you.
+          </p>
+          <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">Add platform usernames</Link>
+        </div>
+      ) : <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="flex flex-col gap-6">
           {/* Executive Summary */}
           <div className="glass-card p-7">
@@ -96,7 +106,7 @@ export default async function AICoachPage() {
             </p>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

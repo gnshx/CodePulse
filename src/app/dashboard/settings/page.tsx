@@ -3,6 +3,7 @@ import { auth } from "@/modules/auth/config";
 import { prisma } from "@/shared/db/client";
 import { revalidatePath } from "next/cache";
 import { triggerPlatformSync } from "@/modules/sync/service";
+import { CACHE_KEYS, redis } from "@/shared/cache/redis";
 
 async function updateProfile(formData: FormData) {
   "use server";
@@ -43,6 +44,9 @@ async function updateProfile(formData: FormData) {
   revalidatePath("/dashboard/roadmap");
   revalidatePath("/dashboard/goals");
   revalidatePath("/dashboard/ai-coach");
+  if (redis) {
+    await redis.del(CACHE_KEYS.aiCoach(session.user.id));
+  }
 
   // The UI reads public handles immediately; this also starts the deeper
   // background import for durable history and future refreshes.

@@ -94,7 +94,7 @@ export async function computeAnalytics(userId: string): Promise<AnalyticsSummary
   const acceptanceRate = totalAttempted > 0 ? (seenProblems.size / totalAttempted) * 100 : 0;
 
   // ── Platform stats ──
-  const platformStats: any = {};
+  const platformStats: Record<string, { solved: number; rating?: number }> = {};
   for (const sub of accepted) {
     const p = sub.problem.platform;
     if (!platformStats[p]) platformStats[p] = { solved: 0 };
@@ -121,7 +121,7 @@ export async function computeAnalytics(userId: string): Promise<AnalyticsSummary
     topicMastery,
     weakTopics,
     strongTopics,
-    platformStats,
+    platformStats: platformStats as AnalyticsSummary["platformStats"],
     lastActiveDate: dailyStats[0]?.date,
   };
 
@@ -189,7 +189,7 @@ export async function getAnalytics(userId: string): Promise<AnalyticsSummary | n
         topicMastery: analytics.topicMastery as Record<string, number>,
         weakTopics: analytics.weakTopics,
         strongTopics: analytics.strongTopics,
-        platformStats: analytics.platformStats as any,
+        platformStats: analytics.platformStats as AnalyticsSummary["platformStats"],
         lastActiveDate: analytics.lastActiveDate ?? undefined,
       };
     }

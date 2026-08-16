@@ -3,6 +3,14 @@ import { fetchLeetCodeProfile, fetchLeetCodeTopics } from "@/modules/leetcode/se
 import { fetchCodeforcesAnalytics, fetchCodeforcesProfile } from "@/modules/codeforces/service";
 import type { AnalyticsSummary } from "@/shared/types";
 
+export async function hasLinkedLearningSource(userId: string) {
+  const profile = await prisma.profile.findUnique({
+    where: { userId },
+    select: { leetcodeUsername: true, codeforcesUsername: true },
+  });
+  return Boolean(profile?.leetcodeUsername || profile?.codeforcesUsername);
+}
+
 function masteryFromSolved(solved: number) {
   if (solved <= 0) return 0;
   return Math.min(100, Math.round((Math.log(solved + 1) / Math.log(51)) * 100));

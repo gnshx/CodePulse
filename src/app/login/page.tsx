@@ -2,6 +2,7 @@ import { isGitHubAuthEnabled, isGoogleAuthEnabled } from "@/modules/auth/config"
 import { registerWithPassword, signInWithPassword } from "@/app/login/actions";
 import { OAuthProviders } from "@/components/auth/oauth-providers";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -68,7 +69,7 @@ export default async function LoginPage({
         <div className="auth-motivation-grid">
           {MOTIVATION.map((item) => (
             <div key={item.label} className="auth-motivation-card animate-float">
-              <img src={item.icon} alt="" width={64} height={64} />
+              <Image src={item.icon} alt="" width={64} height={64} />
               <strong>{item.label}</strong>
               <span>{item.hint}</span>
             </div>

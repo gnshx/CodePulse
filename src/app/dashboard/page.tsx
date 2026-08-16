@@ -1,6 +1,7 @@
 import { auth } from "@/modules/auth/config";
 import { getAnalytics } from "@/modules/analytics/service";
 import { prisma } from "@/shared/db/client";
+import type { Profile } from "@prisma/client";
 import { fetchLeetCodeProfile, fetchLeetCodeTopics } from "@/modules/leetcode/service";
 import {
   fetchCodeforcesProfile,
@@ -19,7 +20,9 @@ type AllData = {
   cfA: CFAnalytics;                          // full CF deep analytics
 };
 
-async function fetchAllData(profile: any): Promise<AllData> {
+async function fetchAllData(
+  profile: Pick<Profile, "leetcodeUsername" | "codeforcesUsername"> | null
+): Promise<AllData> {
   const [lc, cf, lcTopics, cfA] = await Promise.all([
     profile?.leetcodeUsername
       ? fetchLeetCodeProfile(profile.leetcodeUsername)
@@ -335,7 +338,7 @@ async function TopicMasteryCard({
   data: AllData;
 }) {
   const analytics = await getAnalytics(userId);
-  let topicMastery: Record<string, number> = analytics?.topicMastery ?? {};
+  const topicMastery: Record<string, number> = analytics?.topicMastery ?? {};
 
   const { lcTopics, cfA } = data;
   const cfTopics = cfA.topicCounts;
@@ -538,7 +541,7 @@ async function InsightsCard({
         >
           <p style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: 4 }}>🎯 Next Practice Target</p>
           <p style={{ fontSize: "0.94rem", color: "var(--text-secondary)" }}>
-            You're comfortable up to{" "}
+            You&apos;re comfortable up to{" "}
             <strong style={{ color: ratingColor(cfA.p75Rating) }}>{cfA.p75Rating}</strong>.
             Push to{" "}
             <strong style={{ color: ratingColor(cfA.nextPracticeMin) }}>
@@ -573,7 +576,7 @@ export default async function DashboardPage() {
           👋 Welcome back, {session!.user!.name?.split(" ")[0]}
         </h1>
         <p style={{ color: "var(--text-secondary)" }}>
-          Here's your competitive programming overview
+          Here&apos;s your competitive programming overview
         </p>
       </div>
 

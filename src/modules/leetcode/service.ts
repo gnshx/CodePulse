@@ -1,3 +1,5 @@
+/* LeetCode's public GraphQL schema is not published; keep its response boundary isolated here. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { CACHE_KEYS, CACHE_TTL, withCache } from "@/shared/cache/redis";
 import type { PlatformProfile, SubmissionData } from "@/shared/types";

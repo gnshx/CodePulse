@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
-import { getRecommendations } from "@/modules/recommendations/service";
-import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
+import { getRecommendations, getStarterRecommendations } from "@/modules/recommendations/service";
+import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 
 export default async function RoadmapPage() {
   const session = await auth();
@@ -9,17 +9,22 @@ export default async function RoadmapPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const analytics = await getPersonalizedAnalytics(userId);
-  const recommendations = await getRecommendations(userId, analytics);
+  const [analytics, hasLinkedSource] = await Promise.all([
+    getPersonalizedAnalytics(userId),
+    hasLinkedLearningSource(userId),
+  ]);
+  const recommendations = hasLinkedSource
+    ? await getRecommendations(userId, analytics)
+    : getStarterRecommendations();
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-1.5 text-3xl font-extrabold">🗺️ Smart Learning Roadmap</h1>
         <p className="text-secondary">
-          {analytics?.totalSolved
+          {hasLinkedSource && analytics?.totalSolved
             ? `Personalized from ${analytics.totalSolved} solved problems across your linked platforms`
-            : "Start with a foundation plan, then link a platform for a personalized roadmap"}
+            : "Start with the NeetCode 75 foundation. Link your accounts anytime for a personalized roadmap."}
         </p>
       </div>
 
@@ -47,7 +52,7 @@ export default async function RoadmapPage() {
                 className="btn btn-primary shrink-0 px-5 py-2.5"
                 id={`solve-prob-${idx}`}
               >
-                Solve ↗
+                {hasLinkedSource ? "Solve ↗" : "View on NeetCode ↗"}
               </a>
             )}
           </div>

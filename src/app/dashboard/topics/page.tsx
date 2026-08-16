@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
+import { hasLinkedLearningSource } from "@/modules/learning/live-analytics";
+import Link from "next/link";
 
 export default async function TopicsPage() {
   const session = await auth();
@@ -8,20 +10,12 @@ export default async function TopicsPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const analytics = await getPersonalizedAnalytics(userId);
+  const [analytics, hasLinkedSource] = await Promise.all([
+    getPersonalizedAnalytics(userId),
+    hasLinkedLearningSource(userId),
+  ]);
 
-  const topicEntries = Object.entries(analytics?.topicMastery ?? {
-    "Array": 85,
-    "String": 70,
-    "Hash Table": 75,
-    "Two Pointers": 65,
-    "Binary Search": 55,
-    "Dynamic Programming": 30,
-    "Graph": 40,
-    "Tree": 60,
-    "Greedy": 50,
-    "Stack / Queue": 68,
-  }).sort(([, a], [, b]) => b - a);
+  const topicEntries = Object.entries(analytics?.topicMastery ?? {}).sort(([, a], [, b]) => b - a);
 
   return (
     <div>
@@ -32,7 +26,22 @@ export default async function TopicsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+      {!hasLinkedSource ? (
+        <div className="glass-card max-w-2xl p-8 text-center">
+          <p className="mb-3 text-4xl">🔗</p>
+          <h2 className="mb-2 text-xl font-bold">Link your coding accounts to unlock topic analysis</h2>
+          <p className="mb-6 text-secondary">
+            Add your LeetCode or Codeforces username and we&apos;ll calculate your covered topics, strengths, and focus areas from your solved problems.
+          </p>
+          <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">
+            Add platform usernames
+          </Link>
+        </div>
+      ) : topicEntries.length === 0 ? (
+        <div className="glass-card max-w-2xl p-8 text-center text-secondary">
+          We could not find solved-problem topic data for this account yet. Check the username in Settings and try again shortly.
+        </div>
+      ) : <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
         {topicEntries.map(([topic, score]) => {
           let badgeCls = "badge-easy";
           let statusText = "Mastered";
@@ -57,7 +66,7 @@ export default async function TopicsPage() {
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
   );
 }

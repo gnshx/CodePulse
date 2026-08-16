@@ -1,3 +1,5 @@
+/* Codeforces returns unversioned JSON payloads; keep its response boundary isolated here. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { CACHE_KEYS, CACHE_TTL, withCache } from "@/shared/cache/redis";
 import type { PlatformProfile, SubmissionData } from "@/shared/types";
@@ -33,7 +35,7 @@ export async function fetchCodeforcesProfile(username: string): Promise<Platform
     CACHE_TTL.MEDIUM,
     async () => {
       try {
-        const [infoRes, ratingRes] = await Promise.all([
+        const [infoRes] = await Promise.all([
           axios.get(`${CF_BASE}/user.info?handles=${username}`, { timeout: 10000 }),
           axios.get(`${CF_BASE}/user.rating?handle=${username}`, { timeout: 10000 }),
         ]);

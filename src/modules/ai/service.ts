@@ -10,6 +10,24 @@ export interface AICoachResponse {
   motivationalNote: string;
 }
 
+function personalizedFallback(analytics: AnalyticsSummary, userName?: string): AICoachResponse {
+  const focus = analytics.weakTopics[0] ?? "core problem-solving patterns";
+  const nextFocus = analytics.weakTopics[1] ?? "implementation accuracy";
+  const rating = analytics.platformStats.CODEFORCES?.rating;
+  const volume = analytics.totalSolved;
+  return {
+    summary: `${userName ?? "Your"} profile shows ${volume} solved problems. Your next biggest opportunity is ${focus}; build consistency there before increasing difficulty.`,
+    weeklyPlan: [
+      `Days 1–2: solve 3 ${focus} problems and write down the pattern used.`,
+      `Days 3–4: solve 3 ${nextFocus} problems one level above your comfort zone.`,
+      "Days 5–7: review missed solutions, repeat one problem without help, then take a timed virtual contest.",
+    ],
+    readinessLevel: rating ? `Build from your current Codeforces rating of ${rating}` : `Build from ${volume} solved problems`,
+    topPriority: `Turn ${focus} into a reliable pattern through deliberate practice.`,
+    motivationalNote: "Small daily reviews compound into contest-level strength.",
+  };
+}
+
 export async function generateAICoachInsights(
   userId: string,
   analytics: AnalyticsSummary,
@@ -17,17 +35,7 @@ export async function generateAICoachInsights(
 ): Promise<AICoachResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
 
-  const fallbackResponse: AICoachResponse = {
-    summary: "Your progress shows strong fundamentals in basic data structures. You are ready to tackle medium-level Dynamic Programming and Graph algorithms.",
-    weeklyPlan: [
-      "Days 1-2: 1D Dynamic Programming & Knapsack variants",
-      "Days 3-4: Breadth-First Search & Depth-First Search on 2D Grids",
-      "Days 5-7: Codeforces Div. 2 Virtual Contest & Error Analysis",
-    ],
-    readinessLevel: "Ready for Codeforces Div. 2 B/C-level problems",
-    topPriority: "Focus on 2D Dynamic Programming & memoization patterns",
-    motivationalNote: "Consistency is key — keep your daily streak alive!",
-  };
+  const fallbackResponse = personalizedFallback(analytics, userName);
 
   if (!apiKey || apiKey.startsWith("sk-...")) {
     return fallbackResponse;
@@ -61,7 +69,7 @@ ${Object.entries(analytics.topicMastery)
 Weak Topics: ${analytics.weakTopics.slice(0, 5).join(", ")}
 Strong Topics: ${analytics.strongTopics.slice(0, 5).join(", ")}
 
-Codeforces Rating: ${(analytics.platformStats as any)?.CODEFORCES?.rating ?? "Not connected"}
+Codeforces Rating: ${analytics.platformStats.CODEFORCES?.rating ?? "Not connected"}
 
 Respond with a JSON object with these exact keys:
 {

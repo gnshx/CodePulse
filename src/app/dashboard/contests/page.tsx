@@ -3,6 +3,14 @@ import { auth } from "@/modules/auth/config";
 import { prisma } from "@/shared/db/client";
 import { fetchCodeforcesRatingHistory } from "@/modules/codeforces/service";
 
+type ContestRating = {
+  contestName: string;
+  contestId: string;
+  rating: number;
+  rank: number;
+  recordedAt: Date;
+};
+
 export default async function ContestsPage() {
   const session = await auth();
   if (!session?.user?.id) {
@@ -11,7 +19,9 @@ export default async function ContestsPage() {
   const userId = session.user.id;
 
   const profile = await prisma.profile.findUnique({ where: { userId } });
-  const cfHistory = profile?.codeforcesUsername ? await fetchCodeforcesRatingHistory(profile.codeforcesUsername) : [];
+  const cfHistory: ContestRating[] = profile?.codeforcesUsername
+    ? await fetchCodeforcesRatingHistory(profile.codeforcesUsername)
+    : [];
 
   return (
     <div>
@@ -40,7 +50,7 @@ export default async function ContestsPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {cfHistory.slice(0, 8).map((c: any) => (
+              {cfHistory.slice(0, 8).map((c) => (
                 <div
                   key={c.contestId}
                   className="flex items-center justify-between rounded-[var(--radius-md)] bg-elevated px-4 py-3 transition-colors hover:bg-hover"
@@ -66,7 +76,7 @@ export default async function ContestsPage() {
             <div className="rounded-[var(--radius-md)] border border-brand-primary/20 bg-brand-primary/10 p-4">
               <p className="text-[0.9rem] text-muted">Peak Rating</p>
               <p className="text-[1.6rem] font-extrabold text-brand-secondary">
-                {cfHistory.length > 0 ? Math.max(...cfHistory.map((c: any) => c.rating)) : "—"}
+                {cfHistory.length > 0 ? Math.max(...cfHistory.map((c) => c.rating)) : "—"}
               </p>
             </div>
             <div className="rounded-[var(--radius-md)] border border-brand-accent/20 bg-brand-accent/10 p-4">

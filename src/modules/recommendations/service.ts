@@ -41,6 +41,49 @@ const NEETCODE_FOUNDATIONS: Record<string, RoadmapProblem[]> = {
 const FALLBACK_TOPICS = ["Array", "Two Pointers", "Binary Search"] as const;
 const roadmapTopics = Object.keys(NEETCODE_FOUNDATIONS);
 
+const NEETCODE_75_STARTER = [
+  ["Arrays & Hashing", "Contains Duplicate", "Valid Anagram", "Two Sum"],
+  ["Arrays & Hashing", "Group Anagrams", "Top K Frequent Elements", "Product of Array Except Self"],
+  ["Two Pointers", "Valid Palindrome", "Two Sum II", "3Sum"],
+  ["Two Pointers", "Container With Most Water", "Trapping Rain Water", "Best Time to Buy and Sell Stock"],
+  ["Sliding Window", "Longest Substring Without Repeating Characters", "Longest Repeating Character Replacement", "Minimum Window Substring"],
+  ["Stack", "Valid Parentheses", "Min Stack", "Evaluate Reverse Polish Notation"],
+  ["Stack", "Generate Parentheses", "Daily Temperatures", "Car Fleet"],
+  ["Binary Search", "Binary Search", "Search a 2D Matrix", "Koko Eating Bananas"],
+  ["Binary Search", "Find Minimum in Rotated Sorted Array", "Search in Rotated Sorted Array", "Time Based Key-Value Store"],
+  ["Linked List", "Reverse Linked List", "Merge Two Sorted Lists", "Reorder List"],
+  ["Linked List", "Remove Nth Node From End of List", "Copy List with Random Pointer", "Add Two Numbers"],
+  ["Trees", "Invert Binary Tree", "Maximum Depth of Binary Tree", "Diameter of Binary Tree"],
+  ["Trees", "Balanced Binary Tree", "Same Tree", "Subtree of Another Tree"],
+  ["Trees", "Lowest Common Ancestor of a BST", "Binary Tree Level Order Traversal", "Validate Binary Search Tree"],
+  ["Tries", "Implement Trie", "Design Add and Search Words", "Word Search II"],
+  ["Heap / Priority Queue", "Kth Largest Element in a Stream", "Last Stone Weight", "K Closest Points to Origin"],
+  ["Heap / Priority Queue", "Kth Largest Element in an Array", "Task Scheduler", "Find Median from Data Stream"],
+  ["Backtracking", "Subsets", "Combination Sum", "Permutations"],
+  ["Backtracking", "Word Search", "Palindrome Partitioning", "Letter Combinations of a Phone Number"],
+  ["Graphs", "Number of Islands", "Clone Graph", "Max Area of Island"],
+  ["Graphs", "Pacific Atlantic Water Flow", "Course Schedule", "Course Schedule II"],
+  ["Advanced Graphs", "Network Delay Time", "Min Cost to Connect All Points", "Cheapest Flights Within K Stops"],
+  ["1-D Dynamic Programming", "Climbing Stairs", "Min Cost Climbing Stairs", "House Robber"],
+  ["1-D Dynamic Programming", "Coin Change", "Longest Increasing Subsequence", "Word Break"],
+  ["2-D Dynamic Programming", "Unique Paths", "Longest Common Subsequence", "Edit Distance"],
+] as const;
+
+export function getStarterRecommendations(): RecommendationItem[] {
+  return NEETCODE_75_STARTER.flatMap(([topic, ...problems], sectionIndex) =>
+    problems.map((problemName, problemIndex) => ({
+      topic,
+      pattern: "NeetCode 75",
+      problemName,
+      problemUrl: "https://neetcode.io/practice",
+      platform: "LEETCODE" as const,
+      difficulty: problemIndex === 0 ? "EASY" as const : problemIndex === 1 ? "MEDIUM" as const : "HARD" as const,
+      priority: sectionIndex * 10 + problemIndex,
+      reason: "Part of the NeetCode 75 starter curriculum.",
+    }))
+  );
+}
+
 function configuredOpenAIKey() {
   const key = process.env.OPENAI_API_KEY?.trim();
   return key && !key.startsWith("sk-...") ? key : undefined;

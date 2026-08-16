@@ -60,6 +60,8 @@ export default async function DashboardLayout({
             {session.user.name}
           </span>
           {session.user.image && (
+            // OAuth providers can return avatars from arbitrary hosts, so a native image avoids an unnecessary image-proxy allowlist.
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={session.user.image}
               alt="avatar"
