@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { prisma } from "@/shared/db/client";
 import { revalidatePath } from "next/cache";
+import { triggerPlatformSync } from "@/modules/sync/service";
 
 async function updateProfile(formData: FormData) {
   "use server";
@@ -10,35 +11,26 @@ async function updateProfile(formData: FormData) {
     throw new Error("Unauthorized");
   }
 
-  const leetcodeUsername = formData.get("leetcodeUsername") as string;
-  const codeforcesUsername = formData.get("codeforcesUsername") as string;
-  const gfgUsername = formData.get("gfgUsername") as string;
-  const codechefUsername = formData.get("codechefUsername") as string;
-  const atcoderUsername = formData.get("atcoderUsername") as string;
-  const githubUsername = formData.get("githubUsername") as string;
+  const value = (name: string) => String(formData.get(name) ?? "").trim() || null;
+  const leetcodeUsername = value("leetcodeUsername");
+  const codeforcesUsername = value("codeforcesUsername");
+  const gfgUsername = value("gfgUsername");
+  const codechefUsername = value("codechefUsername");
+  const atcoderUsername = value("atcoderUsername");
+  const githubUsername = value("githubUsername");
   const bio = formData.get("bio") as string;
   const isPublic = formData.get("isPublic") === "on";
 
   await prisma.profile.upsert({
     where: { userId: session.user.id },
     update: {
-      leetcodeUsername: leetcodeUsername || null,
-      codeforcesUsername: codeforcesUsername || null,
-      gfgUsername: gfgUsername || null,
-      codechefUsername: codechefUsername || null,
-      atcoderUsername: atcoderUsername || null,
-      githubUsername: githubUsername || null,
+      leetcodeUsername, codeforcesUsername, gfgUsername, codechefUsername, atcoderUsername, githubUsername,
       bio: bio || null,
       isPublic,
     },
     create: {
       userId: session.user.id,
-      leetcodeUsername: leetcodeUsername || null,
-      codeforcesUsername: codeforcesUsername || null,
-      gfgUsername: gfgUsername || null,
-      codechefUsername: codechefUsername || null,
-      atcoderUsername: atcoderUsername || null,
-      githubUsername: githubUsername || null,
+      leetcodeUsername, codeforcesUsername, gfgUsername, codechefUsername, atcoderUsername, githubUsername,
       bio: bio || null,
       isPublic,
     },
@@ -47,6 +39,16 @@ async function updateProfile(formData: FormData) {
   revalidatePath("/dashboard/settings");
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/platforms");
+  revalidatePath("/dashboard/topics");
+  revalidatePath("/dashboard/roadmap");
+  revalidatePath("/dashboard/goals");
+  revalidatePath("/dashboard/ai-coach");
+
+  // The UI reads public handles immediately; this also starts the deeper
+  // background import for durable history and future refreshes.
+  if (leetcodeUsername || codeforcesUsername) {
+    await triggerPlatformSync(session.user.id).catch(() => undefined);
+  }
 }
 
 export default async function SettingsPage() {
@@ -70,7 +72,7 @@ export default async function SettingsPage() {
 
       <div className="glass-card max-w-3xl p-8">
         <form action={updateProfile} className="flex flex-col gap-6">
-          <div>
+          <div id="platform-handles">
             <h2 className="mb-4 text-xl font-bold border-b border-[var(--bg-border)] pb-3">
               Platform Handles
             </h2>

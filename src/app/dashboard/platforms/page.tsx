@@ -28,7 +28,7 @@ export default async function PlatformsPage() {
       details: [
         { label: "Total Solved", value: lcProfile?.totalSolved ?? "—" },
         { label: "Global Rank", value: lcProfile?.rank ?? "—" },
-        { label: "Profile Link", value: lcProfile?.profileUrl, isLink: true },
+        { label: "Profile Link", value: lcProfile?.profileUrl ?? "—", isLink: true },
       ],
     },
     {
@@ -41,7 +41,7 @@ export default async function PlatformsPage() {
       details: [
         { label: "Rating", value: cfProfile?.rating ?? "—" },
         { label: "Rank Title", value: cfProfile?.rank ?? "—" },
-        { label: "Profile Link", value: cfProfile?.profileUrl, isLink: true },
+        { label: "Profile Link", value: cfProfile?.profileUrl ?? "—", isLink: true },
       ],
     },
     {
@@ -121,6 +121,14 @@ export default async function PlatformsPage() {
                 </div>
               ))}
             </div>
+            {!p.username && (
+              <Link
+                href="/dashboard/settings#platform-handles"
+                className="mt-5 inline-flex text-sm font-bold text-brand-accent no-underline hover:text-brand-secondary"
+              >
+                Add username →
+              </Link>
+            )}
           </div>
         ))}
       </div>

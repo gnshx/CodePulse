@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getRecommendations } from "@/modules/recommendations/service";
+import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
 
 export default async function RoadmapPage() {
   const session = await auth();
@@ -8,14 +9,17 @@ export default async function RoadmapPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const recommendations = await getRecommendations(userId);
+  const analytics = await getPersonalizedAnalytics(userId);
+  const recommendations = await getRecommendations(userId, analytics);
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-1.5 text-3xl font-extrabold">🗺️ Smart Learning Roadmap</h1>
         <p className="text-secondary">
-          Tailored problem set based on your weak topics & prerequisite concept patterns
+          {analytics?.totalSolved
+            ? `Personalized from ${analytics.totalSolved} solved problems across your linked platforms`
+            : "Start with a foundation plan, then link a platform for a personalized roadmap"}
         </p>
       </div>
 

@@ -86,7 +86,8 @@ async function StatsGrid({
 
   const lcSolved = lc?.totalSolved ?? 0;
   const cfSolved = cfA.solvedCount;                        // from deep analytics, deduplicated
-  const totalSolved = analytics?.totalSolved ?? (lcSolved + cfSolved);
+  // Linked profiles are the source of truth between background imports.
+  const totalSolved = lcSolved + cfSolved || analytics?.totalSolved || 0;
   const currentStreak = analytics?.currentStreak ?? 0;
   const longestStreak = analytics?.longestStreak ?? 0;
 

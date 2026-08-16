@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
-import { getAnalytics } from "@/modules/analytics/service";
+import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
 
 export default async function TopicsPage() {
   const session = await auth();
@@ -8,7 +8,7 @@ export default async function TopicsPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const analytics = await getAnalytics(userId);
+  const analytics = await getPersonalizedAnalytics(userId);
 
   const topicEntries = Object.entries(analytics?.topicMastery ?? {
     "Array": 85,

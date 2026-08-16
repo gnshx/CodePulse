@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
-import { getAnalytics } from "@/modules/analytics/service";
+import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
 import { generateAICoachInsights } from "@/modules/ai/service";
 
 export default async function AICoachPage() {
@@ -9,7 +9,7 @@ export default async function AICoachPage() {
     redirect("/login");
   }
   const userId = session.user.id;
-  const analytics = await getAnalytics(userId);
+  const analytics = await getPersonalizedAnalytics(userId);
 
   // Fallback / Default AI report if OpenAI key is not set or empty
   let coachReport = {

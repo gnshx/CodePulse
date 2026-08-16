@@ -21,7 +21,7 @@ export default async function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", icon: "📊", label: "Overview" },
-    { href: "/dashboard/platforms", icon: "🔗", label: "Platforms" },
+    { href: "/dashboard/settings#platform-handles", icon: "🔗", label: "Platforms" },
     { href: "/dashboard/topics", icon: "🧩", label: "Topics" },
     { href: "/dashboard/contests", icon: "🏆", label: "Contests" },
     { href: "/dashboard/roadmap", icon: "🗺️", label: "Roadmap" },
