@@ -64,7 +64,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
                   <Swords size={16} />
                 </div>
                 <span style={{ fontWeight: 800, fontSize: "1.1rem" }}>
-                  Code<span className="gradient-text">Pulse</span>
+                  Better<span className="gradient-text">CP</span>
                 </span>
               </div>
               <button

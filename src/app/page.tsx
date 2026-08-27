@@ -90,7 +90,7 @@ export default async function LandingPage() {
             <Swords size={18} />
           </div>
           <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
-            Code<span className="gradient-text">Pulse</span>
+            Better<span className="gradient-text">CP</span>
           </span>
         </div>
 

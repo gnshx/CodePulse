@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Swords, Utensils, Code2, Moon } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sign In - CodePulse",
+  title: "Sign In - BetterCP",
   description: "Sign in to track your competitive programming progress.",
 };
 
@@ -51,7 +51,7 @@ export default async function LoginPage({
             <Swords size={20} />
           </div>
           <span>
-            Code<span className="gradient-text">Pulse</span>
+            Better<span className="gradient-text">CP</span>
           </span>
         </Link>
 
@@ -97,7 +97,7 @@ export default async function LoginPage({
               <Swords size={20} />
             </div>
             <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "var(--text-primary)" }}>
-              Code<span className="gradient-text">Pulse</span>
+              Better<span className="gradient-text">CP</span>
             </span>
           </Link>
 
@@ -105,7 +105,7 @@ export default async function LoginPage({
             <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
             <p>
               {isSignup
-                ? "Join CodePulse with Google or create a password account."
+                ? "Join BetterCP with Google or create a password account."
                 : "Sign in with Google, GitHub, or your password."}
             </p>
           </div>

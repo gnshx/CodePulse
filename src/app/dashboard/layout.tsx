@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Dashboard | CodePulse Intelligence",
+  title: "Dashboard | BetterCP Intelligence",
   description: "Production-style Competitive Programming Intelligence & Analytics Dashboard.",
 };
 
@@ -68,7 +68,7 @@ export default async function DashboardLayout({
             <Swords size={18} />
           </div>
           <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
-            Code<span className="gradient-text">Pulse</span>
+            Better<span className="gradient-text">CP</span>
           </span>
           <div
             style={{
