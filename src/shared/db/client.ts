@@ -6,7 +6,19 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-const connectionString = process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/better_cp?schema=public";
+function normalizeConnectionString(rawUrl?: string) {
+  if (!rawUrl) return "postgresql://user:password@localhost:5432/better_cp?schema=public";
+  
+  // Handle database passwords that contain unescaped '@' characters
+  const match = rawUrl.match(/^(postgresql:\/\/[^:]+:)(.*)(@[^@]+:\d+\/.*)$/);
+  if (match) {
+    const [, prefix, password, suffix] = match;
+    return `${prefix}${encodeURIComponent(password)}${suffix}`;
+  }
+  return rawUrl;
+}
+
+const connectionString = normalizeConnectionString(process.env.DATABASE_URL);
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 

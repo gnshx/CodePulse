@@ -544,9 +544,19 @@ button, input, select, textarea {
 .auth-page {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.1fr 0.9fr;
   background: var(--bg-base);
   position: relative;
+}
+
+.auth-page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 75%, rgba(34, 211, 238, 0.12) 0%, transparent 42%);
 }
 
 .auth-motivation {

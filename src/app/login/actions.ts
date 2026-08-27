@@ -20,11 +20,27 @@ export async function signInWithPassword(formData: FormData) {
     redirect(loginError("Incorrect username, email, or password.", "signin"));
   }
 
-  await signIn("credentials", {
-    identifier: parsed.data.identifier,
-    password: parsed.data.password,
-    redirectTo: "/dashboard",
-  });
+  try {
+    await signIn("credentials", {
+      identifier: parsed.data.identifier,
+      password: parsed.data.password,
+      redirectTo: "/dashboard",
+    });
+  } catch (error) {
+    // Next.js redirect works by throwing a NEXT_REDIRECT error - rethrow it so redirect succeeds
+    if (
+      typeof error === "object" &&
+      error &&
+      "digest" in error &&
+      typeof error.digest === "string" &&
+      error.digest.startsWith("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
+
+    // Handle invalid credentials cleanly instead of crashing to error overlay
+    redirect(loginError("CredentialsSignin", "signin"));
+  }
 }
 
 export async function registerWithPassword(formData: FormData) {
@@ -66,7 +82,20 @@ export async function registerWithPassword(formData: FormData) {
     throw error;
   }
 
-  await signIn("credentials", { identifier: email, password, redirectTo: "/dashboard" });
+  try {
+    await signIn("credentials", { identifier: email, password, redirectTo: "/dashboard" });
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error &&
+      "digest" in error &&
+      typeof error.digest === "string" &&
+      error.digest.startsWith("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
+    redirect(loginError("CredentialsSignin", "signin"));
+  }
 }
 
 export async function signInWithGoogle() {
