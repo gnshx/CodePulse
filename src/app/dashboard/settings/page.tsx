@@ -48,8 +48,6 @@ async function updateProfile(formData: FormData) {
     await redis.del(CACHE_KEYS.aiCoach(session.user.id));
   }
 
-  // The UI reads public handles immediately; this also starts the deeper
-  // background import for durable history and future refreshes.
   if (leetcodeUsername || codeforcesUsername) {
     await triggerPlatformSync(session.user.id).catch(() => undefined);
   }
@@ -67,22 +65,25 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-extrabold">⚙️ Account Settings</h1>
-        <p className="text-secondary">
-          Configure your platform handles and profile preferences
+      <div className="page-header">
+        <p className="page-eyebrow">Preferences & Configuration</p>
+        <h1 className="page-title">
+          <span>⚙️</span> Account Settings
+        </h1>
+        <p className="page-description">
+          Configure connected platform handles and customize profile settings.
         </p>
       </div>
 
-      <div className="glass-card max-w-3xl p-8">
-        <form action={updateProfile} className="flex flex-col gap-6">
+      <div className="glass-card max-w-3xl" style={{ padding: 28 }}>
+        <form action={updateProfile} style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div id="platform-handles">
-            <h2 className="mb-4 text-xl font-bold border-b border-[var(--bg-border)] pb-3">
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
               Platform Handles
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   LeetCode Username
                 </label>
                 <input
@@ -95,7 +96,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   Codeforces Handle
                 </label>
                 <input
@@ -108,7 +109,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   GeeksforGeeks Username
                 </label>
                 <input
@@ -121,7 +122,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   CodeChef Handle
                 </label>
                 <input
@@ -134,7 +135,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   AtCoder Username
                 </label>
                 <input
@@ -147,7 +148,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
                   GitHub Username
                 </label>
                 <input
@@ -162,13 +163,13 @@ export default async function SettingsPage() {
           </div>
 
           <div>
-            <h2 className="mb-6 text-xl font-bold border-b border-[var(--bg-border)] pb-3">
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
               Profile Details
             </h2>
-            <div className="flex flex-col gap-5">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-secondary">
-                  Bio / About Me
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                  Bio / Competitive Programming Goals
                 </label>
                 <textarea
                   name="bio"
@@ -180,24 +181,24 @@ export default async function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <input
                   type="checkbox"
                   name="isPublic"
                   id="isPublic"
                   defaultChecked={profile?.isPublic || false}
-                  className="h-4 w-4 rounded border-[var(--bg-border)]"
+                  style={{ width: 16, height: 16, accentColor: "var(--brand-primary)", cursor: "pointer" }}
                 />
-                <label htmlFor="isPublic" className="text-sm text-secondary">
-                  Make profile public (allow others to view your stats)
+                <label htmlFor="isPublic" style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-secondary)", cursor: "pointer" }}>
+                  Make profile public (allow others to view your stats and rank)
                 </label>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-[var(--bg-border)] flex justify-end">
+          <div style={{ paddingTop: 16, borderTop: "1px solid var(--bg-border)", display: "flex", justifyContent: "flex-end" }}>
             <button type="submit" className="btn btn-primary" id="save-settings-btn">
-              💾 Save Settings
+              <span>💾</span> Save Settings
             </button>
           </div>
         </form>

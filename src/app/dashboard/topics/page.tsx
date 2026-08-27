@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
-import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
-import { hasLinkedLearningSource } from "@/modules/learning/live-analytics";
+import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 import Link from "next/link";
 
 export default async function TopicsPage() {
@@ -19,54 +18,83 @@ export default async function TopicsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-extrabold">🧩 Topic Mastery Analysis</h1>
-        <p className="text-secondary">
-          Detailed proficiency scores calculated from your solved problems across platforms
+      <div className="page-header">
+        <p className="page-eyebrow">Intelligence</p>
+        <h1 className="page-title">
+          <span>🧩</span> Topic Mastery Analysis
+        </h1>
+        <p className="page-description">
+          Algorithmic proficiency metrics dynamically computed from your connected coding accounts.
         </p>
       </div>
 
       {!hasLinkedSource ? (
-        <div className="glass-card max-w-2xl p-8 text-center">
-          <p className="mb-3 text-4xl">🔗</p>
-          <h2 className="mb-2 text-xl font-bold">Link your coding accounts to unlock topic analysis</h2>
-          <p className="mb-6 text-secondary">
-            Add your LeetCode or Codeforces username and we&apos;ll calculate your covered topics, strengths, and focus areas from your solved problems.
+        <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto" }}>
+          <p style={{ fontSize: "2.5rem", marginBottom: 12 }}>🔗</p>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 800, marginBottom: 8, color: "var(--text-primary)" }}>
+            Link your coding accounts to unlock topic intelligence
+          </h2>
+          <p style={{ color: "var(--text-secondary)", marginBottom: 24, fontSize: "0.95rem" }}>
+            Connect LeetCode or Codeforces in Settings so we can analyze solved problems, mastery levels, and focus areas.
           </p>
           <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">
-            Add platform usernames
+            Connect Platform Handles
           </Link>
         </div>
       ) : topicEntries.length === 0 ? (
-        <div className="glass-card max-w-2xl p-8 text-center text-secondary">
-          We could not find solved-problem topic data for this account yet. Check the username in Settings and try again shortly.
+        <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto", color: "var(--text-secondary)" }}>
+          <p style={{ fontSize: "2rem", marginBottom: 8 }}>🔄</p>
+          <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>Data Syncing In Progress</p>
+          <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", marginTop: 4 }}>
+            We could not find solved-problem topic data for this account yet. Verify your handles in Settings or wait a moment for the sync to complete.
+          </p>
         </div>
-      ) : <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
-        {topicEntries.map(([topic, score]) => {
-          let badgeCls = "badge-easy";
-          let statusText = "Mastered";
-          if (score < 40) { badgeCls = "badge-hard"; statusText = "Needs Practice"; }
-          else if (score < 70) { badgeCls = "badge-medium"; statusText = "Developing"; }
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+          {topicEntries.map(([topic, score]) => {
+            let badgeCls = "badge-easy";
+            let statusText = "Mastered";
+            if (score < 40) {
+              badgeCls = "badge-hard";
+              statusText = "Needs Practice";
+            } else if (score < 70) {
+              badgeCls = "badge-medium";
+              statusText = "Developing";
+            }
 
-          return (
-            <div key={topic} className="glass-card p-6">
-              <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-[1.05rem] font-bold">{topic}</h3>
-                <span className={`badge ${badgeCls}`}>{statusText}</span>
-              </div>
+            return (
+              <div key={topic} className="glass-card" style={{ padding: 22 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", textTransform: "capitalize" }}>
+                    {topic}
+                  </h3>
+                  <span className={`badge ${badgeCls}`}>{statusText}</span>
+                </div>
 
-              <div className="mb-2 flex items-baseline justify-between">
-                <span className="text-[0.95rem] text-muted">Mastery Score</span>
-                <span className="text-[1.4rem] font-extrabold text-brand-secondary">{score}%</span>
-              </div>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: "0.84rem", color: "var(--text-muted)", fontWeight: 600 }}>Mastery Index</span>
+                  <span style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--brand-secondary)" }}>{score}%</span>
+                </div>
 
-              <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${score}%` }} />
+                <div className="progress-bar">
+                  <div
+                    className="progress-bar-fill"
+                    style={{
+                      width: `${score}%`,
+                      background:
+                        score >= 70
+                          ? "var(--color-easy)"
+                          : score >= 40
+                          ? "var(--color-medium)"
+                          : "var(--color-hard)",
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>}
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

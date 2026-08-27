@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
-import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
-import { hasLinkedLearningSource } from "@/modules/learning/live-analytics";
+import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 import { generateAICoachInsights } from "@/modules/ai/service";
 import Link from "next/link";
 
@@ -16,9 +15,8 @@ export default async function AICoachPage() {
     hasLinkedLearningSource(userId),
   ]);
 
-  // Fallback / Default AI report if OpenAI key is not set or empty
   let coachReport = {
-    summary: "We could not read solved-problem data from your linked account yet. Confirm the username in Settings and try again in a moment.",
+    summary: "We could not read solved-problem data from your linked account yet. Confirm your handles in Settings and try again in a moment.",
     weeklyPlan: ["Confirm your platform username", "Refresh this page", "Start the personalized plan once your solved problems load"],
     readinessLevel: "Waiting for linked-platform data",
     topPriority: "Verify your platform username",
@@ -33,80 +31,137 @@ export default async function AICoachPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-extrabold">🤖 AI Coach Insights</h1>
-        <p className="text-secondary">
-          Personalized assessment and AI-generated weekly training roadmap
+      <div className="page-header">
+        <p className="page-eyebrow">AI Intelligence Engine</p>
+        <h1 className="page-title">
+          <span>🤖</span> AI Coach Insights
+        </h1>
+        <p className="page-description">
+          Personalized performance assessment, target readiness level, and AI-tailored 7-day training plan.
         </p>
       </div>
 
       {!hasLinkedSource ? (
-        <div className="glass-card max-w-2xl p-8 text-center">
-          <p className="mb-3 text-4xl">🤖</p>
-          <h2 className="mb-2 text-xl font-bold">Your coach is ready when your accounts are linked</h2>
-          <p className="mb-6 text-secondary">
-            Add a LeetCode or Codeforces username so your coach can use your solved topics, problem volume, and rating to build a plan for you.
+        <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto" }}>
+          <p style={{ fontSize: "2.5rem", marginBottom: 12 }}>🤖</p>
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 800, marginBottom: 8, color: "var(--text-primary)" }}>
+            Your AI Coach is ready when your accounts are linked
+          </h2>
+          <p style={{ color: "var(--text-secondary)", marginBottom: 24, fontSize: "0.95rem" }}>
+            Add your LeetCode or Codeforces handle so your coach can analyze solved topics, volume, and contest ratings to build your plan.
           </p>
-          <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">Add platform usernames</Link>
+          <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">
+            Add Platform Usernames
+          </Link>
         </div>
-      ) : <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
-        <div className="flex flex-col gap-6">
-          {/* Executive Summary */}
-          <div className="glass-card p-7">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-[2rem]">🧠</span>
-              <h2 className="text-xl font-bold">Executive Assessment</h2>
-            </div>
-            <p className="text-[1.05rem] leading-relaxed text-primary">
-              {coachReport.summary}
-            </p>
-          </div>
-
-          {/* Weekly Plan */}
-          <div className="glass-card p-7">
-            <h2 className="mb-5 text-lg font-bold">
-              📅 Recommended 7-Day Training Plan
-            </h2>
-            <div className="flex flex-col gap-3.5">
-              {coachReport.weeklyPlan.map((step, i) => (
+      ) : (
+        <div className="dashboard-row-split">
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {/* Executive Summary */}
+            <div className="glass-card" style={{ padding: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                 <div
-                  key={i}
-                  className="flex items-start gap-3.5 rounded-[var(--radius-md)] bg-elevated p-4 transition-colors hover:bg-hover"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    background: "var(--brand-gradient)",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: "1.2rem",
+                  }}
                 >
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-gradient)] text-[0.95rem] font-extrabold">
-                    {i + 1}
-                  </div>
-                  <p className="pt-0.5 text-[1rem] text-primary">{step}</p>
+                  🧠
                 </div>
-              ))}
+                <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                  Executive Performance Assessment
+                </h2>
+              </div>
+              <p style={{ fontSize: "0.98rem", lineHeight: 1.65, color: "var(--text-primary)" }}>
+                {coachReport.summary}
+              </p>
+            </div>
+
+            {/* Recommended 7-Day Training Plan */}
+            <div className="glass-card" style={{ padding: 24 }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 18 }}>
+                📅 Recommended 7-Day Training Plan
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {coachReport.weeklyPlan.map((step, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 14,
+                      padding: 14,
+                      borderRadius: "var(--radius-md)",
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        background: "var(--brand-gradient)",
+                        color: "#ffffff",
+                        fontSize: "0.85rem",
+                        fontWeight: 800,
+                        display: "grid",
+                        placeItems: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <p style={{ fontSize: "0.94rem", color: "var(--text-primary)", paddingTop: 2 }}>{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar Readiness & Advice */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="glass-card" style={{ padding: 20 }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+                Target Readiness
+              </p>
+              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--brand-accent)" }}>
+                {coachReport.readinessLevel}
+              </h3>
+            </div>
+
+            <div className="glass-card" style={{ padding: 20 }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+                Top Focus Priority
+              </p>
+              <p style={{ fontSize: "0.98rem", fontWeight: 700, color: "var(--color-medium)" }}>
+                {coachReport.topPriority}
+              </p>
+            </div>
+
+            <div
+              className="glass-card"
+              style={{
+                padding: 20,
+                background: "var(--brand-glow)",
+                border: "1px solid var(--bg-border-hover)",
+              }}
+            >
+              <p style={{ fontSize: "0.84rem", fontWeight: 800, color: "var(--brand-secondary)", marginBottom: 6 }}>
+                💡 Coach Strategy Tip
+              </p>
+              <p style={{ fontSize: "0.92rem", fontStyle: "italic", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                &ldquo;{coachReport.motivationalNote}&rdquo;
+              </p>
             </div>
           </div>
         </div>
-
-        {/* Sidebar Cards */}
-        <div className="flex flex-col gap-6">
-          <div className="glass-card p-6">
-            <p className="mb-2 text-[0.9rem] text-muted">Target Readiness</p>
-            <h3 className="text-lg font-extrabold text-brand-accent">
-              {coachReport.readinessLevel}
-            </h3>
-          </div>
-
-          <div className="glass-card p-6">
-            <p className="mb-2 text-[0.9rem] text-muted">Top Focus Priority</p>
-            <p className="text-[1rem] font-semibold text-medium">
-              {coachReport.topPriority}
-            </p>
-          </div>
-
-          <div className="glass-card bg-[linear-gradient(135deg,rgba(108,99,255,0.15),rgba(167,139,250,0.05))] p-6">
-            <p className="mb-2 text-[0.9rem] font-bold text-brand-secondary">💡 Coach Advice</p>
-            <p className="text-[1rem] italic text-secondary">
-              &ldquo;{coachReport.motivationalNote}&rdquo;
-            </p>
-          </div>
-        </div>
-      </div>}
+      )}
     </div>
   );
 }

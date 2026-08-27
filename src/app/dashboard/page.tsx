@@ -51,16 +51,16 @@ async function fetchAllData(
 }
 
 // ─────────────────────────────────────────────
-// Helper: rating colour
+// Helper: rating colour & label
 // ─────────────────────────────────────────────
 function ratingColor(r: number) {
-  if (r < 1200) return "#808080";
-  if (r < 1400) return "#008000";
-  if (r < 1600) return "#03a89e";
-  if (r < 1900) return "#0000ff";
-  if (r < 2100) return "#aa00aa";
-  if (r < 2400) return "#ff8c00";
-  return "#ff0000";
+  if (r < 1200) return "#94a3b8";
+  if (r < 1400) return "#10b981";
+  if (r < 1600) return "#06b6d4";
+  if (r < 1900) return "#3b82f6";
+  if (r < 2100) return "#a855f7";
+  if (r < 2400) return "#f59e0b";
+  return "#ef4444";
 }
 
 function ratingLabel(r: number) {
@@ -88,8 +88,7 @@ async function StatsGrid({
   const { lc, cf, cfA } = data;
 
   const lcSolved = lc?.totalSolved ?? 0;
-  const cfSolved = cfA.solvedCount;                        // from deep analytics, deduplicated
-  // Linked profiles are the source of truth between background imports.
+  const cfSolved = cfA.solvedCount;
   const totalSolved = lcSolved + cfSolved || analytics?.totalSolved || 0;
   const currentStreak = analytics?.currentStreak ?? 0;
   const longestStreak = analytics?.longestStreak ?? 0;
@@ -98,16 +97,18 @@ async function StatsGrid({
     {
       label: "Total Solved",
       value: totalSolved || "—",
-      sub: lcSolved && cfSolved ? `LC ${lcSolved} + CF ${cfSolved}` : undefined,
-      icon: "✅",
+      sub: lcSolved && cfSolved ? `LC ${lcSolved} · CF ${cfSolved}` : "Cross-platform total",
+      icon: "⚡",
       color: "var(--brand-primary)",
+      badge: totalSolved > 0 ? "Active" : undefined,
     },
     {
       label: "LeetCode",
       value: lcSolved || "—",
-      sub: lc?.rank ? `Rank ${lc.rank}` : "Not connected",
+      sub: lc?.rank ? `Global Rank #${lc.rank.toLocaleString()}` : "Not connected",
       icon: "🟡",
       color: "#ffa116",
+      badge: lcSolved > 0 ? "Synced" : undefined,
     },
     {
       label: "Codeforces",
@@ -115,13 +116,15 @@ async function StatsGrid({
       sub: cf?.rating ? ratingLabel(cf.rating) : "Not connected",
       icon: "🔵",
       color: cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)",
+      badge: cf?.rating ? `Max ${cfA.maxSolvedRating || cf.rating}` : undefined,
     },
     {
-      label: "Streak",
-      value: currentStreak ? `${currentStreak}d` : "—",
-      sub: longestStreak ? `Best: ${longestStreak}d` : undefined,
+      label: "Current Streak",
+      value: currentStreak ? `${currentStreak}d` : "0d",
+      sub: longestStreak ? `Personal Best: ${longestStreak}d` : "Consistency score",
       icon: "🔥",
       color: "#f59e0b",
+      badge: currentStreak > 0 ? "On Fire" : undefined,
     },
   ];
 
@@ -129,27 +132,28 @@ async function StatsGrid({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
         gap: 20,
-        marginBottom: 32,
+        marginBottom: 28,
       }}
     >
       {statCards.map((s) => (
         <div key={s.label} className="stat-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div>
-              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", fontWeight: 600, marginBottom: 6 }}>
-                {s.label}
-              </p>
-              <p style={{ fontSize: "2rem", fontWeight: 900, color: s.color, lineHeight: 1 }}>
-                {s.value}
-              </p>
-              {s.sub && (
-                <p style={{ fontSize: "0.84rem", color: "var(--text-muted)", marginTop: 6 }}>{s.sub}</p>
-              )}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+            <span className="stat-label">{s.label}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {s.badge && <span className="badge badge-primary">{s.badge}</span>}
+              <span style={{ fontSize: "1.2rem", opacity: 0.9 }}>{s.icon}</span>
             </div>
-            <span style={{ fontSize: "1.8rem" }}>{s.icon}</span>
           </div>
+          <div className="stat-value" style={{ color: s.color }}>
+            {s.value}
+          </div>
+          {s.sub && (
+            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: 8, fontWeight: 500 }}>
+              {s.sub}
+            </p>
+          )}
         </div>
       ))}
     </div>
@@ -157,7 +161,7 @@ async function StatsGrid({
 }
 
 // ─────────────────────────────────────────────
-// Difficulty Breakdown  (LeetCode only, approximated)
+// Difficulty Breakdown (LeetCode)
 // ─────────────────────────────────────────────
 
 async function DifficultyBreakdown({
@@ -189,21 +193,25 @@ async function DifficultyBreakdown({
   ];
 
   return (
-    <div className="glass-card" style={{ padding: 28 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ fontWeight: 700, fontSize: "1rem" }}>📈 Difficulty Breakdown</h3>
-        <span style={{ fontSize: "0.84rem", color: "var(--text-muted)" }}>LeetCode</span>
+    <div className="glass-card" style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <div>
+          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>📈 Difficulty Distribution</h3>
+          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>LeetCode problem breakdown</p>
+        </div>
+        <span className="badge badge-info">LeetCode</span>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {items.map((item) => {
           const pct = total > 0 ? Math.round((item.value / total) * 100) : 0;
           return (
             <div key={item.label}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                 <span className={`badge ${item.cls}`}>{item.label}</span>
-                <span style={{ fontWeight: 700 }}>
+                <span style={{ fontWeight: 700, fontSize: "0.92rem", color: "var(--text-primary)" }}>
                   {item.value}{" "}
-                  <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({pct}%)</span>
+                  <span style={{ color: "var(--text-muted)", fontWeight: 500, fontSize: "0.84rem" }}>({pct}%)</span>
                 </span>
               </div>
               <div className="progress-bar">
@@ -218,17 +226,24 @@ async function DifficultyBreakdown({
 }
 
 // ─────────────────────────────────────────────
-// CF Rating Distribution  +  Next Practice Recommendation
+// CF Rating Distribution + Recommendation
 // ─────────────────────────────────────────────
 
 function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsername: string | null }) {
   if (!cfUsername) {
     return (
-      <div className="glass-card" style={{ padding: 28 }}>
-        <h3 style={{ fontWeight: 700, marginBottom: 16, fontSize: "1rem" }}>🎯 CF Rating Distribution</h3>
-        <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "32px 0", fontSize: "0.9rem" }}>
-          Connect Codeforces to see your rating breakdown
-        </p>
+      <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h3 style={{ fontWeight: 700, fontSize: "1.05rem" }}>🎯 CF Rating Distribution</h3>
+          <span className="badge badge-medium">Disconnected</span>
+        </div>
+        <div style={{ textAlign: "center", padding: "36px 16px" }}>
+          <p style={{ fontSize: "2rem", marginBottom: 8 }}>📊</p>
+          <p style={{ color: "var(--text-secondary)", fontWeight: 600, marginBottom: 4 }}>Codeforces Account Unlinked</p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.86rem" }}>
+            Add your Codeforces handle in Settings to unlock rating distributions & target recommendations.
+          </p>
+        </div>
       </div>
     );
   }
@@ -242,39 +257,41 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
   const { nextPracticeMin, nextPracticeMax, maxSolvedRating, solvedCount } = cfA;
 
   return (
-    <div className="glass-card" style={{ padding: 28 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-        <h3 style={{ fontWeight: 700, fontSize: "1rem" }}>🎯 CF Rating Distribution</h3>
-        <span style={{ fontSize: "0.84rem", color: "var(--text-muted)" }}>
-          {solvedCount} unique solved · max {maxSolvedRating}
-        </span>
+    <div className="glass-card" style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <div>
+          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>🎯 CF Rating Distribution</h3>
+          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+            {solvedCount} unique solved · Peak {maxSolvedRating || "—"}
+          </p>
+        </div>
+        <span className="badge badge-primary">Codeforces</span>
       </div>
 
-      {/* Next-practice banner */}
       {nextPracticeMin > 0 && (
         <div
           style={{
-            margin: "14px 0 20px",
-            padding: "10px 16px",
+            margin: "0 0 20px",
+            padding: "12px 16px",
             borderRadius: "var(--radius-md)",
-            background: "linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,212,255,0.08))",
-            border: "1px solid rgba(108,99,255,0.25)",
+            background: "var(--brand-glow)",
+            border: "1px solid var(--bg-border-hover)",
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: 12,
           }}
         >
-          <span style={{ fontSize: "1.2rem" }}>🚀</span>
+          <span style={{ fontSize: "1.3rem" }}>🚀</span>
           <div>
-            <p style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--text-primary)" }}>
+            <p style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text-primary)" }}>
               Recommended Next Target
             </p>
-            <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)" }}>
+            <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)" }}>
               Practice{" "}
               <strong style={{ color: ratingColor(nextPracticeMin) }}>{nextPracticeMin}</strong>
               {" – "}
               <strong style={{ color: ratingColor(nextPracticeMax) }}>{nextPracticeMax}</strong>
-              {" "}rated problems (Div 2 B/C range)
+              {" "}rated problems
             </p>
           </div>
         </div>
@@ -286,19 +303,18 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
           const isTarget = bucket >= nextPracticeMin && bucket <= nextPracticeMax;
           return (
             <div key={bucket}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                 <span
                   style={{
-                    fontSize: "0.92rem",
+                    fontSize: "0.88rem",
                     fontWeight: 700,
                     color: ratingColor(bucket),
-                    minWidth: 44,
                   }}
                 >
                   {bucket}
                 </span>
-                <span style={{ fontSize: "0.86rem", color: "var(--text-muted)" }}>
-                  {count} {isTarget && "← target"}
+                <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
+                  {count} {isTarget && <span style={{ color: "var(--brand-accent)", fontWeight: 700 }}>← Target</span>}
                 </span>
               </div>
               <div className="progress-bar">
@@ -306,10 +322,7 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
                   className="progress-bar-fill"
                   style={{
                     width: `${pct}%`,
-                    background: isTarget
-                      ? "linear-gradient(90deg, var(--brand-primary), var(--brand-accent))"
-                      : ratingColor(bucket),
-                    opacity: isTarget ? 1 : 0.7,
+                    background: isTarget ? "var(--brand-gradient)" : ratingColor(bucket),
                   }}
                 />
               </div>
@@ -317,7 +330,7 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
           );
         })}
         {sortedBuckets.length === 0 && (
-          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "20px 0", fontSize: "0.9rem" }}>
+          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "20px 0", fontSize: "0.88rem" }}>
             No rated problem data found yet
           </p>
         )}
@@ -327,7 +340,7 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
 }
 
 // ─────────────────────────────────────────────
-// Combined Topic Mastery  (LC + CF, with CF avg-rating tag)
+// Combined Topic Mastery
 // ─────────────────────────────────────────────
 
 async function TopicMasteryCard({
@@ -357,62 +370,62 @@ async function TopicMasteryCard({
 
   const topics = Object.entries(topicMastery)
     .sort(([, a], [, b]) => b - a)
-    .slice(0, 10);
+    .slice(0, 8);
 
   return (
-    <div className="glass-card" style={{ padding: 28 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ fontWeight: 700, fontSize: "1rem" }}>🧠 Topic Mastery</h3>
-        <span style={{ fontSize: "0.84rem", color: "var(--text-muted)" }}>Combined LC + CF</span>
+    <div className="glass-card" style={{ padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <div>
+          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>🧠 Topic Mastery Intelligence</h3>
+          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Cross-platform algorithmic proficiency</p>
+        </div>
+        <span className="badge badge-primary">LC + CF</span>
       </div>
 
       {topics.length === 0 ? (
-        <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "20px 0" }}>
-          Connect a platform to see topic mastery
+        <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "24px 0", fontSize: "0.9rem" }}>
+          Link a profile to start tracking topic mastery
         </p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {topics.map(([topic, score]) => {
             const fromLC = (lcTopics[topic] ?? 0) > 0;
             const fromCF = (cfTopics[topic] ?? 0) > 0;
             const avgRating = cfA.topicAvgRating[topic];
-            const maxRating = cfA.topicMaxRating[topic];
 
             return (
               <div key={topic}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  {/* Left: name + platform tags + CF rating badge */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: "0.96rem", color: "var(--text-secondary)", textTransform: "capitalize" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)", textTransform: "capitalize" }}>
                       {topic}
                     </span>
                     {fromLC && (
-                      <span style={{ fontSize: "0.76rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "rgba(255,161,22,0.15)", color: "#c66a00" }}>
+                      <span className="badge platform-leetcode" style={{ padding: "1px 6px", fontSize: "0.72rem" }}>
                         LC
                       </span>
                     )}
                     {fromCF && (
-                      <span style={{ fontSize: "0.76rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "rgba(26,131,242,0.15)", color: "#1769c2" }}>
+                      <span className="badge platform-codeforces" style={{ padding: "1px 6px", fontSize: "0.72rem" }}>
                         CF
                       </span>
                     )}
                     {avgRating && (
                       <span
                         style={{
-                          fontSize: "0.76rem",
+                          fontSize: "0.72rem",
                           fontWeight: 700,
                           padding: "1px 6px",
                           borderRadius: 4,
                           background: `${ratingColor(avgRating)}18`,
                           color: ratingColor(avgRating),
                         }}
-                        title={`Max solved: ${maxRating}`}
                       >
                         ~{avgRating} avg
                       </span>
                     )}
                   </div>
-                  <span style={{ fontSize: "0.88rem", fontWeight: 700, flexShrink: 0 }}>{score}%</span>
+                  <span style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--brand-secondary)" }}>{score}%</span>
                 </div>
                 <div className="progress-bar">
                   <div className="progress-bar-fill" style={{ width: `${score}%` }} />
@@ -427,7 +440,7 @@ async function TopicMasteryCard({
 }
 
 // ─────────────────────────────────────────────
-// Strengths & Weaknesses  +  CF next-practice insight
+// Strengths & Weaknesses Insights
 // ─────────────────────────────────────────────
 
 async function InsightsCard({
@@ -459,65 +472,63 @@ async function InsightsCard({
     strong = scored.filter(([, s]) => s >= 75).map(([t]) => t);
   }
 
-  // Top CF topics by avg rating (for "deep" insight)
   const cfTopicsByAvgRating = Object.entries(cfA.topicAvgRating)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5);
 
   return (
-    <div className="glass-card" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 24 }}>
-
+    <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
       {/* Strengths */}
       <div>
-        <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
           🟢 Strong Topics
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {strong.length > 0
             ? strong.slice(0, 6).map((t) => (
-                <span key={t} style={{ padding: "5px 11px", borderRadius: 99, background: "rgba(34,197,94,0.1)", color: "var(--color-easy)", fontSize: "0.9rem", fontWeight: 600, textTransform: "capitalize" }}>
+                <span key={t} className="badge badge-easy" style={{ textTransform: "capitalize", fontSize: "0.84rem" }}>
                   {t}
                 </span>
               ))
-            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No data yet</span>}
+            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No mastered topics yet</span>}
         </div>
       </div>
 
       {/* Weaknesses */}
       <div>
-        <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
           🔴 Focus Areas
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {weak.length > 0
             ? weak.slice(0, 6).map((t) => (
-                <span key={t} style={{ padding: "5px 11px", borderRadius: 99, background: "rgba(239,68,68,0.1)", color: "var(--color-hard)", fontSize: "0.9rem", fontWeight: 600, textTransform: "capitalize" }}>
+                <span key={t} className="badge badge-hard" style={{ textTransform: "capitalize", fontSize: "0.84rem" }}>
                   {t}
                 </span>
               ))
-            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No data yet</span>}
+            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No weak areas identified</span>}
         </div>
       </div>
 
-      {/* CF topic difficulty insight */}
+      {/* Hardest CF Topics */}
       {cfTopicsByAvgRating.length > 0 && (
         <div>
-          <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", marginBottom: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            🔵 Your Hardest CF Topics
+          <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            🔵 Hardest CF Topics
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {cfTopicsByAvgRating.map(([topic, avg]) => (
               <div key={topic} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.92rem", textTransform: "capitalize", color: "var(--text-secondary)" }}>
+                <span style={{ fontSize: "0.88rem", textTransform: "capitalize", color: "var(--text-secondary)", fontWeight: 500 }}>
                   {topic}
                 </span>
                 <span
                   style={{
-                    fontSize: "0.86rem",
+                    fontSize: "0.78rem",
                     fontWeight: 700,
                     padding: "2px 8px",
                     borderRadius: 4,
-                    background: `${ratingColor(avg)}18`,
+                    background: `${ratingColor(avg)}15`,
                     color: ratingColor(avg),
                   }}
                 >
@@ -529,25 +540,24 @@ async function InsightsCard({
         </div>
       )}
 
-      {/* Next Practice CTA */}
+      {/* Target recommendation CTA */}
       {cfA.nextPracticeMin > 0 && (
         <div
           style={{
             padding: "12px 16px",
             borderRadius: "var(--radius-md)",
-            background: "rgba(108,99,255,0.08)",
-            border: "1px solid rgba(108,99,255,0.2)",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--bg-border)",
           }}
         >
-          <p style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: 4 }}>🎯 Next Practice Target</p>
-          <p style={{ fontSize: "0.94rem", color: "var(--text-secondary)" }}>
-            You&apos;re comfortable up to{" "}
-            <strong style={{ color: ratingColor(cfA.p75Rating) }}>{cfA.p75Rating}</strong>.
-            Push to{" "}
+          <p style={{ fontSize: "0.85rem", fontWeight: 700, marginBottom: 4, color: "var(--brand-accent)" }}>🎯 Practice Recommendation</p>
+          <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+            Current comfort level:{" "}
+            <strong style={{ color: ratingColor(cfA.p75Rating) }}>{cfA.p75Rating}</strong> rating.
+            Target range:{" "}
             <strong style={{ color: ratingColor(cfA.nextPracticeMin) }}>
               {cfA.nextPracticeMin}–{cfA.nextPracticeMax}
-            </strong>{" "}
-            rated problems to level up.
+            </strong>.
           </p>
         </div>
       )}
@@ -564,32 +574,31 @@ export default async function DashboardPage() {
   const userId = session!.user!.id!;
 
   const profile = await prisma.profile.findUnique({ where: { userId } });
-
-  // One shared fetch — all components read from this
   const data = await fetchAllData(profile);
 
   return (
-    <div>
+    <div className="dashboard-page">
       {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: "1.8rem", fontWeight: 800, marginBottom: 6 }}>
-          👋 Welcome back, {session!.user!.name?.split(" ")[0]}
+      <div className="page-header">
+        <p className="page-eyebrow">Command Center</p>
+        <h1 className="page-title">
+          <span>👋</span> Welcome back, {session!.user!.name?.split(" ")[0]}
         </h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Here&apos;s your competitive programming overview
+        <p className="page-description">
+          Real-time competitive programming intelligence and rating analytics.
         </p>
       </div>
 
       {/* Row 1: Platform stat cards */}
       <StatsGrid userId={userId} data={data} />
 
-      {/* Row 2: LC Difficulty  |  CF Rating Distribution */}
+      {/* Row 2: LC Difficulty | CF Rating Distribution */}
       <div className="dashboard-row-2col">
         <DifficultyBreakdown userId={userId} data={data} />
         <CFRatingDistribution cfA={data.cfA} cfUsername={profile?.codeforcesUsername ?? null} />
       </div>
 
-      {/* Row 3: Topic Mastery  |  Insights + Next Practice */}
+      {/* Row 3: Topic Mastery | Insights + Next Practice */}
       <div className="dashboard-row-split">
         <TopicMasteryCard userId={userId} data={data} />
         <InsightsCard userId={userId} data={data} />

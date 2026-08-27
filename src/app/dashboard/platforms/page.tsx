@@ -27,7 +27,7 @@ export default async function PlatformsPage() {
       profileData: lcProfile,
       details: [
         { label: "Total Solved", value: lcProfile?.totalSolved ?? "—" },
-        { label: "Global Rank", value: lcProfile?.rank ?? "—" },
+        { label: "Global Rank", value: lcProfile?.rank ? `#${lcProfile.rank.toLocaleString()}` : "—" },
         { label: "Profile Link", value: lcProfile?.profileUrl ?? "—", isLink: true },
       ],
     },
@@ -72,27 +72,30 @@ export default async function PlatformsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="page-header" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
-          <h1 className="mb-1.5 text-3xl font-extrabold">🔗 Coding Platforms</h1>
-          <p className="text-secondary">
-            Manage platform accounts and view platform-specific statistics
+          <p className="page-eyebrow">Integrations</p>
+          <h1 className="page-title">
+            <span>🔗</span> Coding Platforms
+          </h1>
+          <p className="page-description">
+            Manage linked competitive programming accounts and platform sync status.
           </p>
         </div>
         <Link href="/dashboard/settings" className="btn btn-primary" id="platforms-manage-btn">
-          ⚙️ Manage Usernames
+          <span>⚙️</span> Manage Handles
         </Link>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
         {platforms.map((p) => (
-          <div key={p.name} className="glass-card relative p-7">
-            <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{p.icon}</span>
+          <div key={p.name} className="glass-card" style={{ padding: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: "2rem" }}>{p.icon}</span>
                 <div>
-                  <h2 className="text-xl font-bold" style={{ color: p.color }}>{p.name}</h2>
-                  <p className="text-[0.95rem] text-muted">
+                  <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: p.color }}>{p.name}</h2>
+                  <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 500 }}>
                     {p.username ? `@${p.username}` : "Not connected"}
                   </p>
                 </div>
@@ -102,31 +105,32 @@ export default async function PlatformsPage() {
               </span>
             </div>
 
-            <div className="flex flex-col gap-3 border-t border-[var(--bg-border)] pt-4">
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 16, borderTop: "1px solid var(--bg-border)" }}>
               {p.details.map((d) => (
-                <div key={d.label} className="flex justify-between text-[1rem]">
-                  <span className="text-secondary">{d.label}</span>
-                  {d.isLink && d.value ? (
+                <div key={d.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.92rem" }}>
+                  <span style={{ color: "var(--text-secondary)" }}>{d.label}</span>
+                  {d.isLink && d.value && d.value !== "—" ? (
                     <a
                       href={d.value}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-brand-accent no-underline transition-colors hover:text-brand-secondary"
+                      style={{ color: "var(--brand-accent)", textDecoration: "none", fontWeight: 700 }}
                     >
                       Open Profile ↗
                     </a>
                   ) : (
-                    <span className="font-semibold text-primary">{String(d.value)}</span>
+                    <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{String(d.value)}</span>
                   )}
                 </div>
               ))}
             </div>
+
             {!p.username && (
               <Link
                 href="/dashboard/settings#platform-handles"
-                className="mt-5 inline-flex text-sm font-bold text-brand-accent no-underline hover:text-brand-secondary"
+                style={{ marginTop: 16, display: "inline-block", fontSize: "0.86rem", fontWeight: 700, color: "var(--brand-accent)", textDecoration: "none" }}
               >
-                Add username →
+                Add handle →
               </Link>
             )}
           </div>

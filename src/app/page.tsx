@@ -7,32 +7,32 @@ const FEATURES = [
   {
     icon: "⚡",
     title: "Multi-Platform Sync",
-    desc: "Connect LeetCode, Codeforces, CodeChef, and GFG. All your progress, one place.",
+    desc: "Connect LeetCode, Codeforces, CodeChef, and GFG. Track all your progress in one unified intelligence dashboard.",
+  },
+  {
+    icon: "🤖",
+    title: "AI Coach Insights",
+    desc: "Get personalized weekly study plans, readiness assessments, and target recommendations tailored to your rating trajectory.",
   },
   {
     icon: "🧠",
-    title: "AI Coach",
-    desc: "Get personalized weekly study plans, readiness assessments, and smart recommendations.",
-  },
-  {
-    icon: "📊",
-    title: "Topic Mastery",
-    desc: "See your mastery score for every topic — Arrays, DP, Graphs, and more.",
+    title: "Topic Mastery Index",
+    desc: "See your mastery score for every topic — Arrays, Dynamic Programming, Graphs, Math, and data structures.",
   },
   {
     icon: "🔥",
-    title: "Streaks & Goals",
-    desc: "Stay consistent with daily goals, streak tracking, and achievement badges.",
+    title: "Consistency & Streaks",
+    desc: "Stay consistent with daily goals, streak metrics, and milestone achievement badges.",
   },
   {
     icon: "📈",
     title: "Contest Analytics",
-    desc: "Track your Codeforces rating growth, rank trends, and contest performance over time.",
+    desc: "Track your Codeforces rating growth, rank trends, and contest performance history over time.",
   },
   {
     icon: "🎯",
     title: "Smart Roadmap",
-    desc: "Problem recommendations based on your weak topics and prerequisite concepts.",
+    desc: "Problem recommendations based on your weak topics and target rating range.",
   },
 ];
 
@@ -45,9 +45,9 @@ const PLATFORMS = [
 
 const STATS = [
   { value: "10K+", label: "Problems Tracked" },
-  { value: "4", label: "Platforms" },
-  { value: "AI", label: "Powered Coach" },
-  { value: "Free", label: "To Start" },
+  { value: "4", label: "Connected Platforms" },
+  { value: "AI", label: "Intelligence Engine" },
+  { value: "Free", label: "Forever for Coders" },
 ];
 
 export default async function LandingPage() {
@@ -59,22 +59,22 @@ export default async function LandingPage() {
 
       {/* ── Navbar ── */}
       <nav className="navbar" style={{ justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
+              width: 34,
+              height: 34,
+              borderRadius: 10,
               background: "var(--brand-gradient)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: "grid",
+              placeItems: "center",
               fontSize: 16,
+              boxShadow: "var(--glow-primary)",
             }}
           >
             ⚔
           </div>
-          <span style={{ fontWeight: 800, fontSize: "1.1rem" }}>
+          <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
             Better<span className="gradient-text">CP</span>
           </span>
         </div>
@@ -104,52 +104,51 @@ export default async function LandingPage() {
           zIndex: 1,
         }}
       >
-        {/* Floating badge */}
         <div
           className="badge badge-primary animate-fade-up"
-          style={{ marginBottom: 24, fontSize: "0.92rem", padding: "7px 18px" }}
+          style={{ marginBottom: 24, fontSize: "0.88rem", padding: "6px 16px" }}
         >
-          🚀 AI-Powered CP & DSA Coaching
+          🚀 Competitive Programming & Algorithm Intelligence Platform
         </div>
 
         <h1
           className="animate-fade-up"
           style={{
-            fontSize: "clamp(2.5rem, 6vw, 5rem)",
+            fontSize: "clamp(2.5rem, 6vw, 4.8rem)",
             fontWeight: 900,
             lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            maxWidth: 800,
+            letterSpacing: "-0.03em",
+            maxWidth: 860,
             animationDelay: "0.1s",
           }}
         >
           Level Up Your{" "}
           <span className="gradient-text">Competitive</span>
           <br />
-          Programming
+          Programming Journey
         </h1>
 
         <p
           className="animate-fade-up"
           style={{
             marginTop: 24,
-            fontSize: "1.2rem",
+            fontSize: "1.15rem",
             color: "var(--text-secondary)",
-            maxWidth: 600,
+            maxWidth: 640,
             lineHeight: 1.7,
             animationDelay: "0.2s",
           }}
         >
-          Track your progress across LeetCode, Codeforces, CodeChef & more.
-          Get AI insights, identify weak spots, and become the coder you want to be.
+          Track progress across LeetCode, Codeforces, CodeChef & GFG in real-time.
+          Unlock AI coaching, target rating insights, and topic mastery.
         </p>
 
         <div
           className="animate-fade-up"
           style={{
-            marginTop: 40,
+            marginTop: 36,
             display: "flex",
-            gap: 16,
+            gap: 14,
             flexWrap: "wrap",
             justifyContent: "center",
             animationDelay: "0.3s",
@@ -159,15 +158,15 @@ export default async function LandingPage() {
           <Link href="/login" className="btn btn-primary btn-lg" id="hero-cta-btn">
             🎯 Start Tracking Free
           </Link>
-          <Link href="#features" className="btn btn-ghost btn-lg" id="hero-features-btn">
-            See Features →
+          <Link href="#features" className="btn btn-secondary btn-lg" id="hero-features-btn">
+            Explore Features →
           </Link>
         </div>
 
         {(showGoogleAuth || showGitHubAuth) && (
           <div
             className="animate-fade-up"
-            style={{ marginTop: 18, width: "100%", maxWidth: 360, animationDelay: "0.35s" }}
+            style={{ marginTop: 20, width: "100%", maxWidth: 360, animationDelay: "0.35s" }}
           >
             <OAuthProviders
               googleEnabled={showGoogleAuth}
@@ -177,62 +176,63 @@ export default async function LandingPage() {
           </div>
         )}
 
-        {/* Platform Logos */}
+        {/* Platform Chips */}
         <div
           className="animate-fade-up"
           style={{
-            marginTop: 64,
+            marginTop: 56,
             display: "flex",
-            gap: 16,
-            flexWrap: "wrap",
-            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 14,
             animationDelay: "0.4s",
           }}
         >
-          <p style={{ color: "var(--text-muted)", width: "100%", marginBottom: 8, fontSize: "0.95rem" }}>
-            Supports your favourite platforms
+          <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", fontWeight: 600 }}>
+            Unified tracking for your favorite platforms
           </p>
-          {PLATFORMS.map((p) => (
-            <div
-              key={p.name}
-              style={{
-                padding: "8px 20px",
-                borderRadius: "var(--radius-md)",
-                border: "1px solid var(--bg-border)",
-                background: "var(--bg-elevated)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            {PLATFORMS.map((p) => (
               <div
+                key={p.name}
                 style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 4,
-                  background: p.color + "30",
-                  border: `1px solid ${p.color}50`,
+                  padding: "8px 18px",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--bg-border)",
+                  background: "var(--bg-card)",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "0.76rem",
-                  fontWeight: 800,
-                  color: p.color,
+                  gap: 10,
                 }}
               >
-                {p.icon.slice(0, 2)}
+                <div
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 4,
+                    background: p.color + "20",
+                    border: `1px solid ${p.color}50`,
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: "0.72rem",
+                    fontWeight: 800,
+                    color: p.color,
+                  }}
+                >
+                  {p.icon}
+                </div>
+                <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)" }}>{p.name}</span>
               </div>
-              <span style={{ fontSize: "0.95rem", color: "var(--text-secondary)" }}>{p.name}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Stats Bar */}
         <div
           className="glass-card animate-fade-up"
           style={{
-            marginTop: 64,
-            padding: "28px 48px",
+            marginTop: 56,
+            padding: "24px 48px",
             display: "flex",
             gap: 48,
             flexWrap: "wrap",
@@ -248,7 +248,7 @@ export default async function LandingPage() {
               >
                 {s.value}
               </div>
-              <div style={{ fontSize: "0.95rem", color: "var(--text-muted)", marginTop: 4 }}>
+              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)", marginTop: 2 }}>
                 {s.label}
               </div>
             </div>
@@ -257,32 +257,44 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Features ── */}
-      <section id="features" className="features-section">
-        <div className="features-container">
-          <h2 className="features-title">
-            Everything you need to{" "}
-            <span className="gradient-text">dominate</span>
-          </h2>
-          <p className="features-intro">
-            Built for serious competitive programmers who want real insights, not just stats.
-          </p>
+      <section id="features" style={{ padding: "80px 24px", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <p className="page-eyebrow" style={{ textAlign: "center" }}>Built for Coders</p>
+            <h2 style={{ fontSize: "2.4rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
+              Everything you need to <span className="gradient-text">dominate</span>
+            </h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem", marginTop: 8, maxWidth: 580, marginInline: "auto" }}>
+              Deep rating analytics, problem recommendations, and topic insights engineered for competitive coders.
+            </p>
+          </div>
 
-          <div className="features-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="glass-card feature-card"
-                style={{ animationDelay: `${i * 0.1}s` }}
+                className="glass-card"
+                style={{ padding: 28, animationDelay: `${i * 0.1}s` }}
               >
                 <div
-                  className="feature-icon"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--brand-glow)",
+                    border: "1px solid var(--bg-border-hover)",
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: "1.4rem",
+                    marginBottom: 16,
+                  }}
                 >
                   {f.icon}
                 </div>
-                <h3 className="feature-card-title">
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}>
                   {f.title}
                 </h3>
-                <p className="feature-card-description">
+                <p style={{ fontSize: "0.92rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
                   {f.desc}
                 </p>
               </div>
@@ -292,25 +304,26 @@ export default async function LandingPage() {
       </section>
 
       {/* ── CTA Section ── */}
-      <section style={{ padding: "80px 24px 120px", position: "relative", zIndex: 1 }}>
+      <section style={{ padding: "60px 24px 100px", position: "relative", zIndex: 1 }}>
         <div
           className="glass-card"
           style={{
-            maxWidth: 700,
+            maxWidth: 720,
             margin: "0 auto",
-            padding: "64px 48px",
+            padding: "56px 40px",
             textAlign: "center",
-            background: "linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(34, 211, 238, 0.05))",
+            background: "var(--brand-glow)",
+            border: "1px solid var(--bg-border-hover)",
           }}
         >
-          <h2 style={{ fontSize: "2.2rem", fontWeight: 800, marginBottom: 16 }}>
-            Ready to get <span className="gradient-text">better</span>?
+          <h2 style={{ fontSize: "2.2rem", fontWeight: 800, marginBottom: 12 }}>
+            Ready to elevate your <span className="gradient-text">CP Rating</span>?
           </h2>
-          <p style={{ color: "var(--text-secondary)", marginBottom: 32, fontSize: "1.05rem" }}>
-            Join thousands of coders tracking their journey to mastery.
+          <p style={{ color: "var(--text-secondary)", marginBottom: 28, fontSize: "1.05rem" }}>
+            Join coders tracking their algorithmic mastery today.
           </p>
           <Link href="/login" className="btn btn-primary btn-lg" id="bottom-cta-btn">
-            🚀 Start For Free — No Credit Card
+            🚀 Start For Free — Instant Access
           </Link>
         </div>
       </section>

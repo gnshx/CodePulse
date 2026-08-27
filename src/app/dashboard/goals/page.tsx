@@ -14,38 +14,51 @@ export default async function GoalsPage() {
   const achievements = progress.achievements;
 
   return (
-    <div className="dashboard-page goals-page">
+    <div className="dashboard-page">
       <header className="page-header">
-        <p className="page-eyebrow">Personal progress</p>
-        <h1 className="page-title"><span aria-hidden="true">🎯</span> Goals &amp; Badges</h1>
+        <p className="page-eyebrow">Personal Performance</p>
+        <h1 className="page-title">
+          <span>🎯</span> Goals &amp; Achievements
+        </h1>
         <p className="page-description">
-          Set personal targets, track your streaks, and unlock achievement badges
+          Set weekly targets, track streak consistency, and unlock performance badges.
         </p>
       </header>
 
-      <div className="goals-layout">
-        {/* Goals List */}
-        <section className="glass-card dashboard-card goals-card">
-          <div className="card-heading">
+      <div className="dashboard-row-split">
+        {/* Active Goals Section */}
+        <section className="glass-card" style={{ padding: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
-              <p className="card-eyebrow">This week</p>
-              <h2>📌 Active Goals</h2>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                📌 Active Weekly Goals
+              </h2>
+              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Target progress for this week</p>
             </div>
-            <span className="card-count">{progress.goals.length} goals</span>
+            <span className="badge badge-primary">{progress.goals.length} Goals</span>
           </div>
 
-          <div className="goal-list">
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {progress.goals.map((g: Goal) => {
               const pct = Math.min(100, Math.round((g.current / g.target) * 100));
               return (
-                <article key={g.id} className="goal-item">
-                  <div className="goal-item-header">
-                    <span className="goal-title">{g.title}</span>
-                    <span className={`goal-value ${g.isCompleted ? "is-complete" : ""}`}>
+                <div
+                  key={g.id}
+                  style={{
+                    padding: 16,
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--bg-border)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
+                    <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)" }}>{g.title}</span>
+                    <span style={{ fontSize: "0.88rem", fontWeight: 800, color: g.isCompleted ? "var(--color-easy)" : "var(--brand-secondary)" }}>
                       {g.current} / {g.target} {g.unit}
                     </span>
                   </div>
-                  <div className="progress-bar">
+
+                  <div className="progress-bar" style={{ height: 8 }}>
                     <div
                       className="progress-bar-fill"
                       style={{
@@ -54,37 +67,63 @@ export default async function GoalsPage() {
                       }}
                     />
                   </div>
-                  <div className="goal-progress-caption">
+
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: "0.82rem", fontWeight: 600, color: "var(--text-muted)" }}>
                     <span>{pct}% complete</span>
-                    {g.isCompleted && <span>Completed</span>}
+                    {g.isCompleted && <span style={{ color: "var(--color-easy)", fontWeight: 800 }}>✓ Completed</span>}
                   </div>
-                </article>
+                </div>
               );
             })}
           </div>
         </section>
 
-        {/* Achievements */}
-        <section className="glass-card dashboard-card achievements-card">
-          <div className="card-heading">
+        {/* Achievement Badges Section */}
+        <section className="glass-card" style={{ padding: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
-              <p className="card-eyebrow">Your collection</p>
-              <h2>🎖️ Achievement Badges</h2>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                🎖️ Achievement Badges
+              </h2>
+              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Milestones unlocked</p>
             </div>
-            <span className="card-count">{achievements.length} unlocked</span>
+            <span className="badge badge-info">{achievements.length} Unlocked</span>
           </div>
 
-            <div className="achievements-grid">
-            {achievements.length ? achievements.map((a: Achievement) => (
-              <article key={a.title} className="achievement-card is-unlocked">
-                <span className="achievement-icon" aria-hidden="true">{a.icon}</span>
-                <div>
-                  <h3>{a.title}</h3>
-                  <p>{a.description}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+            {achievements.length ? (
+              achievements.map((a: Achievement) => (
+                <div
+                  key={a.title}
+                  style={{
+                    padding: 16,
+                    borderRadius: "var(--radius-md)",
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--bg-border-hover)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                >
+                  <span style={{ fontSize: "2rem" }}>{a.icon}</span>
+                  <div>
+                    <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
+                      {a.title}
+                    </h3>
+                    <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+                      {a.description}
+                    </p>
+                  </div>
+                  <span className="badge badge-easy" style={{ width: "fit-content", marginTop: "auto" }}>
+                    Unlocked
+                  </span>
                 </div>
-                <span className="achievement-status">Unlocked</span>
-              </article>
-            )) : <p className="text-muted">Solve your first linked-platform problem to unlock badges.</p>}
+              ))
+            ) : (
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", textAlign: "center", padding: "30px 0", gridColumn: "1 / -1" }}>
+                Solve your first linked-platform problem to unlock badges.
+              </p>
+            )}
           </div>
         </section>
       </div>

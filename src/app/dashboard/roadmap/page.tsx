@@ -19,44 +19,70 @@ export default async function RoadmapPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-1.5 text-3xl font-extrabold">🗺️ Smart Learning Roadmap</h1>
-        <p className="text-secondary">
+      <div className="page-header">
+        <p className="page-eyebrow">Algorithmic Growth Path</p>
+        <h1 className="page-title">
+          <span>🗺️</span> Smart Learning Roadmap
+        </h1>
+        <p className="page-description">
           {hasLinkedSource && analytics?.totalSolved
-            ? `Personalized from ${analytics.totalSolved} solved problems across your linked platforms`
-            : "Start with the NeetCode 75 foundation. Link your accounts anytime for a personalized roadmap."}
+            ? `Personalized recommendation engine active — based on ${analytics.totalSolved} solved problems across your linked platforms.`
+            : "Core NeetCode 75 foundation recommendations. Link your accounts anytime to unlock real-time recommendations."}
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
-        {recommendations.map((item, idx) => (
-          <div
-            key={idx}
-            className="glass-card flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <div>
-              <div className="mb-2 flex flex-wrap items-center gap-2.5">
-                <span className="badge badge-primary">{item.topic}</span>
-                <span className={`badge badge-${item.difficulty?.toLowerCase()}`}>{item.difficulty}</span>
-                <span className="text-[0.9rem] text-muted">Pattern: {item.pattern}</span>
-              </div>
-              <h3 className="mb-1 text-lg font-bold">{item.problemName}</h3>
-              <p className="text-[0.95rem] text-secondary">{item.reason}</p>
-            </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {recommendations.map((item, idx) => {
+          let diffBadge = "badge-easy";
+          if (item.difficulty?.toLowerCase() === "medium") diffBadge = "badge-medium";
+          if (item.difficulty?.toLowerCase() === "hard") diffBadge = "badge-hard";
 
-            {item.problemUrl && (
-              <a
-                href={item.problemUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-primary shrink-0 px-5 py-2.5"
-                id={`solve-prob-${idx}`}
-              >
-                {hasLinkedSource ? "Solve ↗" : "View on NeetCode ↗"}
-              </a>
-            )}
-          </div>
-        ))}
+          return (
+            <div
+              key={idx}
+              className="glass-card"
+              style={{
+                padding: 22,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 280 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+                  <span className="badge badge-primary">{item.topic}</span>
+                  <span className={`badge ${diffBadge}`}>{item.difficulty}</span>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
+                    Pattern: <strong style={{ color: "var(--text-secondary)" }}>{item.pattern}</strong>
+                  </span>
+                </div>
+
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
+                  {item.problemName}
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  {item.reason}
+                </p>
+              </div>
+
+              {item.problemUrl && (
+                <a
+                  href={item.problemUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-primary"
+                  id={`solve-prob-${idx}`}
+                  style={{ alignSelf: "center" }}
+                >
+                  {hasLinkedSource ? "Solve Problem ↗" : "View on NeetCode ↗"}
+                </a>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
