@@ -4,6 +4,7 @@ import { prisma } from "@/shared/db/client";
 import { revalidatePath } from "next/cache";
 import { triggerPlatformSync } from "@/modules/sync/service";
 import { CACHE_KEYS, redis } from "@/shared/cache/redis";
+import { Settings, Save, User, Layers, Shield } from "lucide-react";
 
 async function updateProfile(formData: FormData) {
   "use server";
@@ -68,7 +69,7 @@ export default async function SettingsPage() {
       <div className="page-header">
         <p className="page-eyebrow">Preferences & Configuration</p>
         <h1 className="page-title">
-          <span>⚙️</span> Account Settings
+          <Settings size={24} color="var(--brand-primary)" /> Account Settings
         </h1>
         <p className="page-description">
           Configure connected platform handles and customize profile settings.
@@ -78,9 +79,12 @@ export default async function SettingsPage() {
       <div className="glass-card max-w-3xl" style={{ padding: 28 }}>
         <form action={updateProfile} style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div id="platform-handles">
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
-              Platform Handles
-            </h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
+              <Layers size={18} color="var(--brand-accent)" />
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                Platform Handles
+              </h2>
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
@@ -163,9 +167,12 @@ export default async function SettingsPage() {
           </div>
 
           <div>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
-              Profile Details
-            </h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
+              <User size={18} color="var(--brand-secondary)" />
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                Profile Details
+              </h2>
+            </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
@@ -198,7 +205,7 @@ export default async function SettingsPage() {
 
           <div style={{ paddingTop: 16, borderTop: "1px solid var(--bg-border)", display: "flex", justifyContent: "flex-end" }}>
             <button type="submit" className="btn btn-primary" id="save-settings-btn">
-              <span>💾</span> Save Settings
+              <Save size={16} /> Save Settings
             </button>
           </div>
         </form>

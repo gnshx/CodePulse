@@ -2,18 +2,18 @@ import { isGitHubAuthEnabled, isGoogleAuthEnabled } from "@/modules/auth/config"
 import { registerWithPassword, signInWithPassword } from "@/app/login/actions";
 import { OAuthProviders } from "@/components/auth/oauth-providers";
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
+import { Swords, Utensils, Code2, Moon } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sign In - BetterCP",
+  title: "Sign In - CodePulse",
   description: "Sign in to track your competitive programming progress.",
 };
 
 const MOTIVATION = [
-  { icon: "/auth/eat.svg", label: "Eat", hint: "Fuel up for the grind" },
-  { icon: "/auth/code.svg", label: "Code", hint: "Solve. Repeat. Improve." },
-  { icon: "/auth/sleep.svg", label: "Sleep", hint: "Recover. Come back stronger." },
+  { icon: <Utensils size={24} color="var(--brand-primary)" />, label: "Eat", hint: "Fuel up for the grind" },
+  { icon: <Code2 size={24} color="var(--brand-accent)" />, label: "Code", hint: "Solve. Repeat. Improve." },
+  { icon: <Moon size={24} color="var(--brand-secondary)" />, label: "Sleep", hint: "Recover. Come back stronger." },
 ] as const;
 
 function resolveAuthError(error?: string) {
@@ -48,10 +48,10 @@ export default async function LoginPage({
       <aside className="auth-motivation animate-fade-up">
         <Link href="/" className="auth-motivation-brand">
           <div className="auth-motivation-logo" aria-hidden="true">
-            ⚔
+            <Swords size={20} />
           </div>
           <span>
-            Better<span className="gradient-text">CP</span>
+            Code<span className="gradient-text">Pulse</span>
           </span>
         </Link>
 
@@ -69,7 +69,20 @@ export default async function LoginPage({
         <div className="auth-motivation-grid">
           {MOTIVATION.map((item) => (
             <div key={item.label} className="auth-motivation-card animate-float">
-              <Image src={item.icon} alt="" width={64} height={64} />
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 10,
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--bg-border)",
+                  display: "grid",
+                  placeItems: "center",
+                  marginBottom: 4,
+                }}
+              >
+                {item.icon}
+              </div>
               <strong>{item.label}</strong>
               <span>{item.hint}</span>
             </div>
@@ -81,10 +94,10 @@ export default async function LoginPage({
         <div className="auth-card animate-fade-up">
           <Link href="/" className="auth-mobile-brand">
             <div className="auth-motivation-logo" aria-hidden="true">
-              ⚔
+              <Swords size={20} />
             </div>
             <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "var(--text-primary)" }}>
-              Better<span className="gradient-text">CP</span>
+              Code<span className="gradient-text">Pulse</span>
             </span>
           </Link>
 
@@ -92,7 +105,7 @@ export default async function LoginPage({
             <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
             <p>
               {isSignup
-                ? "Join BetterCP with Google or create a password account."
+                ? "Join CodePulse with Google or create a password account."
                 : "Sign in with Google, GitHub, or your password."}
             </p>
           </div>
@@ -131,69 +144,100 @@ export default async function LoginPage({
 
             {isSignup ? (
               <form action={registerWithPassword} className="password-auth-form">
-                <label htmlFor="username">Username</label>
-                <input
-                  className="input"
-                  id="username"
-                  name="username"
-                  autoComplete="username"
-                  minLength={3}
-                  maxLength={24}
-                  pattern="[a-zA-Z0-9_]+"
-                  required
-                />
-                <label htmlFor="email">Email</label>
-                <input className="input" id="email" name="email" type="email" autoComplete="email" required />
-                <label htmlFor="new-password">Password</label>
-                <input
-                  className="input"
-                  id="new-password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  minLength={8}
-                  maxLength={128}
-                  required
-                />
-                <label htmlFor="confirm-password">Confirm password</label>
-                <input
-                  className="input"
-                  id="confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  minLength={8}
-                  maxLength={128}
-                  required
-                />
+                <div className="auth-field">
+                  <label htmlFor="username">Username</label>
+                  <input
+                    className="input"
+                    id="username"
+                    name="username"
+                    autoComplete="username"
+                    placeholder="e.g. tourist"
+                    minLength={3}
+                    maxLength={24}
+                    pattern="[a-zA-Z0-9_]+"
+                    required
+                  />
+                </div>
+
+                <div className="auth-field">
+                  <label htmlFor="email">Email address</label>
+                  <input
+                    className="input"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    required
+                  />
+                </div>
+
+                <div className="auth-field">
+                  <label htmlFor="new-password">Password</label>
+                  <input
+                    className="input"
+                    id="new-password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    minLength={8}
+                    maxLength={128}
+                    required
+                  />
+                </div>
+
+                <div className="auth-field">
+                  <label htmlFor="confirm-password">Confirm password</label>
+                  <input
+                    className="input"
+                    id="confirm-password"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Re-enter password"
+                    minLength={8}
+                    maxLength={128}
+                    required
+                  />
+                </div>
+
                 <button type="submit" className="btn btn-primary auth-submit-button" id="signup-password-btn">
-                  Create account
+                  Create Account
                 </button>
               </form>
             ) : (
               <form action={signInWithPassword} className="password-auth-form">
-                <label htmlFor="identifier">Email or username</label>
-                <input
-                  className="input"
-                  id="identifier"
-                  name="identifier"
-                  autoComplete="username"
-                  maxLength={254}
-                  required
-                />
-                <label htmlFor="password">Password</label>
-                <input
-                  className="input"
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  minLength={8}
-                  maxLength={128}
-                  required
-                />
+                <div className="auth-field">
+                  <label htmlFor="identifier">Email or username</label>
+                  <input
+                    className="input"
+                    id="identifier"
+                    name="identifier"
+                    autoComplete="username"
+                    placeholder="e.g. tourist or user@example.com"
+                    maxLength={254}
+                    required
+                  />
+                </div>
+
+                <div className="auth-field">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    className="input"
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    minLength={8}
+                    maxLength={128}
+                    required
+                  />
+                </div>
+
                 <button type="submit" className="btn btn-primary auth-submit-button" id="login-password-btn">
-                  Sign in
+                  Sign In
                 </button>
               </form>
             )}

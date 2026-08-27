@@ -4,6 +4,17 @@ import { prisma } from "@/shared/db/client";
 import { fetchLeetCodeProfile } from "@/modules/leetcode/service";
 import { fetchCodeforcesProfile } from "@/modules/codeforces/service";
 import Link from "next/link";
+import {
+  Layers,
+  Settings,
+  ExternalLink,
+  CheckCircle2,
+  AlertCircle,
+  Code2,
+  Trophy,
+  Globe,
+  Terminal,
+} from "lucide-react";
 
 export default async function PlatformsPage() {
   const session = await auth();
@@ -23,10 +34,10 @@ export default async function PlatformsPage() {
       key: "leetcodeUsername",
       username: profile?.leetcodeUsername,
       color: "#ffa116",
-      icon: "🟡",
+      icon: <Code2 size={24} color="#ffa116" />,
       profileData: lcProfile,
       details: [
-        { label: "Total Solved", value: lcProfile?.totalSolved ?? "—" },
+        { label: "Total Solved", value: lcProfile?.totalSolved ? lcProfile.totalSolved.toLocaleString() : "—" },
         { label: "Global Rank", value: lcProfile?.rank ? `#${lcProfile.rank.toLocaleString()}` : "—" },
         { label: "Profile Link", value: lcProfile?.profileUrl ?? "—", isLink: true },
       ],
@@ -36,10 +47,10 @@ export default async function PlatformsPage() {
       key: "codeforcesUsername",
       username: profile?.codeforcesUsername,
       color: "#1a83f2",
-      icon: "🔵",
+      icon: <Trophy size={24} color="#1a83f2" />,
       profileData: cfProfile,
       details: [
-        { label: "Rating", value: cfProfile?.rating ?? "—" },
+        { label: "Rating", value: cfProfile?.rating ? cfProfile.rating.toLocaleString() : "—" },
         { label: "Rank Title", value: cfProfile?.rank ?? "—" },
         { label: "Profile Link", value: cfProfile?.profileUrl ?? "—", isLink: true },
       ],
@@ -49,7 +60,7 @@ export default async function PlatformsPage() {
       key: "gfgUsername",
       username: profile?.gfgUsername,
       color: "#2ba94b",
-      icon: "🟢",
+      icon: <Terminal size={24} color="#2ba94b" />,
       profileData: null,
       details: [
         { label: "Username", value: profile?.gfgUsername ?? "Not set" },
@@ -61,7 +72,7 @@ export default async function PlatformsPage() {
       key: "codechefUsername",
       username: profile?.codechefUsername,
       color: "#d4a574",
-      icon: "🍴",
+      icon: <Globe size={24} color="#d4a574" />,
       profileData: null,
       details: [
         { label: "Username", value: profile?.codechefUsername ?? "Not set" },
@@ -76,14 +87,14 @@ export default async function PlatformsPage() {
         <div>
           <p className="page-eyebrow">Integrations</p>
           <h1 className="page-title">
-            <span>🔗</span> Coding Platforms
+            <Layers size={24} color="var(--brand-accent)" /> Coding Platforms
           </h1>
           <p className="page-description">
             Manage linked competitive programming accounts and platform sync status.
           </p>
         </div>
         <Link href="/dashboard/settings" className="btn btn-primary" id="platforms-manage-btn">
-          <span>⚙️</span> Manage Handles
+          <Settings size={16} /> Manage Handles
         </Link>
       </div>
 
@@ -92,7 +103,19 @@ export default async function PlatformsPage() {
           <div key={p.name} className="glass-card" style={{ padding: 24 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: "2rem" }}>{p.icon}</span>
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--bg-border)",
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                >
+                  {p.icon}
+                </div>
                 <div>
                   <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: p.color }}>{p.name}</h2>
                   <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 500 }}>
@@ -101,6 +124,7 @@ export default async function PlatformsPage() {
                 </div>
               </div>
               <span className={`badge ${p.username ? "badge-easy" : "badge-medium"}`}>
+                {p.username ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
                 {p.username ? "Active" : "Unlinked"}
               </span>
             </div>
@@ -114,9 +138,9 @@ export default async function PlatformsPage() {
                       href={d.value}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "var(--brand-accent)", textDecoration: "none", fontWeight: 700 }}
+                      style={{ color: "var(--brand-accent)", textDecoration: "none", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4 }}
                     >
-                      Open Profile ↗
+                      Open Profile <ExternalLink size={14} />
                     </a>
                   ) : (
                     <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{String(d.value)}</span>
@@ -128,7 +152,7 @@ export default async function PlatformsPage() {
             {!p.username && (
               <Link
                 href="/dashboard/settings#platform-handles"
-                style={{ marginTop: 16, display: "inline-block", fontSize: "0.86rem", fontWeight: 700, color: "var(--brand-accent)", textDecoration: "none" }}
+                style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.86rem", fontWeight: 700, color: "var(--brand-accent)", textDecoration: "none" }}
               >
                 Add handle →
               </Link>

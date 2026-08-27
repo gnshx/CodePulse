@@ -3,12 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-type NavItem = {
-  href: string;
-  icon: string;
-  label: string;
-};
+import { X, Menu, Swords } from "lucide-react";
+import type { NavItem } from "./sidebar-nav";
 
 export function MobileNav({ items }: { items: NavItem[] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +35,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
         className="mobile-nav-toggle"
         id="mobile-menu-toggle-btn"
       >
-        <span style={{ fontSize: "1.2rem" }}>{isOpen ? "✕" : "☰"}</span>
+        {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {isOpen && (
@@ -55,19 +51,20 @@ export function MobileNav({ items }: { items: NavItem[] }) {
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div
                   style={{
-                    width: 30,
-                    height: 30,
+                    width: 32,
+                    height: 32,
                     borderRadius: 8,
                     background: "var(--brand-gradient)",
                     display: "grid",
                     placeItems: "center",
-                    fontSize: 14,
+                    color: "#fff",
+                    boxShadow: "var(--glow-primary)",
                   }}
                 >
-                  ⚔
+                  <Swords size={16} />
                 </div>
                 <span style={{ fontWeight: 800, fontSize: "1.1rem" }}>
-                  Better<span className="gradient-text">CP</span>
+                  Code<span className="gradient-text">Pulse</span>
                 </span>
               </div>
               <button
@@ -76,12 +73,13 @@ export function MobileNav({ items }: { items: NavItem[] }) {
                   background: "none",
                   border: "none",
                   color: "var(--text-muted)",
-                  fontSize: "1.2rem",
                   cursor: "pointer",
                   padding: 4,
+                  display: "grid",
+                  placeItems: "center",
                 }}
               >
-                ✕
+                <X size={20} />
               </button>
             </div>
 
@@ -95,7 +93,9 @@ export function MobileNav({ items }: { items: NavItem[] }) {
                     className={`sidebar-item ${isActive ? "active" : ""}`}
                     id={`mobile-nav-${item.label.toLowerCase().replace(/\s/g, "-")}`}
                   >
-                    <span style={{ fontSize: "1.1rem" }}>{item.icon}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, flexShrink: 0 }}>
+                      {item.icon}
+                    </span>
                     <span>{item.label}</span>
                   </Link>
                 );

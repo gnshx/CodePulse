@@ -2,45 +2,60 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { OAuthProviders } from "@/components/auth/oauth-providers";
 import { isGitHubAuthEnabled, isGoogleAuthEnabled } from "@/modules/auth/config";
+import {
+  Zap,
+  Bot,
+  Brain,
+  Flame,
+  TrendingUp,
+  Target,
+  Swords,
+  Code2,
+  Trophy,
+  Globe,
+  Terminal,
+  ArrowRight,
+  ShieldCheck,
+} from "lucide-react";
 
 const FEATURES = [
   {
-    icon: "⚡",
+    icon: <Zap size={22} color="var(--brand-primary)" />,
     title: "Multi-Platform Sync",
     desc: "Connect LeetCode, Codeforces, CodeChef, and GFG. Track all your progress in one unified intelligence dashboard.",
   },
   {
-    icon: "🤖",
+    icon: <Bot size={22} color="var(--brand-accent)" />,
     title: "AI Coach Insights",
     desc: "Get personalized weekly study plans, readiness assessments, and target recommendations tailored to your rating trajectory.",
   },
   {
-    icon: "🧠",
+    icon: <Brain size={22} color="var(--brand-secondary)" />,
     title: "Topic Mastery Index",
     desc: "See your mastery score for every topic — Arrays, Dynamic Programming, Graphs, Math, and data structures.",
   },
   {
-    icon: "🔥",
+    icon: <Flame size={22} color="#f59e0b" />,
     title: "Consistency & Streaks",
     desc: "Stay consistent with daily goals, streak metrics, and milestone achievement badges.",
   },
   {
-    icon: "📈",
+    icon: <TrendingUp size={22} color="#38bdf8" />,
     title: "Contest Analytics",
     desc: "Track your Codeforces rating growth, rank trends, and contest performance history over time.",
   },
   {
-    icon: "🎯",
+    icon: <Target size={22} color="var(--color-easy)" />,
     title: "Smart Roadmap",
     desc: "Problem recommendations based on your weak topics and target rating range.",
   },
 ];
 
 const PLATFORMS = [
-  { name: "LeetCode", color: "#ffa116", icon: "LC" },
-  { name: "Codeforces", color: "#1a83f2", icon: "CF" },
-  { name: "CodeChef", color: "#d4a574", icon: "CC" },
-  { name: "GeeksforGeeks", color: "#2ba94b", icon: "GFG" },
+  { name: "LeetCode", color: "#ffa116", icon: <Code2 size={14} color="#ffa116" /> },
+  { name: "Codeforces", color: "#1a83f2", icon: <Trophy size={14} color="#1a83f2" /> },
+  { name: "CodeChef", color: "#d4a574", icon: <Globe size={14} color="#d4a574" /> },
+  { name: "GeeksforGeeks", color: "#2ba94b", icon: <Terminal size={14} color="#2ba94b" /> },
 ];
 
 const STATS = [
@@ -68,14 +83,14 @@ export default async function LandingPage() {
               background: "var(--brand-gradient)",
               display: "grid",
               placeItems: "center",
-              fontSize: 16,
+              color: "#ffffff",
               boxShadow: "var(--glow-primary)",
             }}
           >
-            ⚔
+            <Swords size={18} />
           </div>
           <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
-            Better<span className="gradient-text">CP</span>
+            Code<span className="gradient-text">Pulse</span>
           </span>
         </div>
 
@@ -106,9 +121,9 @@ export default async function LandingPage() {
       >
         <div
           className="badge badge-primary animate-fade-up"
-          style={{ marginBottom: 24, fontSize: "0.88rem", padding: "6px 16px" }}
+          style={{ marginBottom: 24, fontSize: "0.86rem", padding: "6px 16px", display: "inline-flex", alignItems: "center", gap: 6 }}
         >
-          🚀 Competitive Programming & Algorithm Intelligence Platform
+          <Zap size={14} color="var(--brand-primary)" /> Competitive Programming & Algorithm Intelligence Platform
         </div>
 
         <h1
@@ -156,7 +171,7 @@ export default async function LandingPage() {
           }}
         >
           <Link href="/login" className="btn btn-primary btn-lg" id="hero-cta-btn">
-            🎯 Start Tracking Free
+            Start Tracking Free <ArrowRight size={18} />
           </Link>
           <Link href="#features" className="btn btn-secondary btn-lg" id="hero-features-btn">
             Explore Features →
@@ -207,16 +222,13 @@ export default async function LandingPage() {
               >
                 <div
                   style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 4,
+                    width: 24,
+                    height: 24,
+                    borderRadius: 6,
                     background: p.color + "20",
                     border: `1px solid ${p.color}50`,
                     display: "grid",
                     placeItems: "center",
-                    fontSize: "0.72rem",
-                    fontWeight: 800,
-                    color: p.color,
                   }}
                 >
                   {p.icon}
@@ -243,7 +255,7 @@ export default async function LandingPage() {
           {STATS.map((s) => (
             <div key={s.label} style={{ textAlign: "center" }}>
               <div
-                className="gradient-text"
+                className="gradient-text tabular-nums"
                 style={{ fontSize: "2rem", fontWeight: 900 }}
               >
                 {s.value}
@@ -281,11 +293,10 @@ export default async function LandingPage() {
                     width: 44,
                     height: 44,
                     borderRadius: "var(--radius-md)",
-                    background: "var(--brand-glow)",
+                    background: "var(--bg-elevated)",
                     border: "1px solid var(--bg-border-hover)",
                     display: "grid",
                     placeItems: "center",
-                    fontSize: "1.4rem",
                     marginBottom: 16,
                   }}
                 >
@@ -323,7 +334,7 @@ export default async function LandingPage() {
             Join coders tracking their algorithmic mastery today.
           </p>
           <Link href="/login" className="btn btn-primary btn-lg" id="bottom-cta-btn">
-            🚀 Start For Free — Instant Access
+            Start For Free — Instant Access <ArrowRight size={18} />
           </Link>
         </div>
       </section>

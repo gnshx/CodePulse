@@ -3,6 +3,7 @@ import { auth } from "@/modules/auth/config";
 import { prisma } from "@/shared/db/client";
 import { fetchCodeforcesRatingHistory } from "@/modules/codeforces/service";
 import Link from "next/link";
+import { Trophy, TrendingUp, AlertCircle, Sparkles, Award } from "lucide-react";
 
 type ContestRating = {
   contestName: string;
@@ -41,7 +42,7 @@ export default async function ContestsPage() {
       <div className="page-header">
         <p className="page-eyebrow">Performance Tracking</p>
         <h1 className="page-title">
-          <span>🏆</span> Contest Performance
+          <Trophy size={24} color="var(--color-medium)" /> Contest Performance
         </h1>
         <p className="page-description">
           Rating history, rank progress, and contest logs from live competitive programming contests.
@@ -54,7 +55,7 @@ export default async function ContestsPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                📈 Codeforces Rating Logs
+                Codeforces Rating Logs
               </h2>
               <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Recent contest rating changes</p>
             </div>
@@ -63,13 +64,15 @@ export default async function ContestsPage() {
 
           {cfHistory.length === 0 ? (
             <div style={{ padding: "40px 16px", textAlign: "center" }}>
-              <p style={{ fontSize: "2rem", marginBottom: 8 }}>📊</p>
-              <p style={{ color: "var(--text-secondary)", fontWeight: 600 }}>No contest history found</p>
+              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 12px", color: "var(--text-muted)" }}>
+                <AlertCircle size={24} />
+              </div>
+              <p style={{ color: "var(--text-secondary)", fontWeight: 700 }}>No contest history found</p>
               <p style={{ color: "var(--text-muted)", fontSize: "0.86rem", marginBottom: 16, marginTop: 4 }}>
                 Link your Codeforces handle to load past contest ratings and ranks.
               </p>
               <Link href="/dashboard/settings#platform-handles" className="btn btn-secondary btn-sm">
-                Link Codeforces Handle ↗
+                Link Codeforces Handle →
               </Link>
             </div>
           ) : (
@@ -105,6 +108,7 @@ export default async function ContestsPage() {
                           fontWeight: 800,
                           color: color,
                         }}
+                        className="tabular-nums"
                       >
                         {c.rating}
                       </span>
@@ -118,9 +122,12 @@ export default async function ContestsPage() {
 
         {/* Contest Highlights Sidebar */}
         <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
-            ✨ Contest Highlights
-          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            <Award size={18} color="var(--brand-accent)" />
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+              Contest Highlights
+            </h2>
+          </div>
 
           <div
             style={{
@@ -130,10 +137,10 @@ export default async function ContestsPage() {
               border: "1px solid var(--bg-border-hover)",
             }}
           >
-            <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
               Peak Rating
             </p>
-            <p style={{ fontSize: "2.2rem", fontWeight: 900, color: peakRating ? getRatingBadgeColor(peakRating) : "var(--text-muted)" }}>
+            <p style={{ fontSize: "2.2rem", fontWeight: 900, color: peakRating ? getRatingBadgeColor(peakRating) : "var(--text-muted)" }} className="tabular-nums">
               {peakRating ?? "—"}
             </p>
           </div>
@@ -146,10 +153,10 @@ export default async function ContestsPage() {
               border: "1px solid var(--bg-border)",
             }}
           >
-            <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
               Contests Participated
             </p>
-            <p style={{ fontSize: "2.2rem", fontWeight: 900, color: "var(--brand-accent)" }}>
+            <p style={{ fontSize: "2.2rem", fontWeight: 900, color: "var(--brand-accent)" }} className="tabular-nums">
               {cfHistory.length}
             </p>
           </div>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 import Link from "next/link";
+import { Brain, Link2, RefreshCw, CheckCircle2, AlertTriangle, Flame } from "lucide-react";
 
 export default async function TopicsPage() {
   const session = await auth();
@@ -21,7 +22,7 @@ export default async function TopicsPage() {
       <div className="page-header">
         <p className="page-eyebrow">Intelligence</p>
         <h1 className="page-title">
-          <span>🧩</span> Topic Mastery Analysis
+          <Brain size={24} color="var(--brand-secondary)" /> Topic Mastery Analysis
         </h1>
         <p className="page-description">
           Algorithmic proficiency metrics dynamically computed from your connected coding accounts.
@@ -30,7 +31,9 @@ export default async function TopicsPage() {
 
       {!hasLinkedSource ? (
         <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto" }}>
-          <p style={{ fontSize: "2.5rem", marginBottom: 12 }}>🔗</p>
+          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--brand-primary)" }}>
+            <Link2 size={28} />
+          </div>
           <h2 style={{ fontSize: "1.25rem", fontWeight: 800, marginBottom: 8, color: "var(--text-primary)" }}>
             Link your coding accounts to unlock topic intelligence
           </h2>
@@ -43,9 +46,11 @@ export default async function TopicsPage() {
         </div>
       ) : topicEntries.length === 0 ? (
         <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto", color: "var(--text-secondary)" }}>
-          <p style={{ fontSize: "2rem", marginBottom: 8 }}>🔄</p>
-          <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>Data Syncing In Progress</p>
-          <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", marginTop: 4 }}>
+          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--brand-accent)" }}>
+            <RefreshCw size={28} className="animate-spin" />
+          </div>
+          <p style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--text-primary)" }}>Data Syncing In Progress</p>
+          <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", marginTop: 6, maxWidth: 460, marginInline: "auto" }}>
             We could not find solved-problem topic data for this account yet. Verify your handles in Settings or wait a moment for the sync to complete.
           </p>
         </div>
@@ -54,12 +59,15 @@ export default async function TopicsPage() {
           {topicEntries.map(([topic, score]) => {
             let badgeCls = "badge-easy";
             let statusText = "Mastered";
+            let StatusIcon = CheckCircle2;
             if (score < 40) {
               badgeCls = "badge-hard";
               statusText = "Needs Practice";
+              StatusIcon = AlertTriangle;
             } else if (score < 70) {
               badgeCls = "badge-medium";
               statusText = "Developing";
+              StatusIcon = Flame;
             }
 
             return (
@@ -68,12 +76,14 @@ export default async function TopicsPage() {
                   <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", textTransform: "capitalize" }}>
                     {topic}
                   </h3>
-                  <span className={`badge ${badgeCls}`}>{statusText}</span>
+                  <span className={`badge ${badgeCls}`}>
+                    <StatusIcon size={12} /> {statusText}
+                  </span>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontSize: "0.84rem", color: "var(--text-muted)", fontWeight: 600 }}>Mastery Index</span>
-                  <span style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--brand-secondary)" }}>{score}%</span>
+                  <span style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--brand-secondary)" }} className="tabular-nums">{score}%</span>
                 </div>
 
                 <div className="progress-bar">

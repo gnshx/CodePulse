@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
-type NavItem = {
+export type NavItem = {
   href: string;
-  icon: string;
+  icon: React.ReactNode;
   label: string;
 };
 
@@ -23,8 +24,10 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
             className={`sidebar-item ${isActive ? "active" : ""}`}
             id={`nav-${item.label.toLowerCase().replace(/\s/g, "-")}`}
           >
-            <span style={{ fontSize: "1.05rem" }}>{item.icon}</span>
-            <span>{item.label}</span>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, flexShrink: 0 }}>
+              {item.icon}
+            </span>
+            <span style={{ fontSize: "0.92rem" }}>{item.label}</span>
           </Link>
         );
       })}

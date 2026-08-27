@@ -3,6 +3,7 @@ import { auth } from "@/modules/auth/config";
 import { getPersonalProgress } from "@/modules/goals/service";
 import type { Goal, Achievement } from "@/shared/types";
 import { getPersonalizedAnalytics } from "@/modules/learning/live-analytics";
+import { Target, Award, CheckCircle2, Flame, Zap, ShieldCheck } from "lucide-react";
 
 export default async function GoalsPage() {
   const session = await auth();
@@ -18,7 +19,7 @@ export default async function GoalsPage() {
       <header className="page-header">
         <p className="page-eyebrow">Personal Performance</p>
         <h1 className="page-title">
-          <span>🎯</span> Goals &amp; Achievements
+          <Target size={24} color="var(--brand-primary)" /> Goals &amp; Achievements
         </h1>
         <p className="page-description">
           Set weekly targets, track streak consistency, and unlock performance badges.
@@ -31,7 +32,7 @@ export default async function GoalsPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                📌 Active Weekly Goals
+                Active Weekly Goals
               </h2>
               <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Target progress for this week</p>
             </div>
@@ -53,7 +54,7 @@ export default async function GoalsPage() {
                 >
                   <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
                     <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)" }}>{g.title}</span>
-                    <span style={{ fontSize: "0.88rem", fontWeight: 800, color: g.isCompleted ? "var(--color-easy)" : "var(--brand-secondary)" }}>
+                    <span style={{ fontSize: "0.88rem", fontWeight: 800, color: g.isCompleted ? "var(--color-easy)" : "var(--brand-secondary)" }} className="tabular-nums">
                       {g.current} / {g.target} {g.unit}
                     </span>
                   </div>
@@ -69,8 +70,12 @@ export default async function GoalsPage() {
                   </div>
 
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: "0.82rem", fontWeight: 600, color: "var(--text-muted)" }}>
-                    <span>{pct}% complete</span>
-                    {g.isCompleted && <span style={{ color: "var(--color-easy)", fontWeight: 800 }}>✓ Completed</span>}
+                    <span className="tabular-nums">{pct}% complete</span>
+                    {g.isCompleted && (
+                      <span style={{ color: "var(--color-easy)", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                        <CheckCircle2 size={12} /> Completed
+                      </span>
+                    )}
                   </div>
                 </div>
               );
@@ -83,7 +88,7 @@ export default async function GoalsPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                🎖️ Achievement Badges
+                Achievement Badges
               </h2>
               <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Milestones unlocked</p>
             </div>
@@ -105,7 +110,9 @@ export default async function GoalsPage() {
                     gap: 8,
                   }}
                 >
-                  <span style={{ fontSize: "2rem" }}>{a.icon}</span>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--brand-glow)", display: "grid", placeItems: "center", color: "var(--brand-primary)" }}>
+                    <Award size={20} />
+                  </div>
                   <div>
                     <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
                       {a.title}
@@ -115,7 +122,7 @@ export default async function GoalsPage() {
                     </p>
                   </div>
                   <span className="badge badge-easy" style={{ width: "fit-content", marginTop: "auto" }}>
-                    Unlocked
+                    <CheckCircle2 size={12} /> Unlocked
                   </span>
                 </div>
               ))

@@ -8,6 +8,22 @@ import {
   fetchCodeforcesAnalytics,
   type CFAnalytics,
 } from "@/modules/codeforces/service";
+import {
+  Zap,
+  Flame,
+  Trophy,
+  Brain,
+  BarChart3,
+  Target,
+  ShieldCheck,
+  AlertCircle,
+  Sparkles,
+  ArrowUpRight,
+  TrendingUp,
+  Layers,
+  Code2,
+} from "lucide-react";
+import Link from "next/link";
 
 // ─────────────────────────────────────────────
 // Shared data — fetched once, passed to every component
@@ -17,7 +33,7 @@ type AllData = {
   lc: Awaited<ReturnType<typeof fetchLeetCodeProfile>>;
   cf: Awaited<ReturnType<typeof fetchCodeforcesProfile>>;
   lcTopics: Record<string, number>;
-  cfA: CFAnalytics;                          // full CF deep analytics
+  cfA: CFAnalytics;
 };
 
 async function fetchAllData(
@@ -96,33 +112,33 @@ async function StatsGrid({
   const statCards = [
     {
       label: "Total Solved",
-      value: totalSolved || "—",
+      value: totalSolved ? totalSolved.toLocaleString() : "—",
       sub: lcSolved && cfSolved ? `LC ${lcSolved} · CF ${cfSolved}` : "Cross-platform total",
-      icon: "⚡",
+      icon: <Zap size={20} color="var(--brand-primary)" />,
       color: "var(--brand-primary)",
       badge: totalSolved > 0 ? "Active" : undefined,
     },
     {
       label: "LeetCode",
-      value: lcSolved || "—",
+      value: lcSolved ? lcSolved.toLocaleString() : "—",
       sub: lc?.rank ? `Global Rank #${lc.rank.toLocaleString()}` : "Not connected",
-      icon: "🟡",
+      icon: <Code2 size={20} color="#ffa116" />,
       color: "#ffa116",
       badge: lcSolved > 0 ? "Synced" : undefined,
     },
     {
       label: "Codeforces",
-      value: cf?.rating ?? "—",
+      value: cf?.rating ? cf.rating.toLocaleString() : "—",
       sub: cf?.rating ? ratingLabel(cf.rating) : "Not connected",
-      icon: "🔵",
+      icon: <Trophy size={20} color={cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)"} />,
       color: cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)",
-      badge: cf?.rating ? `Max ${cfA.maxSolvedRating || cf.rating}` : undefined,
+      badge: cf?.rating ? `Peak ${cfA.maxSolvedRating || cf.rating}` : undefined,
     },
     {
       label: "Current Streak",
       value: currentStreak ? `${currentStreak}d` : "0d",
       sub: longestStreak ? `Personal Best: ${longestStreak}d` : "Consistency score",
-      icon: "🔥",
+      icon: <Flame size={20} color="#f59e0b" />,
       color: "#f59e0b",
       badge: currentStreak > 0 ? "On Fire" : undefined,
     },
@@ -143,7 +159,19 @@ async function StatsGrid({
             <span className="stat-label">{s.label}</span>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {s.badge && <span className="badge badge-primary">{s.badge}</span>}
-              <span style={{ fontSize: "1.2rem", opacity: 0.9 }}>{s.icon}</span>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--bg-border)",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                {s.icon}
+              </div>
             </div>
           </div>
           <div className="stat-value" style={{ color: s.color }}>
@@ -195,11 +223,16 @@ async function DifficultyBreakdown({
   return (
     <div className="glass-card" style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <div>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>📈 Difficulty Distribution</h3>
-          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>LeetCode problem breakdown</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ padding: 8, borderRadius: 8, background: "rgba(59, 130, 246, 0.12)", color: "var(--color-info)" }}>
+            <BarChart3 size={18} />
+          </div>
+          <div>
+            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>Difficulty Breakdown</h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>LeetCode problem distribution</p>
+          </div>
         </div>
-        <span className="badge badge-info">LeetCode</span>
+        <span className="badge platform-leetcode">LeetCode</span>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -234,15 +267,25 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
     return (
       <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem" }}>🎯 CF Rating Distribution</h3>
-          <span className="badge badge-medium">Disconnected</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ padding: 8, borderRadius: 8, background: "rgba(245, 158, 11, 0.12)", color: "var(--color-medium)" }}>
+              <Target size={18} />
+            </div>
+            <h3 style={{ fontWeight: 700, fontSize: "1.05rem" }}>CF Rating Distribution</h3>
+          </div>
+          <span className="badge badge-medium">Unlinked</span>
         </div>
-        <div style={{ textAlign: "center", padding: "36px 16px" }}>
-          <p style={{ fontSize: "2rem", marginBottom: 8 }}>📊</p>
-          <p style={{ color: "var(--text-secondary)", fontWeight: 600, marginBottom: 4 }}>Codeforces Account Unlinked</p>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.86rem" }}>
+        <div style={{ textAlign: "center", padding: "32px 16px" }}>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 12px", color: "var(--text-muted)" }}>
+            <AlertCircle size={22} />
+          </div>
+          <p style={{ color: "var(--text-secondary)", fontWeight: 700, marginBottom: 4 }}>Codeforces Handle Unlinked</p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.86rem", maxWidth: 360, margin: "0 auto 16px" }}>
             Add your Codeforces handle in Settings to unlock rating distributions & target recommendations.
           </p>
+          <Link href="/dashboard/settings#platform-handles" className="btn btn-secondary btn-sm">
+            Link Codeforces Handle →
+          </Link>
         </div>
       </div>
     );
@@ -259,13 +302,18 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
   return (
     <div className="glass-card" style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <div>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>🎯 CF Rating Distribution</h3>
-          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
-            {solvedCount} unique solved · Peak {maxSolvedRating || "—"}
-          </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ padding: 8, borderRadius: 8, background: "rgba(26, 131, 242, 0.12)", color: "#1a83f2" }}>
+            <Target size={18} />
+          </div>
+          <div>
+            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>CF Rating Distribution</h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+              {solvedCount} unique solved · Peak {maxSolvedRating || "—"}
+            </p>
+          </div>
         </div>
-        <span className="badge badge-primary">Codeforces</span>
+        <span className="badge platform-codeforces">Codeforces</span>
       </div>
 
       {nextPracticeMin > 0 && (
@@ -281,17 +329,18 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
             gap: 12,
           }}
         >
-          <span style={{ fontSize: "1.3rem" }}>🚀</span>
+          <div style={{ padding: 6, borderRadius: 6, background: "var(--brand-primary)", color: "#fff" }}>
+            <TrendingUp size={16} />
+          </div>
           <div>
             <p style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text-primary)" }}>
-              Recommended Next Target
+              Recommended Next Practice Target
             </p>
             <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)" }}>
-              Practice{" "}
+              Target rating range:{" "}
               <strong style={{ color: ratingColor(nextPracticeMin) }}>{nextPracticeMin}</strong>
               {" – "}
               <strong style={{ color: ratingColor(nextPracticeMax) }}>{nextPracticeMax}</strong>
-              {" "}rated problems
             </p>
           </div>
         </div>
@@ -314,7 +363,7 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
                   {bucket}
                 </span>
                 <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
-                  {count} {isTarget && <span style={{ color: "var(--brand-accent)", fontWeight: 700 }}>← Target</span>}
+                  {count} {isTarget && <span style={{ color: "var(--brand-cyan)", fontWeight: 700 }}>← Target</span>}
                 </span>
               </div>
               <div className="progress-bar">
@@ -375,9 +424,14 @@ async function TopicMasteryCard({
   return (
     <div className="glass-card" style={{ padding: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <div>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>🧠 Topic Mastery Intelligence</h3>
-          <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Cross-platform algorithmic proficiency</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ padding: 8, borderRadius: 8, background: "rgba(139, 92, 246, 0.12)", color: "var(--brand-secondary)" }}>
+            <Brain size={18} />
+          </div>
+          <div>
+            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>Topic Mastery Intelligence</h3>
+            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Cross-platform algorithmic proficiency</p>
+          </div>
         </div>
         <span className="badge badge-primary">LC + CF</span>
       </div>
@@ -480,9 +534,12 @@ async function InsightsCard({
     <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
       {/* Strengths */}
       <div>
-        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          🟢 Strong Topics
-        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+          <ShieldCheck size={16} color="var(--color-easy)" />
+          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Strong Topics
+          </p>
+        </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {strong.length > 0
             ? strong.slice(0, 6).map((t) => (
@@ -496,9 +553,12 @@ async function InsightsCard({
 
       {/* Weaknesses */}
       <div>
-        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          🔴 Focus Areas
-        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+          <Target size={16} color="var(--color-hard)" />
+          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Focus Areas
+          </p>
+        </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {weak.length > 0
             ? weak.slice(0, 6).map((t) => (
@@ -513,9 +573,12 @@ async function InsightsCard({
       {/* Hardest CF Topics */}
       {cfTopicsByAvgRating.length > 0 && (
         <div>
-          <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-            🔵 Hardest CF Topics
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+            <Layers size={16} color="#1a83f2" />
+            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              Hardest CF Topics
+            </p>
+          </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {cfTopicsByAvgRating.map(([topic, avg]) => (
               <div key={topic} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -544,13 +607,16 @@ async function InsightsCard({
       {cfA.nextPracticeMin > 0 && (
         <div
           style={{
-            padding: "12px 16px",
+            padding: "14px 16px",
             borderRadius: "var(--radius-md)",
             background: "var(--bg-elevated)",
             border: "1px solid var(--bg-border)",
           }}
         >
-          <p style={{ fontSize: "0.85rem", fontWeight: 700, marginBottom: 4, color: "var(--brand-accent)" }}>🎯 Practice Recommendation</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+            <Sparkles size={14} color="var(--brand-accent)" />
+            <p style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--brand-accent)" }}>Practice Recommendation</p>
+          </div>
           <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
             Current comfort level:{" "}
             <strong style={{ color: ratingColor(cfA.p75Rating) }}>{cfA.p75Rating}</strong> rating.
@@ -582,7 +648,7 @@ export default async function DashboardPage() {
       <div className="page-header">
         <p className="page-eyebrow">Command Center</p>
         <h1 className="page-title">
-          <span>👋</span> Welcome back, {session!.user!.name?.split(" ")[0]}
+          <Sparkles size={24} color="var(--brand-primary)" /> Welcome back, {session!.user!.name?.split(" ")[0]}
         </h1>
         <p className="page-description">
           Real-time competitive programming intelligence and rating analytics.

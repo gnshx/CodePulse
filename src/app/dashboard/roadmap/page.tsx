@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getRecommendations, getStarterRecommendations } from "@/modules/recommendations/service";
 import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
+import { Map, ExternalLink, Sparkles, Target, Layers } from "lucide-react";
 
 export default async function RoadmapPage() {
   const session = await auth();
@@ -22,7 +23,7 @@ export default async function RoadmapPage() {
       <div className="page-header">
         <p className="page-eyebrow">Algorithmic Growth Path</p>
         <h1 className="page-title">
-          <span>🗺️</span> Smart Learning Roadmap
+          <Map size={24} color="var(--brand-accent)" /> Smart Learning Roadmap
         </h1>
         <p className="page-description">
           {hasLinkedSource && analytics?.totalSolved
@@ -77,7 +78,7 @@ export default async function RoadmapPage() {
                   id={`solve-prob-${idx}`}
                   style={{ alignSelf: "center" }}
                 >
-                  {hasLinkedSource ? "Solve Problem ↗" : "View on NeetCode ↗"}
+                  {hasLinkedSource ? "Solve Problem" : "View on NeetCode"} <ExternalLink size={14} />
                 </a>
               )}
             </div>
