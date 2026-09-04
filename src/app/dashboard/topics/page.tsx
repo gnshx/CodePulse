@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
 import Link from "next/link";
-import { Brain, Link2, RefreshCw, CheckCircle2, AlertTriangle, Flame } from "lucide-react";
+import { Link2, RefreshCw, CheckCircle2, AlertTriangle, Flame } from "lucide-react";
 
 export default async function TopicsPage() {
   const session = await auth();
@@ -19,43 +19,41 @@ export default async function TopicsPage() {
 
   return (
     <div>
-      <div className="page-header">
+      <header className="page-header">
         <p className="page-eyebrow">Intelligence</p>
-        <h1 className="page-title">
-          <Brain size={24} color="var(--brand-secondary)" /> Topic Mastery Analysis
-        </h1>
+        <h1 className="page-title">Topic Mastery</h1>
         <p className="page-description">
           Algorithmic proficiency metrics dynamically computed from your connected coding accounts.
         </p>
-      </div>
+      </header>
 
       {!hasLinkedSource ? (
-        <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto" }}>
-          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--brand-primary)" }}>
-            <Link2 size={28} />
+        <section className="glass-card" style={{ maxWidth: 560, margin: "var(--space-10) auto", padding: "var(--space-8)", textAlign: "center" }}>
+          <div style={{ width: 44, height: 44, borderRadius: "var(--radius-md)", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto var(--space-4)", color: "var(--brand-primary)" }}>
+            <Link2 size={20} />
           </div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 800, marginBottom: 8, color: "var(--text-primary)" }}>
-            Link your coding accounts to unlock topic intelligence
+          <h2 style={{ fontSize: "var(--text-h2)", fontWeight: 600, marginBottom: "var(--space-2)", color: "var(--text-primary)" }}>
+            Link your coding accounts
           </h2>
-          <p style={{ color: "var(--text-secondary)", marginBottom: 24, fontSize: "0.95rem" }}>
-            Connect LeetCode or Codeforces in Settings so we can analyze solved problems, mastery levels, and focus areas.
+          <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-6)", fontSize: "var(--text-sm)", lineHeight: 1.6 }}>
+            Connect LeetCode or Codeforces in Settings to enable real-time topic mastery analysis and focus area detection.
           </p>
           <Link href="/dashboard/settings#platform-handles" className="btn btn-primary">
-            Connect Platform Handles
+            Connect Platforms
           </Link>
-        </div>
+        </section>
       ) : topicEntries.length === 0 ? (
-        <div className="glass-card max-w-2xl p-8 text-center" style={{ margin: "40px auto", color: "var(--text-secondary)" }}>
-          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--brand-accent)" }}>
-            <RefreshCw size={28} className="animate-spin" />
+        <section className="glass-card" style={{ maxWidth: 560, margin: "var(--space-10) auto", padding: "var(--space-8)", textAlign: "center" }}>
+          <div style={{ width: 44, height: 44, borderRadius: "var(--radius-md)", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto var(--space-4)", color: "var(--brand-accent)" }}>
+            <RefreshCw size={20} className="animate-spin" />
           </div>
-          <p style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--text-primary)" }}>Data Syncing In Progress</p>
-          <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", marginTop: 6, maxWidth: 460, marginInline: "auto" }}>
-            We could not find solved-problem topic data for this account yet. Verify your handles in Settings or wait a moment for the sync to complete.
+          <h2 style={{ fontWeight: 600, fontSize: "var(--text-h2)", color: "var(--text-primary)" }}>Syncing Account Data</h2>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", marginTop: "var(--space-2)", maxWidth: 420, marginInline: "auto" }}>
+            Problem history is syncing from your connected handles. Refresh in a few moments to view your topic breakdown.
           </p>
-        </div>
+        </section>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-4)" }}>
           {topicEntries.map(([topic, score]) => {
             let badgeCls = "badge-easy";
             let statusText = "Mastered";
@@ -70,35 +68,28 @@ export default async function TopicsPage() {
               StatusIcon = Flame;
             }
 
+            const barColor = score >= 70 ? "var(--color-easy)" : score >= 40 ? "var(--color-medium)" : "var(--color-hard)";
+
             return (
-              <div key={topic} className="glass-card" style={{ padding: 22 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)", textTransform: "capitalize" }}>
+              <div key={topic} className="glass-card" style={{ padding: "var(--space-5)" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)" }}>
+                  <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--text-primary)", textTransform: "capitalize" }}>
                     {topic}
                   </h3>
-                  <span className={`badge ${badgeCls}`}>
-                    <StatusIcon size={12} /> {statusText}
+                  <span className={`badge ${badgeCls}`} style={{ fontSize: "var(--text-xs)" }}>
+                    <StatusIcon size={11} /> {statusText}
                   </span>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontSize: "0.84rem", color: "var(--text-muted)", fontWeight: 600 }}>Mastery Index</span>
-                  <span style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--brand-secondary)" }} className="tabular-nums">{score}%</span>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "var(--space-2)" }}>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", fontWeight: 500 }}>Mastery Index</span>
+                  <span style={{ fontSize: "var(--text-h2)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }} className="tabular-nums">
+                    {score}%
+                  </span>
                 </div>
 
                 <div className="progress-bar">
-                  <div
-                    className="progress-bar-fill"
-                    style={{
-                      width: `${score}%`,
-                      background:
-                        score >= 70
-                          ? "var(--color-easy)"
-                          : score >= 40
-                          ? "var(--color-medium)"
-                          : "var(--color-hard)",
-                    }}
-                  />
+                  <div className="progress-bar-fill" style={{ width: `${score}%`, background: barColor }} />
                 </div>
               </div>
             );

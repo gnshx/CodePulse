@@ -12,15 +12,11 @@ import {
   Zap,
   Flame,
   Trophy,
-  Brain,
-  BarChart3,
   Target,
   ShieldCheck,
-  AlertCircle,
   Sparkles,
-  ArrowUpRight,
+  ArrowRight,
   TrendingUp,
-  Layers,
   Code2,
 } from "lucide-react";
 import Link from "next/link";
@@ -70,13 +66,13 @@ async function fetchAllData(
 // Helper: rating colour & label
 // ─────────────────────────────────────────────
 function ratingColor(r: number) {
-  if (r < 1200) return "#94a3b8";
-  if (r < 1400) return "#10b981";
-  if (r < 1600) return "#06b6d4";
-  if (r < 1900) return "#3b82f6";
-  if (r < 2100) return "#a855f7";
-  if (r < 2400) return "#f59e0b";
-  return "#ef4444";
+  if (r < 1200) return "var(--text-muted)";
+  if (r < 1400) return "var(--color-easy)";
+  if (r < 1600) return "var(--color-info)";
+  if (r < 1900) return "#818cf8";
+  if (r < 2100) return "var(--brand-secondary)";
+  if (r < 2400) return "var(--color-medium)";
+  return "var(--color-hard)";
 }
 
 function ratingLabel(r: number) {
@@ -90,7 +86,7 @@ function ratingLabel(r: number) {
 }
 
 // ─────────────────────────────────────────────
-// Top stats row
+// Stats Grid
 // ─────────────────────────────────────────────
 
 async function StatsGrid({
@@ -114,33 +110,29 @@ async function StatsGrid({
       label: "Total Solved",
       value: totalSolved ? totalSolved.toLocaleString() : "—",
       sub: lcSolved && cfSolved ? `LC ${lcSolved} · CF ${cfSolved}` : "Cross-platform total",
-      icon: <Zap size={20} color="var(--brand-primary)" />,
-      color: "var(--brand-primary)",
-      badge: totalSolved > 0 ? "Active" : undefined,
+      icon: <Zap size={16} />,
+      accentColor: "var(--brand-primary)",
     },
     {
       label: "LeetCode",
       value: lcSolved ? lcSolved.toLocaleString() : "—",
-      sub: lc?.rank ? `Global Rank #${lc.rank.toLocaleString()}` : "Not connected",
-      icon: <Code2 size={20} color="#ffa116" />,
-      color: "#ffa116",
-      badge: lcSolved > 0 ? "Synced" : undefined,
+      sub: lc?.rank ? `Rank #${lc.rank.toLocaleString()}` : "Not connected",
+      icon: <Code2 size={16} />,
+      accentColor: "#ffa116",
     },
     {
       label: "Codeforces",
       value: cf?.rating ? cf.rating.toLocaleString() : "—",
       sub: cf?.rating ? ratingLabel(cf.rating) : "Not connected",
-      icon: <Trophy size={20} color={cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)"} />,
-      color: cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)",
-      badge: cf?.rating ? `Peak ${cfA.maxSolvedRating || cf.rating}` : undefined,
+      icon: <Trophy size={16} />,
+      accentColor: cf?.rating ? ratingColor(cf.rating) : "var(--text-muted)",
     },
     {
-      label: "Current Streak",
+      label: "Streak",
       value: currentStreak ? `${currentStreak}d` : "0d",
-      sub: longestStreak ? `Personal Best: ${longestStreak}d` : "Consistency score",
-      icon: <Flame size={20} color="#f59e0b" />,
-      color: "#f59e0b",
-      badge: currentStreak > 0 ? "On Fire" : undefined,
+      sub: longestStreak ? `Best: ${longestStreak}d` : "Start solving to build a streak",
+      icon: <Flame size={16} />,
+      accentColor: "var(--color-medium)",
     },
   ];
 
@@ -148,40 +140,35 @@ async function StatsGrid({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: 20,
-        marginBottom: 28,
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "var(--space-4)",
+        marginBottom: "var(--space-6)",
       }}
     >
       {statCards.map((s) => (
         <div key={s.label} className="stat-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-3)" }}>
             <span className="stat-label">{s.label}</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              {s.badge && <span className="badge badge-primary">{s.badge}</span>}
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: "var(--bg-elevated)",
-                  border: "1px solid var(--bg-border)",
-                  display: "grid",
-                  placeItems: "center",
-                }}
-              >
-                {s.icon}
-              </div>
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: "var(--radius-sm)",
+                background: "var(--bg-elevated)",
+                display: "grid",
+                placeItems: "center",
+                color: s.accentColor,
+              }}
+            >
+              {s.icon}
             </div>
           </div>
-          <div className="stat-value" style={{ color: s.color }}>
+          <div className="stat-value tabular-nums" style={{ color: s.accentColor }}>
             {s.value}
           </div>
-          {s.sub && (
-            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: 8, fontWeight: 500 }}>
-              {s.sub}
-            </p>
-          )}
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", marginTop: "var(--space-2)", fontWeight: 400 }}>
+            {s.sub}
+          </p>
         </div>
       ))}
     </div>
@@ -221,40 +208,44 @@ async function DifficultyBreakdown({
   ];
 
   return (
-    <div className="glass-card" style={{ padding: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ padding: 8, borderRadius: 8, background: "rgba(59, 130, 246, 0.12)", color: "var(--color-info)" }}>
-            <BarChart3 size={18} />
-          </div>
-          <div>
-            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>Difficulty Breakdown</h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>LeetCode problem distribution</p>
-          </div>
+    <section className="glass-card" style={{ padding: "var(--space-5)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-5)" }}>
+        <div>
+          <h3 style={{ fontWeight: 600, fontSize: "var(--text-h3)", color: "var(--text-primary)" }}>Difficulty Breakdown</h3>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", marginTop: 2 }}>LeetCode problem distribution</p>
         </div>
         <span className="badge platform-leetcode">LeetCode</span>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* Segmented bar */}
+      {total > 0 && (
+        <div style={{ display: "flex", height: 8, borderRadius: 99, overflow: "hidden", marginBottom: "var(--space-4)", background: "var(--bg-elevated)" }}>
+          {items.map((item) => {
+            const pct = Math.round((item.value / total) * 100);
+            return pct > 0 ? (
+              <div key={item.label} style={{ width: `${pct}%`, background: item.color, transition: "width 0.6s var(--ease-out)" }} />
+            ) : null;
+          })}
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
         {items.map((item) => {
           const pct = total > 0 ? Math.round((item.value / total) * 100) : 0;
           return (
-            <div key={item.label}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <span className={`badge ${item.cls}`}>{item.label}</span>
-                <span style={{ fontWeight: 700, fontSize: "0.92rem", color: "var(--text-primary)" }}>
-                  {item.value}{" "}
-                  <span style={{ color: "var(--text-muted)", fontWeight: 500, fontSize: "0.84rem" }}>({pct}%)</span>
-                </span>
+            <div key={item.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+                <div style={{ width: 8, height: 8, borderRadius: 2, background: item.color }} />
+                <span style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>{item.label}</span>
               </div>
-              <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${pct}%`, background: item.color }} />
-              </div>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text-primary)" }}>
+                {item.value} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({pct}%)</span>
+              </span>
             </div>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -265,29 +256,20 @@ async function DifficultyBreakdown({
 function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsername: string | null }) {
   if (!cfUsername) {
     return (
-      <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ padding: 8, borderRadius: 8, background: "rgba(245, 158, 11, 0.12)", color: "var(--color-medium)" }}>
-              <Target size={18} />
-            </div>
-            <h3 style={{ fontWeight: 700, fontSize: "1.05rem" }}>CF Rating Distribution</h3>
+      <section className="glass-card" style={{ padding: "var(--space-5)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", padding: "var(--space-8) var(--space-4)" }}>
+          <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto var(--space-3)", color: "var(--text-muted)" }}>
+            <Target size={20} />
           </div>
-          <span className="badge badge-medium">Unlinked</span>
-        </div>
-        <div style={{ textAlign: "center", padding: "32px 16px" }}>
-          <div style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--bg-elevated)", display: "grid", placeItems: "center", margin: "0 auto 12px", color: "var(--text-muted)" }}>
-            <AlertCircle size={22} />
-          </div>
-          <p style={{ color: "var(--text-secondary)", fontWeight: 700, marginBottom: 4 }}>Codeforces Handle Unlinked</p>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.86rem", maxWidth: 360, margin: "0 auto 16px" }}>
-            Add your Codeforces handle in Settings to unlock rating distributions & target recommendations.
+          <p style={{ color: "var(--text-primary)", fontWeight: 600, fontSize: "var(--text-body)", marginBottom: "var(--space-1)" }}>Codeforces not linked</p>
+          <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", maxWidth: 320, margin: "0 auto var(--space-4)" }}>
+            Add your handle in Settings to see rating distributions and practice targets.
           </p>
           <Link href="/dashboard/settings#platform-handles" className="btn btn-secondary btn-sm">
-            Link Codeforces Handle →
+            Link Handle
           </Link>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -297,21 +279,14 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
     .sort(([a], [b]) => a - b);
 
   const maxCount = Math.max(...sortedBuckets.map(([, c]) => c), 1);
-  const { nextPracticeMin, nextPracticeMax, maxSolvedRating, solvedCount } = cfA;
+  const { nextPracticeMin, nextPracticeMax, solvedCount } = cfA;
 
   return (
-    <div className="glass-card" style={{ padding: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ padding: 8, borderRadius: 8, background: "rgba(26, 131, 242, 0.12)", color: "#1a83f2" }}>
-            <Target size={18} />
-          </div>
-          <div>
-            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>CF Rating Distribution</h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
-              {solvedCount} unique solved · Peak {maxSolvedRating || "—"}
-            </p>
-          </div>
+    <section className="glass-card" style={{ padding: "var(--space-5)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-4)" }}>
+        <div>
+          <h3 style={{ fontWeight: 600, fontSize: "var(--text-h3)", color: "var(--text-primary)" }}>Rating Distribution</h3>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", marginTop: 2 }}>{solvedCount} solved problems</p>
         </div>
         <span className="badge platform-codeforces">Codeforces</span>
       </div>
@@ -319,72 +294,56 @@ function CFRatingDistribution({ cfA, cfUsername }: { cfA: CFAnalytics; cfUsernam
       {nextPracticeMin > 0 && (
         <div
           style={{
-            margin: "0 0 20px",
-            padding: "12px 16px",
+            margin: `0 0 var(--space-4)`,
+            padding: "var(--space-3) var(--space-4)",
             borderRadius: "var(--radius-md)",
-            background: "var(--brand-glow)",
-            border: "1px solid var(--bg-border-hover)",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--bg-border)",
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            gap: "var(--space-3)",
           }}
         >
-          <div style={{ padding: 6, borderRadius: 6, background: "var(--brand-primary)", color: "#fff" }}>
-            <TrendingUp size={16} />
-          </div>
-          <div>
-            <p style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--text-primary)" }}>
-              Recommended Next Practice Target
-            </p>
-            <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)" }}>
-              Target rating range:{" "}
-              <strong style={{ color: ratingColor(nextPracticeMin) }}>{nextPracticeMin}</strong>
-              {" – "}
-              <strong style={{ color: ratingColor(nextPracticeMax) }}>{nextPracticeMax}</strong>
-            </p>
-          </div>
+          <TrendingUp size={14} color="var(--brand-primary)" />
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>
+            Practice target: <span style={{ fontFamily: "var(--font-mono)", fontWeight: 500, color: "var(--text-primary)" }}>{nextPracticeMin}–{nextPracticeMax}</span>
+          </p>
         </div>
       )}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
         {sortedBuckets.map(([bucket, count]) => {
           const pct = Math.round((count / maxCount) * 100);
           const isTarget = bucket >= nextPracticeMin && bucket <= nextPracticeMax;
           return (
-            <div key={bucket}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                <span
-                  style={{
-                    fontSize: "0.88rem",
-                    fontWeight: 700,
-                    color: ratingColor(bucket),
-                  }}
-                >
-                  {bucket}
-                </span>
-                <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
-                  {count} {isTarget && <span style={{ color: "var(--brand-cyan)", fontWeight: 700 }}>← Target</span>}
-                </span>
-              </div>
-              <div className="progress-bar">
+            <div key={bucket} style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+              <span style={{ fontSize: "var(--text-xs)", fontFamily: "var(--font-mono)", fontWeight: 500, color: ratingColor(bucket), width: 36, textAlign: "right" }}>
+                {bucket}
+              </span>
+              <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--bg-elevated)", overflow: "hidden" }}>
                 <div
-                  className="progress-bar-fill"
                   style={{
+                    height: "100%",
                     width: `${pct}%`,
-                    background: isTarget ? "var(--brand-gradient)" : ratingColor(bucket),
+                    borderRadius: 3,
+                    background: isTarget ? "var(--brand-primary)" : ratingColor(bucket),
+                    transition: "width 0.6s var(--ease-out)",
                   }}
                 />
               </div>
+              <span style={{ fontSize: "var(--text-xs)", fontFamily: "var(--font-mono)", color: "var(--text-muted)", width: 24, textAlign: "right" }}>
+                {count}
+              </span>
             </div>
           );
         })}
         {sortedBuckets.length === 0 && (
-          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "20px 0", fontSize: "0.88rem" }}>
-            No rated problem data found yet
+          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "var(--space-5) 0", fontSize: "var(--text-sm)" }}>
+            No rated problems found yet
           </p>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -422,79 +381,49 @@ async function TopicMasteryCard({
     .slice(0, 8);
 
   return (
-    <div className="glass-card" style={{ padding: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ padding: 8, borderRadius: 8, background: "rgba(139, 92, 246, 0.12)", color: "var(--brand-secondary)" }}>
-            <Brain size={18} />
-          </div>
-          <div>
-            <h3 style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text-primary)" }}>Topic Mastery Intelligence</h3>
-            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Cross-platform algorithmic proficiency</p>
-          </div>
+    <section className="glass-card" style={{ padding: "var(--space-5)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-5)" }}>
+        <div>
+          <h3 style={{ fontWeight: 600, fontSize: "var(--text-h3)", color: "var(--text-primary)" }}>Topic Mastery</h3>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", marginTop: 2 }}>Algorithmic proficiency</p>
         </div>
-        <span className="badge badge-primary">LC + CF</span>
+        <Link href="/dashboard/topics" className="btn btn-ghost btn-sm" style={{ fontSize: "var(--text-xs)" }}>
+          View All <ArrowRight size={12} />
+        </Link>
       </div>
 
       {topics.length === 0 ? (
-        <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "24px 0", fontSize: "0.9rem" }}>
+        <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "var(--space-6) 0", fontSize: "var(--text-sm)" }}>
           Link a profile to start tracking topic mastery
         </p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
           {topics.map(([topic, score]) => {
-            const fromLC = (lcTopics[topic] ?? 0) > 0;
-            const fromCF = (cfTopics[topic] ?? 0) > 0;
-            const avgRating = cfA.topicAvgRating[topic];
-
+            const barColor = score >= 70 ? "var(--color-easy)" : score >= 40 ? "var(--color-medium)" : "var(--color-hard)";
             return (
               <div key={topic}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)", textTransform: "capitalize" }}>
-                      {topic}
-                    </span>
-                    {fromLC && (
-                      <span className="badge platform-leetcode" style={{ padding: "1px 6px", fontSize: "0.72rem" }}>
-                        LC
-                      </span>
-                    )}
-                    {fromCF && (
-                      <span className="badge platform-codeforces" style={{ padding: "1px 6px", fontSize: "0.72rem" }}>
-                        CF
-                      </span>
-                    )}
-                    {avgRating && (
-                      <span
-                        style={{
-                          fontSize: "0.72rem",
-                          fontWeight: 700,
-                          padding: "1px 6px",
-                          borderRadius: 4,
-                          background: `${ratingColor(avgRating)}18`,
-                          color: ratingColor(avgRating),
-                        }}
-                      >
-                        ~{avgRating} avg
-                      </span>
-                    )}
-                  </div>
-                  <span style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--brand-secondary)" }}>{score}%</span>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <span style={{ fontSize: "var(--text-sm)", fontWeight: 450, color: "var(--text-primary)", textTransform: "capitalize" }}>
+                    {topic}
+                  </span>
+                  <span style={{ fontSize: "var(--text-xs)", fontFamily: "var(--font-mono)", fontWeight: 500, color: "var(--text-secondary)" }}>
+                    {score}%
+                  </span>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-bar-fill" style={{ width: `${score}%` }} />
+                  <div className="progress-bar-fill" style={{ width: `${score}%`, background: barColor }} />
                 </div>
               </div>
             );
           })}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
 // ─────────────────────────────────────────────
-// Strengths & Weaknesses Insights
+// Insights — Strengths, Weaknesses, Next Move
 // ─────────────────────────────────────────────
 
 async function InsightsCard({
@@ -526,108 +455,77 @@ async function InsightsCard({
     strong = scored.filter(([, s]) => s >= 75).map(([t]) => t);
   }
 
-  const cfTopicsByAvgRating = Object.entries(cfA.topicAvgRating)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 5);
+  // Find top weak topic for "Next Best Move"
+  const topWeakTopic = weak[0];
 
   return (
-    <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
-      {/* Strengths */}
-      <div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-          <ShieldCheck size={16} color="var(--color-easy)" />
-          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-            Strong Topics
-          </p>
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {strong.length > 0
-            ? strong.slice(0, 6).map((t) => (
-                <span key={t} className="badge badge-easy" style={{ textTransform: "capitalize", fontSize: "0.84rem" }}>
-                  {t}
-                </span>
-              ))
-            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No mastered topics yet</span>}
-        </div>
-      </div>
-
-      {/* Weaknesses */}
-      <div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-          <Target size={16} color="var(--color-hard)" />
-          <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-            Focus Areas
-          </p>
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {weak.length > 0
-            ? weak.slice(0, 6).map((t) => (
-                <span key={t} className="badge badge-hard" style={{ textTransform: "capitalize", fontSize: "0.84rem" }}>
-                  {t}
-                </span>
-              ))
-            : <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No weak areas identified</span>}
-        </div>
-      </div>
-
-      {/* Hardest CF Topics */}
-      {cfTopicsByAvgRating.length > 0 && (
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-            <Layers size={16} color="#1a83f2" />
-            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Hardest CF Topics
-            </p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {cfTopicsByAvgRating.map(([topic, avg]) => (
-              <div key={topic} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.88rem", textTransform: "capitalize", color: "var(--text-secondary)", fontWeight: 500 }}>
-                  {topic}
-                </span>
-                <span
-                  style={{
-                    fontSize: "0.78rem",
-                    fontWeight: 700,
-                    padding: "2px 8px",
-                    borderRadius: 4,
-                    background: `${ratingColor(avg)}15`,
-                    color: ratingColor(avg),
-                  }}
-                >
-                  ~{avg}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Target recommendation CTA */}
-      {cfA.nextPracticeMin > 0 && (
+    <section className="glass-card" style={{ padding: "var(--space-5)", display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
+      {/* Next Best Move — the defining feature */}
+      {topWeakTopic && (
         <div
           style={{
-            padding: "14px 16px",
+            padding: "var(--space-4)",
             borderRadius: "var(--radius-md)",
             background: "var(--bg-elevated)",
             border: "1px solid var(--bg-border)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-            <Sparkles size={14} color="var(--brand-accent)" />
-            <p style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--brand-accent)" }}>Practice Recommendation</p>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginBottom: "var(--space-2)" }}>
+            <Sparkles size={14} color="var(--brand-primary)" />
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--brand-primary)" }}>
+              Next Best Move
+            </span>
           </div>
-          <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-            Current comfort level:{" "}
-            <strong style={{ color: ratingColor(cfA.p75Rating) }}>{cfA.p75Rating}</strong> rating.
-            Target range:{" "}
-            <strong style={{ color: ratingColor(cfA.nextPracticeMin) }}>
-              {cfA.nextPracticeMin}–{cfA.nextPracticeMax}
-            </strong>.
+          <p style={{ fontSize: "var(--text-body)", fontWeight: 600, color: "var(--text-primary)", textTransform: "capitalize", marginBottom: "var(--space-1)" }}>
+            {topWeakTopic}
           </p>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>
+            Your weakest area — focus here for the highest impact improvement.
+          </p>
+          <Link href="/dashboard/roadmap" className="btn btn-primary btn-sm" style={{ marginTop: "var(--space-3)" }}>
+            Start Practice <ArrowRight size={12} />
+          </Link>
         </div>
       )}
-    </div>
+
+      {/* Strengths */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginBottom: "var(--space-2)" }}>
+          <ShieldCheck size={14} color="var(--color-easy)" />
+          <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)" }}>
+            Strong Topics
+          </span>
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
+          {strong.length > 0
+            ? strong.slice(0, 5).map((t) => (
+                <span key={t} className="badge badge-easy" style={{ textTransform: "capitalize", fontSize: "var(--text-xs)" }}>
+                  {t}
+                </span>
+              ))
+            : <span style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>No mastered topics yet</span>}
+        </div>
+      </div>
+
+      {/* Weaknesses */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginBottom: "var(--space-2)" }}>
+          <Target size={14} color="var(--color-hard)" />
+          <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)" }}>
+            Focus Areas
+          </span>
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
+          {weak.length > 0
+            ? weak.slice(0, 5).map((t) => (
+                <span key={t} className="badge badge-hard" style={{ textTransform: "capitalize", fontSize: "var(--text-xs)" }}>
+                  {t}
+                </span>
+              ))
+            : <span style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>No weak areas identified</span>}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -642,29 +540,52 @@ export default async function DashboardPage() {
   const profile = await prisma.profile.findUnique({ where: { userId } });
   const data = await fetchAllData(profile);
 
-  return (
-    <div className="dashboard-page">
-      {/* Header */}
-      <div className="page-header">
-        <p className="page-eyebrow">Command Center</p>
-        <h1 className="page-title">
-          <Sparkles size={24} color="var(--brand-primary)" /> Welcome back, {session!.user!.name?.split(" ")[0]}
-        </h1>
-        <p className="page-description">
-          Real-time competitive programming intelligence and rating analytics.
-        </p>
-      </div>
+  const firstName = session!.user!.name?.split(" ")[0] ?? "there";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-      {/* Row 1: Platform stat cards */}
+  return (
+    <div>
+      {/* Header */}
+      <header className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "var(--space-4)" }}>
+        <div>
+          <span className="badge badge-primary" style={{ fontSize: "var(--text-xs)", marginBottom: "var(--space-2)", display: "inline-flex" }}>
+            Eat. Sleep. Code. Repeat.
+          </span>
+          <h1 className="page-title" style={{ gap: "var(--space-2)" }}>
+            {greeting}, {firstName}
+          </h1>
+          <p className="page-description">
+            Your competitive programming performance at a glance.
+          </p>
+        </div>
+
+        <div
+          style={{
+            padding: "var(--space-3) var(--space-4)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--bg-border)",
+            fontSize: "var(--text-xs)",
+            color: "var(--text-secondary)",
+            fontStyle: "italic",
+            maxWidth: 360,
+          }}
+        >
+          &ldquo;Talk is cheap. Show me the code.&rdquo; — Linus Torvalds
+        </div>
+      </header>
+
+      {/* Stats Grid */}
       <StatsGrid userId={userId} data={data} />
 
-      {/* Row 2: LC Difficulty | CF Rating Distribution */}
+      {/* Difficulty + CF Rating */}
       <div className="dashboard-row-2col">
         <DifficultyBreakdown userId={userId} data={data} />
         <CFRatingDistribution cfA={data.cfA} cfUsername={profile?.codeforcesUsername ?? null} />
       </div>
 
-      {/* Row 3: Topic Mastery | Insights + Next Practice */}
+      {/* Topic Mastery + Insights */}
       <div className="dashboard-row-split">
         <TopicMasteryCard userId={userId} data={data} />
         <InsightsCard userId={userId} data={data} />

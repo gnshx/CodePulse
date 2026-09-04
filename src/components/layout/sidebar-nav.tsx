@@ -14,7 +14,7 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {items.map((item) => {
         const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
         return (
@@ -24,10 +24,10 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
             className={`sidebar-item ${isActive ? "active" : ""}`}
             id={`nav-${item.label.toLowerCase().replace(/\s/g, "-")}`}
           >
-            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16, flexShrink: 0 }}>
               {item.icon}
             </span>
-            <span style={{ fontSize: "0.92rem" }}>{item.label}</span>
+            <span style={{ fontSize: "var(--text-sm)" }}>{item.label}</span>
           </Link>
         );
       })}

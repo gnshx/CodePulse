@@ -10,11 +10,6 @@ export function MobileNav({ items }: { items: NavItem[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close drawer when route changes
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
   // Prevent background scrolling when open
   useEffect(() => {
     if (isOpen) {
@@ -47,24 +42,23 @@ export function MobileNav({ items }: { items: NavItem[] }) {
             className="mobile-drawer-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, paddingBottom: 12, borderBottom: "1px solid var(--bg-border)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid var(--bg-border)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div
                   style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 8,
+                    width: 26,
+                    height: 26,
+                    borderRadius: 6,
                     background: "var(--brand-gradient)",
                     display: "grid",
                     placeItems: "center",
                     color: "#fff",
-                    boxShadow: "var(--glow-primary)",
                   }}
                 >
-                  <Swords size={16} />
+                  <Swords size={14} />
                 </div>
-                <span style={{ fontWeight: 800, fontSize: "1.1rem" }}>
-                  Better<span className="gradient-text">CP</span>
+                <span style={{ fontWeight: 600, fontSize: "0.9375rem", color: "var(--text-primary)" }}>
+                  Better<span style={{ color: "var(--brand-primary)" }}>CP</span>
                 </span>
               </div>
               <button
@@ -79,24 +73,25 @@ export function MobileNav({ items }: { items: NavItem[] }) {
                   placeItems: "center",
                 }}
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               {items.map((item) => {
                 const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => setIsOpen(false)}
                     className={`sidebar-item ${isActive ? "active" : ""}`}
                     id={`mobile-nav-${item.label.toLowerCase().replace(/\s/g, "-")}`}
                   >
-                    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, flexShrink: 0 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16, flexShrink: 0 }}>
                       {item.icon}
                     </span>
-                    <span>{item.label}</span>
+                    <span style={{ fontSize: "var(--text-sm)" }}>{item.label}</span>
                   </Link>
                 );
               })}

@@ -9,53 +9,53 @@ import {
   Flame,
   TrendingUp,
   Target,
-  Swords,
+  Activity,
   Code2,
   Trophy,
   Globe,
   Terminal,
   ArrowRight,
-  ShieldCheck,
+  Quote,
 } from "lucide-react";
 
 const FEATURES = [
   {
-    icon: <Zap size={22} color="var(--brand-primary)" />,
+    icon: <Zap size={18} color="var(--brand-primary)" />,
     title: "Multi-Platform Sync",
-    desc: "Connect LeetCode, Codeforces, CodeChef, and GFG. Track all your progress in one unified intelligence dashboard.",
+    desc: "Connect LeetCode, Codeforces, CodeChef, and GFG into one unified analytics dashboard.",
   },
   {
-    icon: <Bot size={22} color="var(--brand-accent)" />,
-    title: "AI Coach Insights",
-    desc: "Get personalized weekly study plans, readiness assessments, and target recommendations tailored to your rating trajectory.",
+    icon: <Bot size={18} color="var(--brand-primary)" />,
+    title: "AI Performance Coach",
+    desc: "Personalized weekly study plans, readiness assessments, and rating recommendations.",
   },
   {
-    icon: <Brain size={22} color="var(--brand-secondary)" />,
+    icon: <Brain size={18} color="var(--color-easy)" />,
     title: "Topic Mastery Index",
-    desc: "See your mastery score for every topic — Arrays, Dynamic Programming, Graphs, Math, and data structures.",
+    desc: "Track proficiency across Arrays, DP, Graphs, Math, and Trees in real-time.",
   },
   {
-    icon: <Flame size={22} color="#f59e0b" />,
-    title: "Consistency & Streaks",
-    desc: "Stay consistent with daily goals, streak metrics, and milestone achievement badges.",
+    icon: <Flame size={18} color="var(--color-medium)" />,
+    title: "Streak & Consistency",
+    desc: "Maintain daily goals, streak metrics, and achievement badges built for coders.",
   },
   {
-    icon: <TrendingUp size={22} color="#38bdf8" />,
+    icon: <TrendingUp size={18} color="var(--color-info)" />,
     title: "Contest Analytics",
-    desc: "Track your Codeforces rating growth, rank trends, and contest performance history over time.",
+    desc: "Track Codeforces rating growth, rank trends, and contest performance history.",
   },
   {
-    icon: <Target size={22} color="var(--color-easy)" />,
+    icon: <Target size={18} color="var(--color-hard)" />,
     title: "Smart Roadmap",
-    desc: "Problem recommendations based on your weak topics and target rating range.",
+    desc: "Algorithmic problem recommendations tailored to your rating gap.",
   },
 ];
 
 const PLATFORMS = [
-  { name: "LeetCode", color: "#ffa116", icon: <Code2 size={14} color="#ffa116" /> },
-  { name: "Codeforces", color: "#1a83f2", icon: <Trophy size={14} color="#1a83f2" /> },
-  { name: "CodeChef", color: "#d4a574", icon: <Globe size={14} color="#d4a574" /> },
-  { name: "GeeksforGeeks", color: "#2ba94b", icon: <Terminal size={14} color="#2ba94b" /> },
+  { name: "LeetCode", color: "#ffa116", icon: <Code2 size={13} color="#ffa116" /> },
+  { name: "Codeforces", color: "#818cf8", icon: <Trophy size={13} color="#818cf8" /> },
+  { name: "CodeChef", color: "#fbbf24", icon: <Globe size={13} color="#fbbf24" /> },
+  { name: "GeeksforGeeks", color: "#34d399", icon: <Terminal size={13} color="#34d399" /> },
 ];
 
 const STATS = [
@@ -68,39 +68,39 @@ const STATS = [
 export default async function LandingPage() {
   const showGoogleAuth = isGoogleAuthEnabled;
   const showGitHubAuth = isGitHubAuthEnabled;
+
   return (
     <div style={{ position: "relative", overflow: "hidden" }}>
       <div className="bg-mesh" />
 
       {/* ── Navbar ── */}
       <nav className="navbar" style={{ justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 10,
+              width: 28,
+              height: 28,
+              borderRadius: 7,
               background: "var(--brand-gradient)",
               display: "grid",
               placeItems: "center",
               color: "#ffffff",
-              boxShadow: "var(--glow-primary)",
             }}
           >
-            <Swords size={18} />
+            <Activity size={14} />
           </div>
-          <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
-            Better<span className="gradient-text">CP</span>
+          <span style={{ fontWeight: 600, fontSize: "0.9375rem", color: "var(--text-primary)" }}>
+            Better<span style={{ color: "var(--brand-primary)" }}>CP</span>
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <ThemeToggle />
-          <Link href="/login" className="btn btn-ghost" id="nav-login-btn">
+          <Link href="/login" className="btn btn-ghost btn-sm" id="nav-login-btn">
             Sign In
           </Link>
-          <Link href="/login" className="btn btn-primary" id="nav-get-started-btn">
-            Get Started Free
+          <Link href="/login" className="btn btn-primary btn-sm" id="nav-get-started-btn">
+            Get Started
           </Link>
         </div>
       </nav>
@@ -108,80 +108,75 @@ export default async function LandingPage() {
       {/* ── Hero ── */}
       <section
         style={{
-          minHeight: "100vh",
+          minHeight: "85vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "120px 24px 80px",
+          padding: "100px var(--space-5) 60px",
           position: "relative",
           zIndex: 1,
         }}
       >
         <div
           className="badge badge-primary animate-fade-up"
-          style={{ marginBottom: 24, fontSize: "0.86rem", padding: "6px 16px", display: "inline-flex", alignItems: "center", gap: 6 }}
+          style={{ marginBottom: "var(--space-4)", fontSize: "var(--text-xs)", padding: "4px 12px", display: "inline-flex", alignItems: "center", gap: 6 }}
         >
-          <Zap size={14} color="var(--brand-primary)" /> Competitive Programming & Algorithm Intelligence Platform
+          Eat. Sleep. Code. Repeat. — Precision CP Intelligence
         </div>
 
         <h1
           className="animate-fade-up"
           style={{
-            fontSize: "clamp(2.5rem, 6vw, 4.8rem)",
-            fontWeight: 900,
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-            maxWidth: 860,
-            animationDelay: "0.1s",
+            fontSize: "clamp(2.2rem, 5vw, 4rem)",
+            fontWeight: 700,
+            lineHeight: 1.15,
+            letterSpacing: "-0.02em",
+            maxWidth: 780,
+            color: "var(--text-primary)",
           }}
         >
-          Level Up Your{" "}
-          <span className="gradient-text">Competitive</span>
-          <br />
-          Programming Journey
+          Talk is cheap. <br />
+          <span style={{ color: "var(--brand-primary)" }}>Show me the code.</span>
         </h1>
 
         <p
           className="animate-fade-up"
           style={{
-            marginTop: 24,
-            fontSize: "1.15rem",
+            marginTop: "var(--space-4)",
+            fontSize: "var(--text-body)",
             color: "var(--text-secondary)",
-            maxWidth: 640,
-            lineHeight: 1.7,
-            animationDelay: "0.2s",
+            maxWidth: 560,
+            lineHeight: 1.6,
           }}
         >
-          Track progress across LeetCode, Codeforces, CodeChef & GFG in real-time.
-          Unlock AI coaching, target rating insights, and topic mastery.
+          Stop talking, start solving. Track your performance across LeetCode, Codeforces, CodeChef &amp; GFG with AI coaching and topic mastery insights.
         </p>
 
         <div
           className="animate-fade-up"
           style={{
-            marginTop: 36,
+            marginTop: "var(--space-6)",
             display: "flex",
-            gap: 14,
+            gap: "var(--space-3)",
             flexWrap: "wrap",
             justifyContent: "center",
-            animationDelay: "0.3s",
-            maxWidth: 520,
+            maxWidth: 480,
           }}
         >
-          <Link href="/login" className="btn btn-primary btn-lg" id="hero-cta-btn">
-            Start Tracking Free <ArrowRight size={18} />
+          <Link href="/login" className="btn btn-primary" id="hero-cta-btn">
+            Start Free <ArrowRight size={14} />
           </Link>
-          <Link href="#features" className="btn btn-secondary btn-lg" id="hero-features-btn">
-            Explore Features →
+          <Link href="#features" className="btn btn-secondary" id="hero-features-btn">
+            Explore Features
           </Link>
         </div>
 
         {(showGoogleAuth || showGitHubAuth) && (
           <div
             className="animate-fade-up"
-            style={{ marginTop: 20, width: "100%", maxWidth: 360, animationDelay: "0.35s" }}
+            style={{ marginTop: "var(--space-4)", width: "100%", maxWidth: 320 }}
           >
             <OAuthProviders
               googleEnabled={showGoogleAuth}
@@ -191,49 +186,55 @@ export default async function LandingPage() {
           </div>
         )}
 
+        {/* Coder Quote Card */}
+        <div
+          className="animate-fade-up glass-card"
+          style={{
+            marginTop: "var(--space-8)",
+            padding: "var(--space-4) var(--space-6)",
+            maxWidth: 520,
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-3)",
+            textAlign: "left",
+          }}
+        >
+          <Quote size={20} color="var(--brand-primary)" style={{ flexShrink: 0 }} />
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--text-secondary)", fontStyle: "italic" }}>
+            &ldquo;Consistency beats intensity. Solve daily, track weak topics, and let the rating take care of itself.&rdquo;
+          </p>
+        </div>
+
         {/* Platform Chips */}
         <div
           className="animate-fade-up"
           style={{
-            marginTop: 56,
+            marginTop: "var(--space-8)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 14,
-            animationDelay: "0.4s",
+            gap: "var(--space-3)",
           }}
         >
-          <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", fontWeight: 600 }}>
-            Unified tracking for your favorite platforms
+          <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", fontWeight: 500 }}>
+            Supported platforms
           </p>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "center" }}>
             {PLATFORMS.map((p) => (
               <div
                 key={p.name}
                 style={{
-                  padding: "8px 18px",
+                  padding: "6px 14px",
                   borderRadius: "var(--radius-md)",
                   border: "1px solid var(--bg-border)",
                   background: "var(--bg-card)",
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
+                  gap: 8,
                 }}
               >
-                <div
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 6,
-                    background: p.color + "20",
-                    border: `1px solid ${p.color}50`,
-                    display: "grid",
-                    placeItems: "center",
-                  }}
-                >
-                  {p.icon}
-                </div>
-                <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--text-primary)" }}>{p.name}</span>
+                {p.icon}
+                <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-primary)" }}>{p.name}</span>
               </div>
             ))}
           </div>
@@ -243,24 +244,23 @@ export default async function LandingPage() {
         <div
           className="glass-card animate-fade-up"
           style={{
-            marginTop: 56,
-            padding: "24px 48px",
+            marginTop: "var(--space-10)",
+            padding: "var(--space-5) var(--space-8)",
             display: "flex",
-            gap: 48,
+            gap: "var(--space-8)",
             flexWrap: "wrap",
             justifyContent: "center",
-            animationDelay: "0.5s",
           }}
         >
           {STATS.map((s) => (
             <div key={s.label} style={{ textAlign: "center" }}>
               <div
-                className="gradient-text tabular-nums"
-                style={{ fontSize: "2rem", fontWeight: 900 }}
+                style={{ fontSize: "var(--text-h2)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}
+                className="tabular-nums"
               >
                 {s.value}
               </div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)", marginTop: 2 }}>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", marginTop: 2 }}>
                 {s.label}
               </div>
             </div>
@@ -269,43 +269,40 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Features ── */}
-      <section id="features" style={{ padding: "80px 24px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <p className="page-eyebrow" style={{ textAlign: "center" }}>Built for Coders</p>
-            <h2 style={{ fontSize: "2.4rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-              Everything you need to <span className="gradient-text">dominate</span>
+      <section id="features" style={{ padding: "var(--space-12) var(--space-5)", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "var(--space-10)" }}>
+            <p className="page-eyebrow" style={{ textAlign: "center" }}>Motivated to Code</p>
+            <h2 style={{ fontSize: "var(--text-h1)", fontWeight: 600, letterSpacing: "-0.02em", color: "var(--text-primary)" }}>
+              Engineered for algorithmic growth
             </h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem", marginTop: 8, maxWidth: 580, marginInline: "auto" }}>
-              Deep rating analytics, problem recommendations, and topic insights engineered for competitive coders.
-            </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
-            {FEATURES.map((f, i) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--space-4)" }}>
+            {FEATURES.map((f) => (
               <div
                 key={f.title}
                 className="glass-card"
-                style={{ padding: 28, animationDelay: `${i * 0.1}s` }}
+                style={{ padding: "var(--space-5)" }}
               >
                 <div
                   style={{
-                    width: 44,
-                    height: 44,
+                    width: 32,
+                    height: 32,
                     borderRadius: "var(--radius-md)",
                     background: "var(--bg-elevated)",
-                    border: "1px solid var(--bg-border-hover)",
+                    border: "1px solid var(--bg-border)",
                     display: "grid",
                     placeItems: "center",
-                    marginBottom: 16,
+                    marginBottom: "var(--space-3)",
                   }}
                 >
                   {f.icon}
                 </div>
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}>
+                <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 }}>
                   {f.title}
                 </h3>
-                <p style={{ fontSize: "0.92rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                <p style={{ fontSize: "var(--text-xs)", color: "var(--text-secondary)", lineHeight: 1.5 }}>
                   {f.desc}
                 </p>
               </div>
@@ -314,27 +311,28 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA Section ── */}
-      <section style={{ padding: "60px 24px 100px", position: "relative", zIndex: 1 }}>
+      {/* ── Bottom CTA ── */}
+      <section style={{ padding: "var(--space-8) var(--space-5) var(--space-16)", position: "relative", zIndex: 1 }}>
         <div
           className="glass-card"
           style={{
-            maxWidth: 720,
+            maxWidth: 600,
             margin: "0 auto",
-            padding: "56px 40px",
+            padding: "var(--space-10) var(--space-6)",
             textAlign: "center",
-            background: "var(--brand-glow)",
-            border: "1px solid var(--bg-border-hover)",
           }}
         >
-          <h2 style={{ fontSize: "2.2rem", fontWeight: 800, marginBottom: 12 }}>
-            Ready to elevate your <span className="gradient-text">CP Rating</span>?
+          <span className="badge badge-primary" style={{ fontSize: "var(--text-xs)", marginBottom: "var(--space-3)", display: "inline-flex" }}>
+            Eat. Sleep. Code. Repeat.
+          </span>
+          <h2 style={{ fontSize: "var(--text-h1)", fontWeight: 600, color: "var(--text-primary)", marginBottom: "var(--space-2)" }}>
+            Talk is cheap. Show me the code.
           </h2>
-          <p style={{ color: "var(--text-secondary)", marginBottom: 28, fontSize: "1.05rem" }}>
-            Join coders tracking their algorithmic mastery today.
+          <p style={{ color: "var(--text-secondary)", marginBottom: "var(--space-6)", fontSize: "var(--text-sm)" }}>
+            Join competitive coders tracking their algorithmic growth every day.
           </p>
-          <Link href="/login" className="btn btn-primary btn-lg" id="bottom-cta-btn">
-            Start For Free — Instant Access <ArrowRight size={18} />
+          <Link href="/login" className="btn btn-primary" id="bottom-cta-btn">
+            Get Started Free <ArrowRight size={14} />
           </Link>
         </div>
       </section>

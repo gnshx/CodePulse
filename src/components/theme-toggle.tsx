@@ -1,51 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-type Theme = "dark" | "light";
-
-const storageKey = "bettercp-theme";
-
-function applyTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme;
-}
+import { useState, useEffect } from "react";
+import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem(storageKey);
-    const preferredTheme: Theme = window.matchMedia("(prefers-color-scheme: light)").matches
-      ? "light"
-      : "dark";
-    const nextTheme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : preferredTheme;
-
-    applyTheme(nextTheme);
-    const frame = window.requestAnimationFrame(() => setTheme(nextTheme));
-
-    return () => window.cancelAnimationFrame(frame);
+    const stored = document.documentElement.dataset.theme;
+    if (stored === "light" || stored === "dark") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTheme(stored);
+    }
+    setMounted(true);
   }, []);
 
-  function toggleTheme() {
-    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    window.localStorage.setItem(storageKey, nextTheme);
-    applyTheme(nextTheme);
-  }
+  const toggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next;
+    localStorage.setItem("bettercp-theme", next);
+  };
 
-  const isLight = theme === "light";
+  if (!mounted) {
+    return (
+      <button className="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+        <Sun size={15} />
+      </button>
+    );
+  }
 
   return (
     <button
-      type="button"
+      onClick={toggle}
       className="theme-toggle"
-      onClick={toggleTheme}
-      aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
-      title={`Switch to ${isLight ? "dark" : "light"} mode`}
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      id="theme-toggle-btn"
     >
-      <span className="theme-toggle-icon" aria-hidden="true">{isLight ? "☀" : "☾"}</span>
-      <span className="theme-toggle-label">{isLight ? "Light" : "Dark"}</span>
+      {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
     </button>
   );
 }

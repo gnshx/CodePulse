@@ -4,7 +4,7 @@ import { prisma } from "@/shared/db/client";
 import { revalidatePath } from "next/cache";
 import { triggerPlatformSync } from "@/modules/sync/service";
 import { CACHE_KEYS, redis } from "@/shared/cache/redis";
-import { Settings, Save, User, Layers, Shield } from "lucide-react";
+import { Save } from "lucide-react";
 
 async function updateProfile(formData: FormData) {
   "use server";
@@ -66,28 +66,23 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <div className="page-header">
+      <header className="page-header">
         <p className="page-eyebrow">Preferences & Configuration</p>
-        <h1 className="page-title">
-          <Settings size={24} color="var(--brand-primary)" /> Account Settings
-        </h1>
+        <h1 className="page-title">Account Settings</h1>
         <p className="page-description">
           Configure connected platform handles and customize profile settings.
         </p>
-      </div>
+      </header>
 
-      <div className="glass-card max-w-3xl" style={{ padding: 28 }}>
-        <form action={updateProfile} style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+      <div className="glass-card" style={{ maxWidth: 720, padding: "var(--space-6)" }}>
+        <form action={updateProfile} style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
           <div id="platform-handles">
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
-              <Layers size={18} color="var(--brand-accent)" />
-              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                Platform Handles
-              </h2>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
+            <h2 style={{ fontSize: "var(--text-h3)", fontWeight: 600, color: "var(--text-primary)", marginBottom: "var(--space-4)", paddingBottom: "var(--space-2)", borderBottom: "1px solid var(--bg-border)" }}>
+              Platform Handles
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "var(--space-4)" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   LeetCode Username
                 </label>
                 <input
@@ -100,7 +95,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   Codeforces Handle
                 </label>
                 <input
@@ -113,7 +108,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   GeeksforGeeks Username
                 </label>
                 <input
@@ -126,7 +121,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   CodeChef Handle
                 </label>
                 <input
@@ -139,7 +134,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   AtCoder Username
                 </label>
                 <input
@@ -152,7 +147,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
                   GitHub Username
                 </label>
                 <input
@@ -167,22 +162,19 @@ export default async function SettingsPage() {
           </div>
 
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--bg-border)", paddingBottom: 10 }}>
-              <User size={18} color="var(--brand-secondary)" />
-              <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                Profile Details
-              </h2>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <h2 style={{ fontSize: "var(--text-h3)", fontWeight: 600, color: "var(--text-primary)", marginBottom: "var(--space-4)", paddingBottom: "var(--space-2)", borderBottom: "1px solid var(--bg-border)" }}>
+              Profile Details
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: 6 }}>
-                  Bio / Competitive Programming Goals
+                <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--text-secondary)", marginBottom: 6 }}>
+                  Bio &amp; Goals
                 </label>
                 <textarea
                   name="bio"
-                  rows={4}
+                  rows={3}
                   defaultValue={profile?.bio || ""}
-                  placeholder="Tell us about your CP journey, target ratings, or goals..."
+                  placeholder="Tell us about your competitive programming goals..."
                   className="input"
                   style={{ resize: "vertical" }}
                 />
@@ -196,16 +188,16 @@ export default async function SettingsPage() {
                   defaultChecked={profile?.isPublic || false}
                   style={{ width: 16, height: 16, accentColor: "var(--brand-primary)", cursor: "pointer" }}
                 />
-                <label htmlFor="isPublic" style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--text-secondary)", cursor: "pointer" }}>
-                  Make profile public (allow others to view your stats and rank)
+                <label htmlFor="isPublic" style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", cursor: "pointer" }}>
+                  Make profile public
                 </label>
               </div>
             </div>
           </div>
 
-          <div style={{ paddingTop: 16, borderTop: "1px solid var(--bg-border)", display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ paddingTop: "var(--space-4)", borderTop: "1px solid var(--bg-border)", display: "flex", justifyContent: "flex-end" }}>
             <button type="submit" className="btn btn-primary" id="save-settings-btn">
-              <Save size={16} /> Save Settings
+              <Save size={14} /> Save Settings
             </button>
           </div>
         </form>

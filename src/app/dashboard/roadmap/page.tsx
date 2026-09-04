@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/modules/auth/config";
 import { getRecommendations, getStarterRecommendations } from "@/modules/recommendations/service";
 import { getPersonalizedAnalytics, hasLinkedLearningSource } from "@/modules/learning/live-analytics";
-import { Map, ExternalLink, Sparkles, Target, Layers } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export default async function RoadmapPage() {
   const session = await auth();
@@ -20,19 +20,17 @@ export default async function RoadmapPage() {
 
   return (
     <div>
-      <div className="page-header">
+      <header className="page-header">
         <p className="page-eyebrow">Algorithmic Growth Path</p>
-        <h1 className="page-title">
-          <Map size={24} color="var(--brand-accent)" /> Smart Learning Roadmap
-        </h1>
+        <h1 className="page-title">Learning Roadmap</h1>
         <p className="page-description">
           {hasLinkedSource && analytics?.totalSolved
-            ? `Personalized recommendation engine active — based on ${analytics.totalSolved} solved problems across your linked platforms.`
+            ? `Personalized recommendation engine active — based on ${analytics.totalSolved} solved problems.`
             : "Core NeetCode 75 foundation recommendations. Link your accounts anytime to unlock real-time recommendations."}
         </p>
-      </div>
+      </header>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
         {recommendations.map((item, idx) => {
           let diffBadge = "badge-easy";
           if (item.difficulty?.toLowerCase() === "medium") diffBadge = "badge-medium";
@@ -43,30 +41,52 @@ export default async function RoadmapPage() {
               key={idx}
               className="glass-card"
               style={{
-                padding: 22,
+                padding: "var(--space-5)",
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 flexWrap: "wrap",
-                gap: 16,
+                gap: "var(--space-4)",
               }}
             >
-              <div style={{ flex: 1, minWidth: 280 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
-                  <span className="badge badge-primary">{item.topic}</span>
-                  <span className={`badge ${diffBadge}`}>{item.difficulty}</span>
-                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
-                    Pattern: <strong style={{ color: "var(--text-secondary)" }}>{item.pattern}</strong>
-                  </span>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-4)", flex: 1, minWidth: 280 }}>
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--bg-border)",
+                    color: "var(--text-muted)",
+                    fontSize: "var(--text-xs)",
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 600,
+                    display: "grid",
+                    placeItems: "center",
+                    flexShrink: 0,
+                    marginTop: 2,
+                  }}
+                >
+                  {idx + 1}
                 </div>
 
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
-                  {item.problemName}
-                </h3>
-                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  {item.reason}
-                </p>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", flexWrap: "wrap", marginBottom: "var(--space-2)" }}>
+                    <span className="badge badge-primary" style={{ fontSize: "var(--text-xs)", textTransform: "capitalize" }}>{item.topic}</span>
+                    <span className={`badge ${diffBadge}`} style={{ fontSize: "var(--text-xs)" }}>{item.difficulty}</span>
+                    <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
+                      Pattern: <span style={{ color: "var(--text-secondary)" }}>{item.pattern}</span>
+                    </span>
+                  </div>
+
+                  <h3 style={{ fontSize: "var(--text-h3)", fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 }}>
+                    {item.problemName}
+                  </h3>
+                  <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                    {item.reason}
+                  </p>
+                </div>
               </div>
 
               {item.problemUrl && (
@@ -74,11 +94,10 @@ export default async function RoadmapPage() {
                   href={item.problemUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-sm"
                   id={`solve-prob-${idx}`}
-                  style={{ alignSelf: "center" }}
                 >
-                  {hasLinkedSource ? "Solve Problem" : "View on NeetCode"} <ExternalLink size={14} />
+                  {hasLinkedSource ? "Solve Problem" : "View Problem"} <ExternalLink size={12} />
                 </a>
               )}
             </div>

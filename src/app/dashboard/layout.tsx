@@ -14,13 +14,12 @@ import {
   Target,
   Settings,
   LogOut,
-  Swords,
   Activity,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Dashboard | BetterCP Intelligence",
-  description: "Production-style Competitive Programming Intelligence & Analytics Dashboard.",
+  title: "Dashboard | BetterCP",
+  description: "Competitive Programming Intelligence & Analytics Dashboard.",
 };
 
 export default async function DashboardLayout({
@@ -35,72 +34,55 @@ export default async function DashboardLayout({
   }
 
   const navItems = [
-    { href: "/dashboard", icon: <LayoutDashboard size={18} />, label: "Overview" },
-    { href: "/dashboard/platforms", icon: <Layers size={18} />, label: "Platforms" },
-    { href: "/dashboard/topics", icon: <Brain size={18} />, label: "Topics" },
-    { href: "/dashboard/contests", icon: <Trophy size={18} />, label: "Contests" },
-    { href: "/dashboard/roadmap", icon: <Map size={18} />, label: "Roadmap" },
-    { href: "/dashboard/ai-coach", icon: <Bot size={18} />, label: "AI Coach" },
-    { href: "/dashboard/goals", icon: <Target size={18} />, label: "Goals" },
-    { href: "/dashboard/settings", icon: <Settings size={18} />, label: "Settings" },
+    { href: "/dashboard", icon: <LayoutDashboard size={16} />, label: "Overview" },
+    { href: "/dashboard/platforms", icon: <Layers size={16} />, label: "Platforms" },
+    { href: "/dashboard/topics", icon: <Brain size={16} />, label: "Topics" },
+    { href: "/dashboard/contests", icon: <Trophy size={16} />, label: "Contests" },
+    { href: "/dashboard/roadmap", icon: <Map size={16} />, label: "Roadmap" },
+    { href: "/dashboard/ai-coach", icon: <Bot size={16} />, label: "AI Coach" },
+    { href: "/dashboard/goals", icon: <Target size={16} />, label: "Goals" },
+    { href: "/dashboard/settings", icon: <Settings size={16} />, label: "Settings" },
   ];
 
   return (
     <>
-      {/* Background Glow Mesh */}
+      {/* Subtle background */}
       <div className="bg-mesh" />
 
-      {/* Navbar */}
-      <nav className="navbar dashboard-navbar" style={{ justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      {/* ── Navbar ── */}
+      <nav className="navbar" style={{ justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 10,
+              width: 28,
+              height: 28,
+              borderRadius: 7,
               background: "var(--brand-gradient)",
               display: "grid",
               placeItems: "center",
               color: "#ffffff",
-              boxShadow: "var(--glow-primary)",
-            }}
-          >
-            <Swords size={18} />
-          </div>
-          <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em" }}>
-            Better<span className="gradient-text">CP</span>
-          </span>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "2px 8px",
-              borderRadius: 99,
-              background: "rgba(16, 185, 129, 0.1)",
-              border: "1px solid rgba(16, 185, 129, 0.2)",
-              fontSize: "0.74rem",
+              fontSize: "0.7rem",
               fontWeight: 700,
-              color: "var(--color-easy)",
-              marginLeft: 4,
             }}
           >
-            <div className="pulse-dot" />
-            Live Sync
+            <Activity size={14} />
           </div>
+          <span style={{ fontWeight: 600, fontSize: "0.9375rem", letterSpacing: "-0.01em", color: "var(--text-primary)" }}>
+            Better<span style={{ color: "var(--brand-primary)" }}>CP</span>
+          </span>
         </div>
 
-        <div className="dashboard-navbar-actions" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <ThemeToggle />
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              padding: "4px 12px 4px 6px",
-              borderRadius: 999,
-              background: "var(--bg-elevated)",
+              gap: 8,
+              padding: "4px 10px 4px 4px",
+              borderRadius: "var(--radius-md)",
               border: "1px solid var(--bg-border)",
+              cursor: "pointer",
             }}
           >
             {session.user.image ? (
@@ -108,26 +90,26 @@ export default async function DashboardLayout({
               <img
                 src={session.user.image}
                 alt="avatar"
-                style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }}
+                style={{ width: 24, height: 24, borderRadius: "50%", objectFit: "cover" }}
               />
             ) : (
               <div
                 style={{
-                  width: 28,
-                  height: 28,
+                  width: 24,
+                  height: 24,
                   borderRadius: "50%",
                   background: "var(--brand-gradient)",
                   display: "grid",
                   placeItems: "center",
-                  fontSize: "0.8rem",
-                  fontWeight: 800,
+                  fontSize: "0.7rem",
+                  fontWeight: 600,
                   color: "#fff",
                 }}
               >
                 {session.user.name?.[0]?.toUpperCase() ?? "U"}
               </div>
             )}
-            <span className="dashboard-user-name" style={{ fontSize: "0.88rem", fontWeight: 700 }}>
+            <span className="dashboard-user-name" style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text-secondary)" }}>
               {session.user.name}
             </span>
           </div>
@@ -135,21 +117,21 @@ export default async function DashboardLayout({
         </div>
       </nav>
 
-      {/* Sidebar */}
-      <aside className="sidebar dashboard-sidebar">
-        <div style={{ marginBottom: 12, padding: "0 8px" }}>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Intelligence Suite
+      {/* ── Sidebar ── */}
+      <aside className="sidebar">
+        <div style={{ marginBottom: 8, padding: "0 12px" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            Navigation
           </p>
         </div>
 
         <SidebarNav items={navItems} />
 
-        <div style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid var(--bg-border)" }}>
+        <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--bg-border)" }}>
           <form action={async () => { "use server"; const { signOut } = await import("@/modules/auth/config"); await signOut({ redirectTo: "/" }); }}>
             <button type="submit" className="sidebar-item" id="nav-signout-btn" style={{ color: "var(--color-hard)" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20 }}>
-                <LogOut size={16} />
+              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16 }}>
+                <LogOut size={14} />
               </span>
               <span>Sign Out</span>
             </button>
@@ -157,7 +139,7 @@ export default async function DashboardLayout({
         </div>
       </aside>
 
-      {/* Main */}
+      {/* ── Main ── */}
       <main className="main-content">{children}</main>
     </>
   );

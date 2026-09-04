@@ -3,7 +3,7 @@ import { registerWithPassword, signInWithPassword } from "@/app/login/actions";
 import { OAuthProviders } from "@/components/auth/oauth-providers";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Swords, Utensils, Code2, Moon } from "lucide-react";
+import { Activity, Flame, Utensils, Code2, Moon, Quote } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Sign In - BetterCP",
@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 };
 
 const MOTIVATION = [
-  { icon: <Utensils size={24} color="var(--brand-primary)" />, label: "Eat", hint: "Fuel up for the grind" },
-  { icon: <Code2 size={24} color="var(--brand-accent)" />, label: "Code", hint: "Solve. Repeat. Improve." },
-  { icon: <Moon size={24} color="var(--brand-secondary)" />, label: "Sleep", hint: "Recover. Come back stronger." },
+  { icon: <Utensils size={14} color="var(--brand-primary)" />, title: "Eat", desc: "Fuel your focus for the daily problem grind." },
+  { icon: <Moon size={14} color="var(--brand-secondary)" />, title: "Sleep", desc: "Rest, recover, and return rating higher." },
+  { icon: <Code2 size={14} color="var(--color-easy)" />, title: "Code", desc: "Talk is cheap. Write accepted solutions." },
+  { icon: <Flame size={14} color="var(--color-medium)" />, title: "Repeat", desc: "Consistency beats intensity every time." },
 ] as const;
 
 function resolveAuthError(error?: string) {
@@ -48,43 +49,61 @@ export default async function LoginPage({
       <aside className="auth-motivation animate-fade-up">
         <Link href="/" className="auth-motivation-brand">
           <div className="auth-motivation-logo" aria-hidden="true">
-            <Swords size={20} />
+            <Activity size={18} />
           </div>
           <span>
-            Better<span className="gradient-text">CP</span>
+            Better<span style={{ color: "var(--brand-primary)" }}>CP</span>
           </span>
         </Link>
 
         <div>
-          <h1 className="auth-motivation-headline">
-            <em>Eat.</em> Code. Sleep.
-            <br />
-            Repeat the climb.
+          <span className="badge badge-primary" style={{ fontSize: "var(--text-xs)", marginBottom: "var(--space-3)", display: "inline-flex" }}>
+            Eat. Sleep. Code. Repeat.
+          </span>
+          <h1 className="auth-motivation-headline" style={{ marginTop: "var(--space-2)" }}>
+            Talk is cheap.<br />
+            <span style={{ color: "var(--brand-primary)" }}>Show me the code.</span>
           </h1>
           <p className="auth-motivation-sub">
-            Track every platform, sharpen weak topics, and stay consistent with goals built for competitive programmers.
+            Track every platform, sharpen weak topics, and build consistency with goals built for rating growth.
           </p>
         </div>
 
-        <div className="auth-motivation-grid">
+        {/* Motivating Quote Box */}
+        <div
+          style={{
+            padding: "var(--space-4)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--bg-border)",
+            marginTop: "var(--space-4)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, color: "var(--brand-primary)" }}>
+            <Quote size={14} />
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Developer Creed</span>
+          </div>
+          <p style={{ fontSize: "var(--text-xs)", fontStyle: "italic", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+            &ldquo;Talk is cheap. Show me the code.&rdquo; — Linus Torvalds
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-3)", marginTop: "var(--space-4)" }}>
           {MOTIVATION.map((item) => (
-            <div key={item.label} className="auth-motivation-card animate-float">
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 10,
-                  background: "var(--bg-elevated)",
-                  border: "1px solid var(--bg-border)",
-                  display: "grid",
-                  placeItems: "center",
-                  marginBottom: 4,
-                }}
-              >
+            <div
+              key={item.title}
+              style={{
+                padding: "var(--space-3)",
+                borderRadius: "var(--radius-md)",
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--bg-border)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
                 {item.icon}
+                <strong style={{ fontSize: "var(--text-xs)", color: "var(--text-primary)", fontWeight: 600 }}>{item.title}</strong>
               </div>
-              <strong>{item.label}</strong>
-              <span>{item.hint}</span>
+              <p style={{ fontSize: "11px", color: "var(--text-muted)", lineHeight: 1.4 }}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -94,19 +113,19 @@ export default async function LoginPage({
         <div className="auth-card animate-fade-up">
           <Link href="/" className="auth-mobile-brand">
             <div className="auth-motivation-logo" aria-hidden="true">
-              <Swords size={20} />
+              <Activity size={18} />
             </div>
-            <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "var(--text-primary)" }}>
-              Better<span className="gradient-text">CP</span>
+            <span style={{ fontWeight: 600, fontSize: "1rem", color: "var(--text-primary)" }}>
+              Better<span style={{ color: "var(--brand-primary)" }}>CP</span>
             </span>
           </Link>
 
           <div className="auth-card-header">
-            <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
+            <h1>{isSignup ? "Create account" : "Welcome back"}</h1>
             <p>
               {isSignup
-                ? "Join BetterCP with Google or create a password account."
-                : "Sign in with Google, GitHub, or your password."}
+                ? "Join BetterCP to track your algorithmic progress."
+                : "Sign in with Google, GitHub, or password."}
             </p>
           </div>
 
@@ -202,7 +221,7 @@ export default async function LoginPage({
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary auth-submit-button" id="signup-password-btn">
+                <button type="submit" className="btn btn-primary auth-submit-button" id="signup-password-btn" style={{ width: "100%" }}>
                   Create Account
                 </button>
               </form>
@@ -236,7 +255,7 @@ export default async function LoginPage({
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary auth-submit-button" id="login-password-btn">
+                <button type="submit" className="btn btn-primary auth-submit-button" id="login-password-btn" style={{ width: "100%" }}>
                   Sign In
                 </button>
               </form>

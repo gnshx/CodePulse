@@ -5,8 +5,6 @@ import { fetchLeetCodeProfile } from "@/modules/leetcode/service";
 import { fetchCodeforcesProfile } from "@/modules/codeforces/service";
 import Link from "next/link";
 import {
-  Layers,
-  Settings,
   ExternalLink,
   CheckCircle2,
   AlertCircle,
@@ -34,7 +32,7 @@ export default async function PlatformsPage() {
       key: "leetcodeUsername",
       username: profile?.leetcodeUsername,
       color: "#ffa116",
-      icon: <Code2 size={24} color="#ffa116" />,
+      icon: <Code2 size={20} color="#ffa116" />,
       profileData: lcProfile,
       details: [
         { label: "Total Solved", value: lcProfile?.totalSolved ? lcProfile.totalSolved.toLocaleString() : "—" },
@@ -46,8 +44,8 @@ export default async function PlatformsPage() {
       name: "Codeforces",
       key: "codeforcesUsername",
       username: profile?.codeforcesUsername,
-      color: "#1a83f2",
-      icon: <Trophy size={24} color="#1a83f2" />,
+      color: "#818cf8",
+      icon: <Trophy size={20} color="#818cf8" />,
       profileData: cfProfile,
       details: [
         { label: "Rating", value: cfProfile?.rating ? cfProfile.rating.toLocaleString() : "—" },
@@ -59,8 +57,8 @@ export default async function PlatformsPage() {
       name: "GeeksforGeeks",
       key: "gfgUsername",
       username: profile?.gfgUsername,
-      color: "#2ba94b",
-      icon: <Terminal size={24} color="#2ba94b" />,
+      color: "#34d399",
+      icon: <Terminal size={20} color="#34d399" />,
       profileData: null,
       details: [
         { label: "Username", value: profile?.gfgUsername ?? "Not set" },
@@ -71,8 +69,8 @@ export default async function PlatformsPage() {
       name: "CodeChef",
       key: "codechefUsername",
       username: profile?.codechefUsername,
-      color: "#d4a574",
-      icon: <Globe size={24} color="#d4a574" />,
+      color: "#fbbf24",
+      icon: <Globe size={20} color="#fbbf24" />,
       profileData: null,
       details: [
         { label: "Username", value: profile?.codechefUsername ?? "Not set" },
@@ -83,31 +81,29 @@ export default async function PlatformsPage() {
 
   return (
     <div>
-      <div className="page-header" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+      <div className="page-header" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--space-4)" }}>
         <div>
           <p className="page-eyebrow">Integrations</p>
-          <h1 className="page-title">
-            <Layers size={24} color="var(--brand-accent)" /> Coding Platforms
-          </h1>
+          <h1 className="page-title">Coding Platforms</h1>
           <p className="page-description">
             Manage linked competitive programming accounts and platform sync status.
           </p>
         </div>
-        <Link href="/dashboard/settings" className="btn btn-primary" id="platforms-manage-btn">
-          <Settings size={16} /> Manage Handles
+        <Link href="/dashboard/settings#platform-handles" className="btn btn-primary btn-sm" id="platforms-manage-btn">
+          Manage Handles
         </Link>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-4)" }}>
         {platforms.map((p) => (
-          <div key={p.name} className="glass-card" style={{ padding: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div key={p.name} className="glass-card" style={{ padding: "var(--space-5)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
                 <div
                   style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
+                    width: 36,
+                    height: 36,
+                    borderRadius: "var(--radius-md)",
                     background: "var(--bg-elevated)",
                     border: "1px solid var(--bg-border)",
                     display: "grid",
@@ -117,33 +113,33 @@ export default async function PlatformsPage() {
                   {p.icon}
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: p.color }}>{p.name}</h2>
-                  <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 500 }}>
+                  <h2 style={{ fontSize: "var(--text-h3)", fontWeight: 600, color: "var(--text-primary)" }}>{p.name}</h2>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", fontFamily: "var(--font-mono)", marginTop: 1 }}>
                     {p.username ? `@${p.username}` : "Not connected"}
                   </p>
                 </div>
               </div>
-              <span className={`badge ${p.username ? "badge-easy" : "badge-medium"}`}>
-                {p.username ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
+              <span className={`badge ${p.username ? "badge-easy" : "badge-medium"}`} style={{ fontSize: "var(--text-xs)" }}>
+                {p.username ? <CheckCircle2 size={11} /> : <AlertCircle size={11} />}
                 {p.username ? "Active" : "Unlinked"}
               </span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 16, borderTop: "1px solid var(--bg-border)" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", paddingTop: "var(--space-3)", borderTop: "1px solid var(--bg-border)" }}>
               {p.details.map((d) => (
-                <div key={d.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.92rem" }}>
+                <div key={d.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "var(--text-xs)" }}>
                   <span style={{ color: "var(--text-secondary)" }}>{d.label}</span>
                   {d.isLink && d.value && d.value !== "—" ? (
                     <a
                       href={d.value}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "var(--brand-accent)", textDecoration: "none", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4 }}
+                      style={{ color: "var(--brand-primary)", textDecoration: "none", fontWeight: 500, display: "inline-flex", alignItems: "center", gap: 3 }}
                     >
-                      Open Profile <ExternalLink size={14} />
+                      Profile <ExternalLink size={11} />
                     </a>
                   ) : (
-                    <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{String(d.value)}</span>
+                    <span style={{ fontWeight: 500, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>{String(d.value)}</span>
                   )}
                 </div>
               ))}
@@ -152,7 +148,7 @@ export default async function PlatformsPage() {
             {!p.username && (
               <Link
                 href="/dashboard/settings#platform-handles"
-                style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.86rem", fontWeight: 700, color: "var(--brand-accent)", textDecoration: "none" }}
+                style={{ marginTop: "var(--space-3)", display: "inline-flex", alignItems: "center", gap: 4, fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--brand-primary)", textDecoration: "none" }}
               >
                 Add handle →
               </Link>
